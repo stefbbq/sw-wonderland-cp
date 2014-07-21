@@ -39,9 +39,13 @@ switch ($action) {
                 getValue('id')
                 );
         break;
-    case 'list':
-        $result = $manager->getClientList();
+    case 'clientList':
+        $result = $manager->getClientList(getValue('s'), getValue('c'));
         break;
+    case 'clientCount':
+        $result = $manager->getClientRecordCount();
+        break;
+      
     default : 
         $result->success = false;
         $result->message = 'no action';
@@ -49,12 +53,20 @@ switch ($action) {
 }
 
 function getValue($name) {
+  if (isset($_GET[$name])) {
     return htmlspecialchars($_GET[$name]);
+  } else {
+    return null;
+  }
 }
 
 /*
  * Return JSON
  */
-$callback = htmlspecialchars($_GET['callback']);
-echo ($callback . '(' . json_encode($result) . ');');
-
+if (isSet($_GET['callback'])) {
+    $callback = htmlspecialchars($_GET['callback']);
+    header('Content-Type: application/json');
+    echo ($callback . '(' . json_encode($result) . ');');
+} else {
+    var_dump($result);
+}

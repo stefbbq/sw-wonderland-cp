@@ -8,8 +8,8 @@
  * Controller of the wplAdminApp
  */
 // ['ui.mask']
-angular.module('wplAdminApp')
-  .controller('AddClientCtrl', function ($scope, $http, $location) {
+angular.module('wplAdmin')
+  .controller('AddClientCtrl', function ($scope, $http, $location, $rootScope) {
       function construct() {
         initializeCompany();
         initializeTestClients();
@@ -25,10 +25,7 @@ angular.module('wplAdminApp')
       
       
       $scope.save = function(company) {
-          //window.console.log(company);
-          var url = 'http://localhost:81/wonderland/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
-
-          $http.jsonp(url, 
+          $http.jsonp($rootScope.wsURL, 
           {
               params:company,
               headers : { 'Content-Type': 'application/x-www-form-urlencoded' }

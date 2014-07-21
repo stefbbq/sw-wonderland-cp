@@ -12,6 +12,10 @@ $clr_button_active_bk:hsl(0, 0, 50);
 $clr_button_active_label:hsl(0, 0, 100);
 
 .spa {
+  border:1px solid green;
+  max-width:1024px;
+  margin:0 auto;
+    
     >div {
         
         &.left {
@@ -116,6 +120,29 @@ $clr_button_active_label:hsl(0, 0, 100);
             display:inline-block;
             margin-right:($columnSpace - $columnMysteryPadding);
         }
-    }    
+    } 
+    
+    // List Clients
+    $tableWidth:600px;
+    .list_clients {
+      max-width:$tableWidth;
+      
+      
+      table.list {
+        border:2px solid black;
+        width:100%;
+        td, th {
+          padding:5px;
+        }
+      }
+      
+      .pages {
+        float:right;
+        
+        .page-numbers a {
+          margin-right:5px;
+        }
+      }
+    }
     
 }

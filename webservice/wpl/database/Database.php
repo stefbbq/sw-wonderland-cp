@@ -28,7 +28,7 @@ class Database {
         $this->db = null;
     }
 
-    public function select($table, $select, $where=NULL){
+    public function select($table, $select, $where=NULL, $start=NULL, $pageSize=NULL){
         $cols = $conditions = '';
         $return = array();
         $i=0;
@@ -41,6 +41,7 @@ class Database {
             $i++;
         }
         $i=0;
+        $queryString = '';
         if($where){
             foreach($where as $col => $data){
                 if($i==0){
@@ -50,10 +51,19 @@ class Database {
                 }
                 $i++;
             }
-            $query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
+            $queryString = "SELECT ".$cols." FROM ".$table." WHERE ".$conditions;
+            //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
         }else{
-            $query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
+          $queryString = "SELECT ".$cols." FROM ".$table;
+          //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
         }
+        
+        if (!is_null($start)) {
+          $queryString .= ' LIMIT ' . $start . ',' . $pageSize;
+        }
+        
+        $query = $this->db->prepare($queryString);
+        
         try {
             $query->execute();
             for($i=0; $row = $query->fetch(); $i++){

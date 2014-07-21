@@ -10,7 +10,7 @@ var viewExt = viewExt || '.html';
  * Main module of the application.
  */
 angular
-  .module('wplAdminApp', [
+  .module('wplAdmin', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -31,6 +31,13 @@ angular
       .otherwise({
         redirectTo: '/listClients'
       });
+  })
+  .run(function ($rootScope) {
+    $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
+    $rootScope.clientList = {
+      pageSize:3
+    };
+    
   })
   .directive('capitalizeFirst', function() {
       return {
@@ -80,6 +87,10 @@ angular
       };
   })
   .controller('MenuController', ['$scope', function($scope) {
+          
+    /*
+     * ~§~ Determine the currently selected menu button.
+     */
     $scope.getClass = function(path) {
         var urlPath = window.location.hash.substr(1);
         
@@ -89,6 +100,8 @@ angular
           return '';
         }
     };
+    
+    
   }])
   
 ;

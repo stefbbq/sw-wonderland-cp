@@ -1,8 +1,31 @@
 <div class="list_clients">
     <h2>Client List</h2>
-    <table>
-        
+    <button ng-click="onAddClient();">Create New Client</button>
+    <table class="list">
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Province</th>
+        <th>Phone</th>
+        <th>Phone2</th>
+      </tr>
+      <tr ng-repeat="company in clientListService.list">
+        <td>{{company.name}}</td>
+        <td>{{company.address}}</td>
+        <td>{{company.city}}</td>
+        <td>{{company.province}}</td>
+        <td>{{company.phone}}</td>
+        <td>{{company.phone2}}</td>
+      </tr>
         
     </table>
+    <div ng-controller="Pager" class="pages">
+      <a href="javascript:void(0);">Prev</a>
+      <span class="page-numbers">
+        <a href="javascript:void(0);" ng-repeat="page in pages" ng-click="loadPage($index)">{{page.num}}</a>
+      </span>
+      <a href="javascript:void(0);">Next</a>
+    </div>
     
 </div>

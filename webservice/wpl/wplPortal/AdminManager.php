@@ -62,14 +62,34 @@ class AdminManager {
     /*
      * List Clients
      */
-    public function getClientList() {
+    public function getClientList($startRecord, $pageSize) {
         $result = new Result();
+        $select = array('guid', 'name', 'address', 'city', 'province', 'phone', 'phone2');
         
+        $dataset = $this->db->select('clients', $select, null, $startRecord, $pageSize);
+        
+        $result->data = $dataset;
         $result->message = 'client list';
 
         return $result;
     }
     
+    public function getClientRecordCount() {
+      $result = new Result();
+      $result->success = true;
+      $result->code = 200;
+      
+      $sql = 'select count(*) from clients';
+      $result2 = $this->db->db->prepare($sql);
+      $result2->execute();
+      $recordCount = $result2->fetchColumn();
+      
+      $result->data = array(
+          'total' => $recordCount,
+      );
+      
+      return $result;
+    }
     
     
     
