@@ -1,33 +1,94 @@
 'use strict';
-
+var basePath = basePath || '';
+var viewExt = viewExt || '.html';
 /**
  * @ngdoc overview
- * @name portalApp
+ * @name wplAdminApp
  * @description
- * # portalApp
+ * # wplAdminApp
  *
  * Main module of the application.
  */
 angular
-  .module('portalApp', [
+  .module('wplAdminApp', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ui.mask'
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+      .when('/listClients', {
+        templateUrl: basePath + 'views/listClients' + viewExt,
+        controller: 'ClientListCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      .when('/addClient', {
+        templateUrl: basePath + 'views/addClient' + viewExt,
+        controller: 'AddClientCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/listClients'
       });
-  });
+  })
+  .directive('capitalizeFirst', function() {
+      return {
+          require: 'ngModel',
+          link:function(scope, element, attrs, modelCtrl) {
+              var capitalize = function(inputValue) {
+                  if (inputValue !== undefined) {
+                    var capitalized = inputValue.charAt(0).toUpperCase() + inputValue.substr(1);
+                    if (capitalized !== inputValue) {
+                        modelCtrl.$setViewValue(capitalized);
+                        modelCtrl.$render();
+                    }
+                    return capitalized;
+                } else {
+                    return '';
+                }
+              };
+              
+              modelCtrl.$parsers.push(capitalize);
+              capitalize(scope[attrs.ngModel]); // capitalize initial value
+          }
+          
+      };
+  })
+  .directive('capitalize', function() {
+      return {
+          require: 'ngModel',
+          link:function(scope, element, attrs, modelCtrl) {
+              var capitalize = function(inputValue) {
+                  if (inputValue !== undefined) {
+
+                    var capitalized = inputValue.toUpperCase();
+                    if (capitalized !== inputValue) {
+                        modelCtrl.$setViewValue(capitalized);
+                        modelCtrl.$render();
+                    }
+                    return capitalized;
+                } else {
+                    return '';
+                }
+              };
+              
+              modelCtrl.$parsers.push(capitalize);
+              capitalize(scope[attrs.ngModel]); // capitalize initial value
+          }
+          
+      };
+  })
+  .controller('MenuController', ['$scope', function($scope) {
+    $scope.getClass = function(path) {
+        var urlPath = window.location.hash.substr(1);
+        
+        if (urlPath === path) {
+          return 'active';
+        } else {
+          return '';
+        }
+    };
+  }])
+  
+;
