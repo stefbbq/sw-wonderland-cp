@@ -141,6 +141,10 @@ $clr_button_active_label:hsl(0, 0, 100);
         
         .page-numbers a {
           margin-right:5px;
+          &.selected {
+            color:red;
+            font-size:20px;
+          }
         }
       }
     }
