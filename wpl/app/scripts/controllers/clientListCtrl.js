@@ -96,7 +96,6 @@ angular.module('wplAdmin')
  */
 angular.module('wplAdmin')
   .directive('pagerComplete', function($timeout) {
-    console.log('onPagerComplete');
       return {
         link: function(scope, element, attr) {
           if (scope.$last === true) {
@@ -106,20 +105,21 @@ angular.module('wplAdmin')
           }
         }
       };
-})
-  .directive('clientCompany', function($timeout) {
-    console.log('client');
+});
+/*
+  // No point in using this; the header row has to be defined in the markup anyway.
+  // We would need to add the header row to a directive as well, and it might just
+  // lead to confusion.
+  .directive('sdgClientRecord', function($timeout) {
       return {
         restrict:'A',
+        templateUrl: 'views/templates/client_record.html',
         link: function(scope, element, attr) {
-          if (scope.$last === true) {
-            $timeout(function() {
-              scope.$emit('pagerComplete');
-            });
-          }
+          console.log('record');
         }
       };
 });    
+*/
 
 
 /*
