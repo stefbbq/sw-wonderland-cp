@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name wplAdminApp.controller:MainCtrl
- * @description
- * # MainCtrl
- * Controller of the wplAdminApp
- */
 angular.module('wplAdmin')
 .controller('SearchCtrl', ['$scope', function($scope) {
     
@@ -51,6 +44,10 @@ angular.module('wplAdmin')
     $scope.onAddClient = function() {
       $location.path('/addClient');
     };   
+    
+    $scope.showClient = function(guid) {
+      $location.path('/clientDetail').search({id:guid});
+    };
     
     loadClientPage(0);
     
@@ -127,20 +124,24 @@ angular.module('wplAdmin')
         }
       };
 });
+
 /*
-  // No point in using this; the header row has to be defined in the markup anyway.
-  // We would need to add the header row to a directive as well, and it might just
-  // lead to confusion.
-  .directive('sdgClientRecord', function($timeout) {
-      return {
-        restrict:'A',
-        templateUrl: 'views/templates/client_record.html',
-        link: function(scope, element, attr) {
-          console.log('record');
-        }
-      };
-});    
-*/
+ * Filters
+ */
+angular.module('wplAdmin')
+.filter('tel', function() {
+  return function(tel) {
+    if (!tel) return '';
+    
+    var value = tel.toString().trim();
+    var areaCode = value.substr(0, 3);
+    var part1 = value.substr(2, 3);
+    var part2 = value.substr(6);
+    
+    return '(' + areaCode + ') ' + part1 + '-' + part2;
+    
+  };
+});
 
 
 /*

@@ -28,6 +28,10 @@ angular
         templateUrl: basePath + 'views/addClient' + viewExt,
         controller: 'AddClientCtrl'
       })
+      .when('/clientDetail', {
+        templateUrl: basePath + 'views/clientDetail' + viewExt,
+        controller: 'ClientDetailCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });

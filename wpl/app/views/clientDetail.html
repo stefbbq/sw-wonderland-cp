@@ -1,0 +1,73 @@
+<div class="client_detail">
+
+    <h1>Client Detail</h1>
+    <h2>Company Name</h2>
+    <p>Company Address<br/>
+      City, PR<br/>
+      P0S 7A1<br/>
+      Country<br/>
+      Phone1<br/>
+      Phone2
+    </p>
+    
+    <section id="users">
+      <h3>Client Users</h3>
+      <div class="util">
+        <button id="add_user_btn">Create New User</button>
+        <form ng-controller="UserSearchCtrl" class="search" ng-submit="doSearch()">
+          <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+          <input type="submit" value="Search">
+        </form>
+      </div>
+      <table>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Confirmation Email</th>
+          <th>Phone</th>
+          <th>Phone2</th>
+        </tr>
+        
+        <tr>
+          <td>First Name</td>
+          <td>Last Name</td>
+          <td>Email</td>
+          <td>Confirmation Email</td>
+          <td>Phone</td>
+          <td>Phone2</td>
+        </tr>
+        
+      </table>
+    </section>
+    
+    <section id="collateral">
+      <h3>Collateral</h3>
+      <div class="util">
+        <form ng-controller="CollateralSearchCtrl" class="search" ng-submit="doSearch()">
+          <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+          <input type="submit" value="Search">
+        </form>
+      </div>
+      <table>
+        <tr>
+          <th>Thumb</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Date Uploaded</th>
+        </tr>
+        
+        <tr>
+          <td><img src="blank.png" width="25" height="25"></td>
+          <td>Name</td>
+          <td>Type</td>
+          <td>Description</td>
+          <td>Uploaded</td>
+        </tr>
+        
+      </table>
+    </section>
+
+    
+</div>

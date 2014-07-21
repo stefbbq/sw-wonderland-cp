@@ -1,7 +1,8 @@
 <div class="list_clients">
-    <h2>Client List</h2>
+  <section id="client_list">
+    <h1>Client List</h1>
     <div class="util">
-      <button  class="add-client" ng-click="onAddClient();">Create New Client</button>
+      <button  class="add-btn" ng-click="onAddClient();">Create New Client</button>
       <form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()">
         <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
         <input type="submit" value="Search">
@@ -16,13 +17,13 @@
         <th>Phone</th>
         <th>Phone2</th>
       </tr>
-      <tr ng-repeat="company in clientListService.list">
+      <tr ng-repeat="company in clientListService.list" ng-click="showClient(company.guid)">
         <td>{{company.name}}</td>
         <td>{{company.address}}</td>
         <td>{{company.city}}</td>
         <td>{{company.province}}</td>
-        <td>{{company.phone}}</td>
-        <td>{{company.phone2}}</td>
+        <td ng-bind="company.phone | tel"></td>
+        <td ng-bind="company.phone2 | tel"></td>
       </tr>
         
     </table>
@@ -34,4 +35,5 @@
       </span>
       <a href="javascript:void(0);" ng-click="nextPage();">Next</a>
     </div>
+  </section>
 </div>
