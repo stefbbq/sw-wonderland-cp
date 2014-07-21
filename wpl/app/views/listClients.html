@@ -1,6 +1,12 @@
 <div class="list_clients">
     <h2>Client List</h2>
-    <button ng-click="onAddClient();">Create New Client</button>
+    <div class="util">
+      <button  class="add-client" ng-click="onAddClient();">Create New Client</button>
+      <form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()">
+        <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+        <input type="submit" value="Search">
+      </form>
+    </div>
     <table class="list">
       <tr>
         <th>Name</th>

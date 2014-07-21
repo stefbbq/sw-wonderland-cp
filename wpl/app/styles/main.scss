@@ -127,6 +127,19 @@ $clr_button_active_label:hsl(0, 0, 100);
     .list_clients {
       max-width:$tableWidth;
       
+      .util {
+        margin-bottom:10px;
+        height:30px;
+        //border:2px solid blue;
+        
+        .add-client {
+          float:left;
+        }
+
+        .search {
+          float:right;
+        }
+      }
       
       table.list {
         border:2px solid black;
