@@ -25,8 +25,12 @@ angular
         controller: 'ClientListCtrl'
       })
       .when('/addClient', {
-        templateUrl: basePath + 'views/addClient' + viewExt,
-        controller: 'AddClientCtrl'
+        templateUrl: basePath + 'views/editClient' + viewExt,
+        controller: 'EditClientCtrl'
+      })
+      .when('/editClient', {
+        templateUrl: basePath + 'views/editClient' + viewExt,
+        controller: 'EditClientCtrl'
       })
       .when('/clientDetail', {
         templateUrl: basePath + 'views/clientDetail' + viewExt,
@@ -40,6 +44,16 @@ angular
     $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
     $rootScope.clientList = {
       pageSize:3
+    };
+    
+    $rootScope.getFormVars = function(model) {
+      var result = {};
+      for (var a in model ) {
+        if (isNaN(Number(a))) {
+          result[a] = model[a];
+        }
+      }
+      return result;
     };
     
   })
@@ -107,5 +121,54 @@ angular
     
     
   }])
+
+/*
+ * Factories 
+ */
+/*
+ * Client Details
+ */
+.factory('clientDetailService', ['$http', '$rootScope', function($http, $rootScope) {
+  
+  var clientDetails = {};
+  var users = [];
+  var collateral = [];
+  
+  function loadDetails(id, callback) {
+    var args = {action:'clientDetail', q:id};
+    
+    $http.jsonp($rootScope.wsURL, 
+    {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+        angular.copy(result.data, clientDetails);
+        if (callback) {
+          callback(clientDetails);
+        }
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
+  function loadClientUsers(start) {
+    
+  }
+  
+  function loadCollateral(start) {
+    
+  }
+  
+  return {
+    loadDetails:loadDetails,
+    loadClientUsers:loadClientUsers,
+    loadCollateral:loadCollateral,
+    clientDetails:clientDetails,
+    users:users,
+    collateral:collateral
+  };
+    
+}]);
+
   
 ;

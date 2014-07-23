@@ -4,40 +4,32 @@
  * Controllers
  */
 angular.module('wplAdmin')
-.controller('ClientDetailCtrl', ['$scope', function($scope) {
+/*
+ * Client Detail
+ */
+.controller('ClientDetailCtrl', ['$scope', '$location', 'clientDetailService', function($scope, $location, clientDetailService) {
+    $scope.clientDetailService = clientDetailService;
+    $scope.clientDetails = clientDetailService.clientDetails;
+    
+    // load detail
+    clientDetailService.loadDetails($location.search().id);
+    
+    // edit button
+    $scope.editClient = function() {
+      $location.path('editClient').search({id:$location.search().id});
+    };
+    
+    
     
 }])
 .controller('UserSearchCtrl', ['$scope', function($scope) {
-    
+    var a = $scope;
 }])
 .controller('CollateralSearchCtrl', ['$scope', function($scope) {
-    
+    var a = $scope;
 }]);
 
 
 /*
  * Factories
  */
-angular.module('wplAdmin')
-/*
- * Client Details
- */
-.factory('clientDetailService', ['$http', '$location', '$rootScope', function($http, $location, $rootScope) {
-  
-  var clientDetails = {};
-  var users = [];
-  var collateral = [];
-  
-  function loadDetails() {
-    
-  }
-  
-  function loadClients(start) {
-    
-  }
-  
-  function loadCollateral(start) {
-    
-  }
-    
-}]);

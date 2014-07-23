@@ -1,10 +1,10 @@
 <div class="add_client">
 
-    <h1>Add New Client</h1>
+    <h1>{{title}}</h1>
 
     <form id="company_form" name="newCompany" novalidate>
-        <input type="hidden" ng-model="company.action">
-        <input type="hidden" ng-model="company.id">
+        <input type="hidden" name="action" ng-value="form.action">
+        <input type="hidden" name="guid" ng-value="company.guid">
         
         <div class="field-group col-3">
             <label for="company_name">Company Name</label>
@@ -41,7 +41,7 @@
             </div>
             <div class="field-group col-1">
                 <label for="company_postal">Postal</label>
-                <input id="company_postal" ng-model="company.postalCode" capitalize ui-mask="A9A 9A9" ng-pattern2="/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/" name="postal_code" required>
+                <input id="company_postal" ng-model="company.postal_code" capitalize ui-mask="A9A 9A9" ng-pattern2="/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/" name="postal_code" required>
             </div>
             
         </div>
@@ -53,7 +53,7 @@
 
         <div class="field-group col-3">
             <label for="company_phone1">Primary Phone</label>
-            <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone1" name="phone1"  required>
+            <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone" name="phone"  required>
         </div>        
         
         <div class="field-group col-3">
@@ -63,7 +63,7 @@
         
         <div class="field-group col-3">
             <label for="company_accEmail">WPL Account Rep. Email</label>
-            <input id="company_accEmail" type="email" ng-model="company.repEmail" name="repEmail" required>
+            <input id="company_accEmail" type="email" ng-model="company.wplEmail" name="wplEmail" required>
         </div>        
 
         <div class="buttons">

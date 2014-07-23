@@ -1,14 +1,16 @@
 <div class="client_detail">
-
+  <section id="client_detail">
     <h1>Client Detail</h1>
-    <h2>Company Name</h2>
-    <p>Company Address<br/>
-      City, PR<br/>
-      P0S 7A1<br/>
-      Country<br/>
-      Phone1<br/>
-      Phone2
+    <h2>{{clientDetailService.clientDetails.name}}</h2>
+    <p>{{clientDetailService.clientDetails.address}}<br/>
+      {{clientDetailService.clientDetails.city}}, {{clientDetailService.clientDetails.province}}<br/>
+      {{clientDetailService.clientDetails.postal_code}}<br/>
+      {{clientDetailService.clientDetails.phone | tel}}<br/>
+      {{clientDetailService.clientDetails.phone2 | tel}}
     </p>
+    <button id="edit_client_btn" ng-click="editClient();" >Edit</button>
+    
+  </section>
     
     <section id="users">
       <h3>Client Users</h3>

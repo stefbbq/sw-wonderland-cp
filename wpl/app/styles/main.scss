@@ -128,7 +128,6 @@ $tableWidth:600px;
     /*
     Common
     */
-    // List Clients
     section {
       max-width:$tableWidth;
       
@@ -159,6 +158,15 @@ $tableWidth:600px;
         
         td, th {
           padding:5px;
+        }
+        
+        &.selectable {
+          tr {
+            cursor:pointer;
+             &:hover {
+              background-color:hsl(60, 100, 80);
+            }
+          }
         }
       }
       

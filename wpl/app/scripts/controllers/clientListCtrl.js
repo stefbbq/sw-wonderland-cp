@@ -1,10 +1,11 @@
 'use strict';
+var $ = $;
 
 angular.module('wplAdmin')
 .controller('SearchCtrl', ['$scope', function($scope) {
     
     $scope.doSearch = function() {
-      if ($scope.searchString.length == 0) {
+      if ($scope.searchString.length === 0) {
         // nothing entered; show all
         $scope.$emit('loadClientPage', 0);
       } else {
@@ -21,11 +22,11 @@ angular.module('wplAdmin')
      */
     
     $scope.$on('loadClientPage', function(e, startPage) {
-      loadClientPage(startPage)
+      loadClientPage(startPage);
     });
     
     $scope.$on('searchClients', function(e, startPage, searchString) {
-      searchClients(startPage, searchString)
+      searchClients(startPage, searchString);
     });
     
     function loadClientPage(startPage) {
@@ -70,7 +71,7 @@ angular.module('wplAdmin')
       var recordNum = 0;
       pageList.length = 0;
       for (var i=0; i<pageCount; i++) {
-        pageList.push({num:i + 1, recordNum:recordNum})
+        pageList.push({num:i + 1, recordNum:recordNum});
         recordNum += pageSize;
       }
       
@@ -131,7 +132,7 @@ angular.module('wplAdmin')
 angular.module('wplAdmin')
 .filter('tel', function() {
   return function(tel) {
-    if (!tel) return '';
+    if (!tel) { return ''; }
     
     var value = tel.toString().trim();
     var areaCode = value.substr(0, 3);
