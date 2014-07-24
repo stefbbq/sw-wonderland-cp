@@ -9,33 +9,35 @@
  */
 // ['ui.mask']
 angular.module('wplAdmin')
-  .controller('EditClientCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientDetailService', function ($scope, $http, $location, $rootScope, clientDetailService) {
+  .controller('EditClientUserCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientUserService', function ($scope, $http, $location, $rootScope, clientUserService) {
     var addMode;
     var action;
+    var companyID = $location.search().companyID;
+    console.log(companyID);
     
-    $scope.company = {};
+    $scope.form = {};
+    $scope.user = {};
     
       function construct() {
         initializeTestData();
         
         switch ($location.path()) {
-            case '/addClient': 
+            case '/addClientUser': 
               addMode = true;
-              $scope.title = 'Add New Client';
-              action = 'addClient'; 
-              $scope.company.guid = ''; 
+              $scope.title = 'Add New Client User';
+              action = 'addClientUser'; 
               break;
-            case '/editClient': 
+            case '/editClientUser': 
               addMode = false;
-              $scope.title = 'Edit Client';
-              action = 'updateClient'; 
-              $scope.clientDetailService = clientDetailService;
-              loadClientDetails();
+              $scope.title = 'Edit Client User';
+              action = 'updateClientUser'; 
+              $scope.clientUserService = clientUserService;
+              loadClientUserDetails();
               break;
         }
       }
       
-      function loadClientDetails() {
+      function loadClientUserDetails() {
         var id = $location.search().id;
         $scope.clientDetailService.loadDetails(id, function(details) {
           angular.copy(details, $scope.company);
@@ -44,7 +46,7 @@ angular.module('wplAdmin')
       
       $scope.save = function(company) {
         var params = $rootScope.getFormVars(company);
-        params.action = action;
+        params.action = $scope.form.action;
         
         $http.jsonp($rootScope.wsURL, 
         {
@@ -56,12 +58,10 @@ angular.module('wplAdmin')
           var msg;
           if (addMode) {
             msg = 'company added';
-            alert(msg);
-            $location.path('/listClients');
           } else {
             msg = 'company updated';
-            alert(msg);
           }
+          alert(msg);
         })          
         .error (function(data) {
           console.log('error', data);
@@ -82,7 +82,7 @@ angular.module('wplAdmin')
       var testDataIndex = 0;
       $scope.autofill = function() {
           var testData = testDataList[testDataIndex++];
-          angular.copy(testDataIndex, $scope.company);
+          angular.copy(testData, $scope.user);
           if (testDataIndex >= testDataList.length) {
               testDataIndex = 0;
           }
@@ -90,27 +90,23 @@ angular.module('wplAdmin')
       
       var testDataList = [];
       function initializeTestData() {
-          testDataList.push(new Client('Oscorp', 'norman.osborne@oscorp.com'));
-          testDataList.push(new Client('Extensive Enterprises', 'tomax@extensiveenterprises.com'));
-          testDataList.push(new Client('Daily Planet', 'lois.lane@dailyplanet.com'));
-          testDataList.push(new Client('Daily Bugle', 'jjjameson@dailybugle.com'));
+          testDataList.push(new ClientUser('Test', 'User', 'testUser@company.com'));
       }
       
-      function Client(name, email) {
+      function ClientUser(firstName, lastName, email) {
         var me = {};
-        me.name         = name;
-        me.address      = '100 This St.';
-        me.city         = 'Anytown';
-        me.province     = 'ON';
-        me.postalCode   = 'H1H 1H1';
-        me.email        = email;
-        me.phone1       = '5555555555';
-        me.phone2       = '5555555556';
-        me.repEmail     = 'wplAccount@wpl.com';
+        me.first_name     = firstName;
+        me.last_name      = lastName;
+        me.email          = email;
+        me.confirm_email  = 'confirmationEmail@company.com';
+        me.phone          = '5555555555';
+        me.phone2         = '5555555556';
        
         return me;
       }
       
+      
+
       construct();
   }])
   

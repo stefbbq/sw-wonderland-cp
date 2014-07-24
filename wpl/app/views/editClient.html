@@ -3,9 +3,6 @@
     <h1>{{title}}</h1>
 
     <form id="company_form" name="newCompany" novalidate>
-        <input type="hidden" name="action" ng-value="form.action">
-        <input type="hidden" name="guid" ng-value="company.guid">
-        
         <div class="field-group col-3">
             <label for="company_name">Company Name</label>
             <input id="company_name" type="text" ng-model="company.name" name="name" required ng-minlength="2" ng-maxlength="50" />

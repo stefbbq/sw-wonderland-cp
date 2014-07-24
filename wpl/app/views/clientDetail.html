@@ -9,13 +9,14 @@
       {{clientDetailService.clientDetails.phone2 | tel}}
     </p>
     <button id="edit_client_btn" ng-click="editClient();" >Edit</button>
+    <button id="edit_client_btn" ng-click="changeActiveStatus();" >{{activeStatusLabel}}</button>
     
   </section>
     
     <section id="users">
       <h3>Client Users</h3>
       <div class="util">
-        <button id="add_user_btn">Create New User</button>
+        <button id="add_user_btn" ng-click="addUser();">Create New User</button>
         <form ng-controller="UserSearchCtrl" class="search" ng-submit="doSearch()">
           <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
           <input type="submit" value="Search">

@@ -15,11 +15,34 @@ class Database {
     public $db;
 
     public function __construct() {
-        $dbServer = '192.186.249.99';
-        $database = 'wonderlandee';
-        $username = 'wonder_db';
-        $password = 'W)ND#R_db';
-
+      //var_dump($_SERVER['HTTP_HOST']);
+      
+      $dbServer = '';
+      $database = '';
+      $username = '';
+      $password = '';
+      
+      switch ($_SERVER['HTTP_HOST']) {
+        case 'wonderland-cp.stagebot.net':
+          $dbServer = 'external-db.s192129.gridserver.com';
+          $database = 'db192129_wonderland_cp';
+          $username = 'db192129';
+          $password = 'St3@myr0b0t5';         
+          break;
+        case 'localhost:81':
+          $dbServer = '192.186.249.99';
+          $database = 'wonderlandee';
+          $username = 'wonder_db';
+          $password = 'W)ND#R_db';
+      }
+      
+      /*
+        $dbServer = 'external-db.s192129.gridserver.com';
+        $database = 'db192129_wonderland_cp';
+        $username = 'db192129';
+        $password = 'St3@myr0b0t5';
+      */
+        
         $this->db = new PDO("mysql:host={$dbServer};dbname={$database}", $username, $password);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
@@ -28,7 +51,82 @@ class Database {
         $this->db = null;
     }
 
-    public function select($table, $select, $where=NULL, $start=NULL, $pageSize=NULL){
+    public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL){
+        $cols = $conditions = '';
+        $return = array();
+        $i=0;
+        foreach($select as $col => $data){
+            if($i==0){
+                $cols .= $data;
+            }else{
+                $cols .= ','.$data;
+            }
+            $i++;
+        }
+        $i=0;
+        $queryString = '';
+        if($where){
+            foreach($where as $col => $data){
+              if ($i++ > 0) {
+                $conditions .= " AND ";
+              }
+              
+              if (is_bool($data) || is_int($data)) {
+                $conditions .= $col."=".$data."";
+              } else {
+                $conditions .= $col."='".$data."'";
+              }
+
+            }
+            $queryString = "SELECT ".$cols." FROM ".$table." WHERE ".$conditions;
+            //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
+        }else{
+          $queryString = "SELECT ".$cols." FROM ".$table;
+          //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
+        }
+        
+        $i=0;
+        if (!is_null($orderBy)) {
+          $queryString .= ' ORDER BY ';
+          foreach ($orderBy as $col => $data) {
+            if ($i++ == 0) {
+              $queryString .= $col . ' ' . $data;
+            } else {
+              $queryString .= ', ' . $col . ' ' . $data;
+            }
+          }
+        }
+        
+        if (!is_null($start)) {
+          $queryString .= ' LIMIT ' . $start . ',' . $pageSize;
+        }
+        
+        //var_dump($queryString);
+        
+        $query = $this->db->prepare($queryString);
+        
+        try {
+            $query->execute();
+            for($i=0; $row = $query->fetch(); $i++){
+                $return[$i] = array();
+                foreach($row as $key => $rowItem){
+                  if (!is_int($key)) {
+                    $return[$i][$key] = $rowItem;
+                  }
+                }
+            }
+            //var_dump($return);
+        }catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+        $query->closeCursor();
+
+        //var_dump($query);
+
+        return $return;
+    }
+
+    public function search($table, $select, $orderBy=NULL, $where=NULL, $whereAnd=NULL, $start=NULL, $pageSize=NULL){
         $cols = $conditions = '';
         $return = array();
         $i=0;
@@ -45,18 +143,43 @@ class Database {
         if($where){
             foreach($where as $col => $data){
                 if($i==0){
-                    $conditions .= $col." = '".$data."'";
+                    $conditions .= $col." LIKE '%".$data."%'";
                 }else{
-                    $conditions .= " AND ".$col." = '".$data."'";
+                    $conditions .= " OR ".$col." LIKE '%".$data."%'";
                 }
                 $i++;
             }
+            
+            /*
+             * Won't work properly where there is no $where defined.
+             * Should be ok, as we can assume there always will be.
+             */
+            if ($whereAnd) {
+              foreach($whereAnd as $col => $data){
+                  $conditions .= " AND ".$col." = '".$data."'";
+              }
+            }
+            
             $queryString = "SELECT ".$cols." FROM ".$table." WHERE ".$conditions;
+            //var_dump($queryString);
             //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
+            
         }else{
           $queryString = "SELECT ".$cols." FROM ".$table;
           //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
         }
+        
+        $i=0;
+        if (!is_null($orderBy)) {
+          $queryString .= ' ORDER BY ';
+          foreach ($orderBy as $col => $data) {
+            if ($i++ == 0) {
+              $queryString .= $col . ' ' . $data;
+            } else {
+              $queryString .= ', ' . $col . ' ' . $data;
+            }
+          }
+        }        
         
         if (!is_null($start)) {
           $queryString .= ' LIMIT ' . $start . ',' . $pageSize;
@@ -69,7 +192,7 @@ class Database {
             for($i=0; $row = $query->fetch(); $i++){
                 $return[$i] = array();
                 foreach($row as $key => $rowItem){
-                    $return[$i][$key] = $rowItem;
+                  $return[$i][$key] = $rowItem;
                 }
             }
         }catch (\PDOException $e) {
@@ -80,20 +203,25 @@ class Database {
         //var_dump($query);
 
         return $return;
-    }
-
+    }    
+    
     public function add($table, $fieldNames){
         $cols = $values = '';
         $i=0;
         foreach($fieldNames as $col => $data){
-            if($i==0){
-                $cols .= $col;
-                $values .= "'$data'";
-            }else{
-                $cols .= ','.$col;
-                $values .= ','."'$data'";
-            }
-            $i++;
+          if($i++>0){
+            $cols .= ",";
+            $values .= ",";
+          }
+
+          $cols .= $col;
+
+          if (is_bool($data) || is_int($data)) {
+            $values .= $data;
+          } else {
+            $values .= "'$data'";
+          }
+
         }
         try {
             $query = $this->db->prepare("INSERT INTO ".$table." (".$cols.") VALUES (".$values.")");
@@ -110,25 +238,44 @@ class Database {
         $condition = '';
         $cols = '';
         $i=0;
+        
+        
         foreach($insert as $col => $data){
-            if($i==0){
-                $cols .= "`".$col."`='".$data."'";
-            }else{
-                $cols .= ",`".$col."`='".$data."'";
+            if($i++>0){
+              $cols .= ", ";
             }
-            $i++;
+
+            if (is_bool($data) || is_int($data)) {
+              if (is_bool($data)) $data = $data ? 'true' : 'false';
+              $cols .= $col."=".$data."";
+            } else {
+              $cols .= $col."='".$data."'";
+            }
         }
         $c=0;
         foreach($where as $col => $value){
-            if($c==0){
-                $condition = $col.'='.$value;
-            }else{
-                $condition = " AND ".$col.'='.$value;
-            }
+          if ($c++ > 0) {
+            $condition .= " AND ";
+          }
+          
+          if (is_bool($value) || is_int($value)) {
+            $condition .= $col."=".$value."";
+          } else {
+            $condition .= $col."='".$value."'";
+          }
+
         }
-        $query = "UPDATE `".$table."` SET ".$cols." WHERE ".$condition;
-        $result = $this->db->query($query);
-        $result->closeCursor();
+        $sql = "UPDATE ".$table." SET ".$cols." WHERE ".$condition;
+        //var_dump($sql);
+        try {
+            $query = $this->db->prepare($sql);
+            $result = $query->execute();
+            $query->closeCursor();
+            return $query->rowCount();
+        }catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 
     public function delete($tablename, $where){

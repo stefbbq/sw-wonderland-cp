@@ -11,12 +11,44 @@ angular.module('wplAdmin')
     $scope.clientDetailService = clientDetailService;
     $scope.clientDetails = clientDetailService.clientDetails;
     
+    var clientID = $location.search().id;
+    var clientActive;
+    
     // load detail
-    clientDetailService.loadDetails($location.search().id);
+    clientDetailService.loadDetails(clientID, function(data) {
+      setClientActiveStatus(data.active == '1');
+    });
+    
+    function setClientActiveStatus(value) {
+      clientActive = value;
+      $scope.activeStatusLabel = clientActive ? "Deactivate Client" : "Reactivate Client";
+    }
     
     // edit button
     $scope.editClient = function() {
-      $location.path('editClient').search({id:$location.search().id});
+      $location.path('editClient').search({id:clientID});
+    };
+    
+    // active status button
+    $scope.changeActiveStatus = function() {
+      if (clientActive) {
+        if (confirm('Are you sure you want to deactivate this client?')) {
+          clientDetailService.deactivate(clientID, function() {
+            setClientActiveStatus(false);
+            alert('Client deactivated');
+          });
+        }
+      } else {
+        clientDetailService.reactivate(clientID, function() {
+          setClientActiveStatus(true);
+          alert('Client reactivated');
+        });
+      }
+    }
+    
+    // add user
+    $scope.addUser = function() {
+      $location.path('addClientUser').search({companyID:clientID});
     };
     
     

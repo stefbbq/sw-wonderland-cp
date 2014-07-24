@@ -12,40 +12,76 @@ $result = new Result();
 
 
 switch ($action) {
-    case 'add':
+    case 'addClient':
         $result = $manager->saveClient(
                 getValue('name'), 
                 getValue('address'), 
                 getValue('city'), 
                 getValue('province'), 
-                getValue('postalCode'), 
+                getValue('postal_code'), 
                 getValue('email'), 
-                getValue('phone1'), 
+                getValue('phone'), 
                 getValue('phone2'), 
-                getValue('repEmail')
+                getValue('wplEmail')
                 );
         break;
-    case 'update':
+    case 'updateClient':
         $result = $manager->saveClient(
                 getValue('name'), 
                 getValue('address'), 
                 getValue('city'), 
                 getValue('province'), 
-                getValue('postalCode'), 
+                getValue('postal_code'), 
                 getValue('email'), 
-                getValue('phone1'), 
+                getValue('phone'), 
                 getValue('phone2'), 
-                getValue('repEmail'),
-                getValue('id')
+                getValue('wplEmail'),
+                getValue('guid')
                 );
         break;
+    case 'deactivateClient':
+      $result = $manager->deactivateClient(getValue('guid'));
+      break;
+    case 'reactivateClient':
+      $result = $manager->reactivateClient(getValue('guid'));
+      break;
     case 'clientList':
         $result = $manager->getClientList(getValue('s'), getValue('c'));
         break;
-    case 'clientCount':
-        $result = $manager->getClientRecordCount();
+    case 'clientSearch':
+        $result = $manager->searchClients(getValue('q'), getValue('s'), getValue('c'));
         break;
-      
+    case 'clientDetail':
+        $result = $manager->getClientDetail(getValue('q'));
+        break;
+     case 'addClientUser':
+        $result = $manager->saveClient(
+                getValue('name'), 
+                getValue('address'), 
+                getValue('city'), 
+                getValue('province'), 
+                getValue('postal_code'), 
+                getValue('email'), 
+                getValue('phone'), 
+                getValue('phone2'), 
+                getValue('wplEmail')
+                );
+        break;
+    case 'updateClientUser':
+        $result = $manager->saveClient(
+                getValue('name'), 
+                getValue('address'), 
+                getValue('city'), 
+                getValue('province'), 
+                getValue('postal_code'), 
+                getValue('email'), 
+                getValue('phone'), 
+                getValue('phone2'), 
+                getValue('wplEmail'),
+                getValue('guid')
+                );
+        break;
+     
     default : 
         $result->success = false;
         $result->message = 'no action';

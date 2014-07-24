@@ -15,7 +15,7 @@ $tableWidth:600px;
 
 
 .spa {
-  border:1px solid green;
+  //border:1px solid green;
   max-width:1024px;
   margin:0 auto;
     
@@ -76,6 +76,10 @@ $tableWidth:600px;
     $columnSpace:10px;
     $columnWidth:180px;
     $columnMysteryPadding:4px;
+    
+    .buttons {
+      margin-top:20px;
+    }
     
     .field-group {
         label {
@@ -184,3 +188,9 @@ $tableWidth:600px;
     }
     
 }
+
+.clearfix:after { content: "\00A0"; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}
+.clearfix{ display: inline-block;}
+html[xmlns] .clearfix { display: block;}
+* html .clearfix{ height: 1%;}
+.clearfix {display: block}

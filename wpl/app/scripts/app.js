@@ -32,6 +32,14 @@ angular
         templateUrl: basePath + 'views/editClient' + viewExt,
         controller: 'EditClientCtrl'
       })
+      .when('/addClientUser', {
+        templateUrl: basePath + 'views/editClientUser' + viewExt,
+        controller: 'EditClientUserCtrl'
+      })
+      .when('/editClientUser', {
+        templateUrl: basePath + 'views/editClientUser' + viewExt,
+        controller: 'EditClientUserCtrl'
+      })
       .when('/clientDetail', {
         templateUrl: basePath + 'views/clientDetail' + viewExt,
         controller: 'ClientDetailCtrl'
@@ -40,8 +48,23 @@ angular
         redirectTo: '/listClients'
       });
   })
-  .run(function ($rootScope) {
-    $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
+  .run(function ($rootScope, $location) {
+    //console.log($location.host());
+    
+    // web service
+    var forceStaging = false;
+    
+    switch ($location.host()) {
+      case 'wonderland-cp.stagebot.net':
+        $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+        break;
+      case 'localhost':
+        $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
+        if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+        break;
+    }
+
+    // settings
     $rootScope.clientList = {
       pageSize:3
     };
@@ -151,6 +174,75 @@ angular
     });
   }
   
+  function deactivateClient(id, callback) {
+    var args = {action:'deactivateClient', guid:id};
+    $http.jsonp($rootScope.wsURL, 
+    {
+      params:args,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+        if (callback) callback();
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
+  function reactivateClient(id, callback) {
+    var args = {action:'reactivateClient', guid:id};
+    $http.jsonp($rootScope.wsURL,
+    {
+      params:args,
+      header: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+      if (callback) callback();
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
+  function loadClientUsers(start) {
+    
+  }
+  
+  function loadCollateral(start) {
+    
+  }
+  
+  return {
+    loadDetails:loadDetails,
+    loadClientUsers:loadClientUsers,
+    loadCollateral:loadCollateral,
+    deactivate:deactivateClient,
+    reactivate:reactivateClient,
+    clientDetails:clientDetails,
+    users:users,
+    collateral:collateral
+  };
+    
+}])
+.factory('clientUserService', ['$http', '$rootScope', function($http, $rootScope) {
+  
+  var clientDetails = {};
+  var users = [];
+  var collateral = [];
+  
+  function loadDetails(id, callback) {
+    var args = {action:'clientDetail', q:id};
+    
+    $http.jsonp($rootScope.wsURL, 
+    {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+        angular.copy(result.data, clientDetails);
+        if (callback) {
+          callback(clientDetails);
+        }
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
   function loadClientUsers(start) {
     
   }
@@ -168,7 +260,23 @@ angular
     collateral:collateral
   };
     
-}]);
+}])
 
-  
-;
+/*
+ * Filters
+ */
+.filter('tel', function() {
+  return function(tel) {
+    if (!tel) { return ''; }
+    
+    var value = tel.toString().trim();
+    var areaCode = value.substr(0, 3);
+    var part1 = value.substr(2, 3);
+    var part2 = value.substr(6);
+    
+    return '(' + areaCode + ') ' + part1 + '-' + part2;
+    
+  };
+});
+
+ 
