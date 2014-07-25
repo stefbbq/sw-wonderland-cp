@@ -1,49 +1,53 @@
 <div class="client_detail">
   <section id="client_detail">
     <h1>Client Detail</h1>
-    <h2>{{clientDetailService.clientDetails.name}}</h2>
-    <p>{{clientDetailService.clientDetails.address}}<br/>
-      {{clientDetailService.clientDetails.city}}, {{clientDetailService.clientDetails.province}}<br/>
-      {{clientDetailService.clientDetails.postal_code}}<br/>
-      {{clientDetailService.clientDetails.phone | tel}}<br/>
-      {{clientDetailService.clientDetails.phone2 | tel}}
+    <h2>{{clientService.details.name}}</h2>
+    <p>{{clientService.details.address}}<br/>
+      {{clientService.details.city}}, {{clientService.details.province}}<br/>
+      {{clientService.details.postal_code}}<br/>
+      {{clientService.details.phone | tel}}<br/>
+      {{clientService.details.phone2 | tel}}
     </p>
     <button id="edit_client_btn" ng-click="editClient();" >Edit</button>
     <button id="edit_client_btn" ng-click="changeActiveStatus();" >{{activeStatusLabel}}</button>
     
   </section>
     
-    <section id="users">
-      <h3>Client Users</h3>
-      <div class="util">
-        <button id="add_user_btn" ng-click="addUser();">Create New User</button>
-        <form ng-controller="UserSearchCtrl" class="search" ng-submit="doSearch()">
-          <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
-          <input type="submit" value="Search">
-        </form>
-      </div>
-      <table>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Confirmation Email</th>
-          <th>Phone</th>
-          <th>Phone2</th>
-        </tr>
-        
-        <tr>
-          <td>First Name</td>
-          <td>Last Name</td>
-          <td>Email</td>
-          <td>Confirmation Email</td>
-          <td>Phone</td>
-          <td>Phone2</td>
-        </tr>
-        
-      </table>
-    </section>
-    
+  <section id="users">
+    <h3>Client Users</h3>
+    <div class="util">
+      <button id="add_user_btn" ng-click="addUser();">Create New User</button>
+      <!--
+      ~§~ Shouldn't need a search; there should only be a few client users.
+
+      <form ng-controller="UserSearchCtrl" class="search" ng-submit="doSearch()">
+        <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+        <input type="submit" value="Search">
+      </form>
+      -->
+    </div>
+    <table class="list selectable">
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Confirmation Email</th>
+        <th>Phone</th>
+        <th>Phone2</th>
+      </tr>
+
+      <tr class="record" ng-repeat="user in clientUserService.list" ng-click="editUser(user.guid);">
+        <td>{{user.first_name}}</td>
+        <td>{{user.last_name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.confirmation_email}}</td>
+        <td>{{user.phone | tel}}</td>
+        <td>{{user.phone2 | tel}}</td>
+      </tr>
+
+    </table>
+  </section>
+
     <section id="collateral">
       <h3>Collateral</h3>
       <div class="util">

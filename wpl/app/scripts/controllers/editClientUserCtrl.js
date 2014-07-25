@@ -13,7 +13,7 @@ angular.module('wplAdmin')
     var addMode;
     var action;
     var companyID = $location.search().companyID;
-    console.log(companyID);
+    //console.log(companyID);
     
     $scope.form = {};
     $scope.user = {};
@@ -44,9 +44,10 @@ angular.module('wplAdmin')
         });
       }
       
-      $scope.save = function(company) {
-        var params = $rootScope.getFormVars(company);
-        params.action = $scope.form.action;
+      $scope.save = function(user) {
+        var params = angular.copy($scope.user);
+        params.action = action;
+        params.company_id = companyID;
         
         $http.jsonp($rootScope.wsURL, 
         {
@@ -57,11 +58,12 @@ angular.module('wplAdmin')
           console.log('success', data);
           var msg;
           if (addMode) {
-            msg = 'company added';
+            msg = 'user added';
           } else {
-            msg = 'company updated';
+            msg = 'user updated';
           }
           alert(msg);
+          $location.path('clientDetail').search({id:companyID});
         })          
         .error (function(data) {
           console.log('error', data);

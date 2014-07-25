@@ -7,17 +7,30 @@ angular.module('wplAdmin')
 /*
  * Client Detail
  */
-.controller('ClientDetailCtrl', ['$scope', '$location', 'clientDetailService', function($scope, $location, clientDetailService) {
-    $scope.clientDetailService = clientDetailService;
-    $scope.clientDetails = clientDetailService.clientDetails;
+.controller('ClientDetailCtrl', ['$scope', '$location', 'clientService', 'clientUserService', function($scope, $location, clientService, clientUserService) {
+    $scope.clientService = clientService;
+    $scope.clientUserService = clientUserService;
     
+    setClientActiveStatus(true);
     var clientID = $location.search().id;
     var clientActive;
     
     // load detail
-    clientDetailService.loadDetails(clientID, function(data) {
-      setClientActiveStatus(data.active == '1');
+    $scope.clientDetails = clientService.clientDetails;
+    clientService.loadDetails(clientID, function(data) {
+      setClientActiveStatus(data.active === '1');
     });
+    
+    // Load user list
+    $scope.users = clientUserService.users;
+    clientUserService.loadList(clientID, function() {
+      
+    });
+    
+    $scope.editUser = function(id) {
+      alert(id);
+    };
+    
     
     function setClientActiveStatus(value) {
       clientActive = value;
@@ -33,13 +46,13 @@ angular.module('wplAdmin')
     $scope.changeActiveStatus = function() {
       if (clientActive) {
         if (confirm('Are you sure you want to deactivate this client?')) {
-          clientDetailService.deactivate(clientID, function() {
+          clientService.deactivate(clientID, function() {
             setClientActiveStatus(false);
             alert('Client deactivated');
           });
         }
       } else {
-        clientDetailService.reactivate(clientID, function() {
+        clientService.reactivate(clientID, function() {
           setClientActiveStatus(true);
           alert('Client reactivated');
         });

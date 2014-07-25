@@ -13,10 +13,10 @@ angular.module('wplAdmin')
       }
     };
 }])
-.controller('ClientListCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientListService', function ($scope, $http, $location, $rootScope, clientListService) {
+.controller('ClientListCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientService', function ($scope, $http, $location, $rootScope, clientService) {
     $scope.companies = [];
-    $scope.clientListService = clientListService;
-    $scope.clientListService.list = clientListService.list;
+    $scope.clientService = clientService;
+    $scope.clientService.list = clientService.list;
     /*
      * Load Client Page
      */
@@ -30,13 +30,13 @@ angular.module('wplAdmin')
     });
     
     function loadClientPage(startPage) {
-      $scope.clientListService.loadList(startPage, function(count) {
+      $scope.clientService.loadList(startPage, function(count) {
         $scope.$broadcast('clientResultsLoaded', count);
       });
     }
     
     function searchClients(startPage, searchString) {
-      $scope.clientListService.search(startPage, searchString, function(count) {
+      $scope.clientService.search(startPage, searchString, function(count) {
         $scope.$broadcast('clientResultsLoaded', count);
       });
     }
@@ -110,71 +110,3 @@ angular.module('wplAdmin')
     }
   });
 
-/*
- * Directives
- */
-angular.module('wplAdmin')
-  .directive('pagerComplete', function($timeout) {
-      return {
-        link: function(scope, element, attr) {
-          if (scope.$last === true) {
-            $timeout(function() {
-              scope.$emit('pagerComplete');
-            });
-          }
-        }
-      };
-});
-
-/*
- * Factories
- */
-angular.module('wplAdmin')
-    .factory('clientListService', function($http, $rootScope) {
-      var list = [];
-      var pageSize = $rootScope.clientList.pageSize;
-      
-      function loadList(startPage, callback) {
-        var args = {action:'clientList', s:startPage, c:pageSize};
-        
-        $http.jsonp($rootScope.wsURL, 
-        {
-            params:args,
-            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-        .success(function(result) {
-          angular.copy(result.data.list, list);
-          var count = result.data.count;
-          callback(count);
-        })          
-        .error (function(result) {
-            console.log('error', result);
-        });        
-      }
-
-      function searchList(startPage, searchString, callback) {
-        var args = {action:'clientSearch', s:startPage, c:pageSize, q:searchString};
-        
-        $http.jsonp($rootScope.wsURL, 
-        {
-            params:args,
-            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-        .success(function(result) {
-          angular.copy(result.data.list, list);
-          var count = result.data.count;
-          callback(count);
-        })          
-        .error (function(result) {
-            console.log('error', result);
-        });         
-      }
-
-      return {
-        list:list,
-        loadList:loadList,
-        search:searchList
-      };
-
-      
-  });

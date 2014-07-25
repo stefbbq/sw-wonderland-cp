@@ -165,7 +165,7 @@ $tableWidth:600px;
         }
         
         &.selectable {
-          tr {
+          tr.record {
             cursor:pointer;
              &:hover {
               background-color:hsl(60, 100, 80);

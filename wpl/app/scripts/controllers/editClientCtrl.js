@@ -9,7 +9,7 @@
  */
 // ['ui.mask']
 angular.module('wplAdmin')
-  .controller('EditClientCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientDetailService', function ($scope, $http, $location, $rootScope, clientDetailService) {
+  .controller('EditClientCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientService', function ($scope, $http, $location, $rootScope, clientService) {
     var addMode;
     var action;
     
@@ -29,7 +29,7 @@ angular.module('wplAdmin')
               addMode = false;
               $scope.title = 'Edit Client';
               action = 'updateClient'; 
-              $scope.clientDetailService = clientDetailService;
+              $scope.clientService = clientService;
               loadClientDetails();
               break;
         }
@@ -37,22 +37,14 @@ angular.module('wplAdmin')
       
       function loadClientDetails() {
         var id = $location.search().id;
-        $scope.clientDetailService.loadDetails(id, function(details) {
+        $scope.clientService.loadDetails(id, function(details) {
           angular.copy(details, $scope.company);
         });
       }
       
-      $scope.save = function(company) {
-        var params = $rootScope.getFormVars(company);
-        params.action = action;
-        
-        $http.jsonp($rootScope.wsURL, 
-        {
-          params : params,
-          headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-        .success(function(data) {
-          console.log('success', data);
+      $scope.save = function(client) {
+        clientService.save(client, action,
+        function success() {
           var msg;
           if (addMode) {
             msg = 'company added';
@@ -61,18 +53,9 @@ angular.module('wplAdmin')
           } else {
             msg = 'company updated';
             alert(msg);
-          }
-        })          
-        .error (function(data) {
-          console.log('error', data);
+            $location.path('/listClients');
+          }          
         });
-
-
-
-
-
-
-        //$scope.master = angular.copy(company);
       };
       
       $scope.cancel = function() {
@@ -112,9 +95,5 @@ angular.module('wplAdmin')
       }
       
       construct();
-  }])
-  
-
-  
-  ;
+  }]);
 
