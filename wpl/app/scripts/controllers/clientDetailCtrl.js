@@ -11,24 +11,27 @@ angular.module('wplAdmin')
     $scope.clientService = clientService;
     $scope.clientUserService = clientUserService;
     
-    setClientActiveStatus(true);
-    var clientID = $location.search().id;
+    function construct() {
+      setClientActiveStatus(true);
+    }
+    
+    var id = $location.search().id;
     var clientActive;
     
     // load detail
     $scope.clientDetails = clientService.clientDetails;
-    clientService.loadDetails(clientID, function(data) {
+    clientService.loadDetails(id, function(data) {
       setClientActiveStatus(data.active === '1');
     });
     
     // Load user list
     $scope.users = clientUserService.users;
-    clientUserService.loadList(clientID, function() {
+    clientUserService.loadList(id, function() {
       
     });
     
-    $scope.editUser = function(id) {
-      alert(id);
+    $scope.showClientUser = function(id) {
+      $location.path('/clientUserDetail').search({id:id});
     };
     
     
@@ -39,33 +42,33 @@ angular.module('wplAdmin')
     
     // edit button
     $scope.editClient = function() {
-      $location.path('editClient').search({id:clientID});
+      $location.path('editClient').search({id:id});
     };
     
     // active status button
     $scope.changeActiveStatus = function() {
       if (clientActive) {
         if (confirm('Are you sure you want to deactivate this client?')) {
-          clientService.deactivate(clientID, function() {
+          clientService.deactivate(id, function() {
             setClientActiveStatus(false);
             alert('Client deactivated');
           });
         }
       } else {
-        clientService.reactivate(clientID, function() {
+        clientService.reactivate(id, function() {
           setClientActiveStatus(true);
           alert('Client reactivated');
         });
       }
-    }
+    };
     
     // add user
     $scope.addUser = function() {
-      $location.path('addClientUser').search({companyID:clientID});
+      $location.path('addClientUser').search({companyID:id});
     };
     
     
-    
+    construct();
 }])
 .controller('UserSearchCtrl', ['$scope', function($scope) {
     var a = $scope;

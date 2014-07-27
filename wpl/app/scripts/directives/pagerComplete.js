@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Dispatches an event when the pager widget has finished rendering.
  * This is used so that we can apply stying through jquery.

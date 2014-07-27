@@ -1,5 +1,4 @@
 <?php
-
 namespace wpl\wplPortal;
 
 use wpl\database\Database;
@@ -42,6 +41,7 @@ class AdminManager {
       $result->data = $client;
 
       if ($newClient) {
+        $client->active = '1';
         $dbResult = $this->db->add('clients', $client);
         if ($dbResult) {
           $result->success = true;
@@ -77,7 +77,7 @@ class AdminManager {
   public function getClientList($startRecord, $pageSize) {
       $result = new Result();
 
-      $sql = 'select count(*) from clients';
+      $sql = "select count(*) from clients where active = '1'";
       $dbResult = $this->db->db->prepare($sql);
       $dbResult->execute();
       $recordCount = $dbResult->fetchColumn();        
@@ -134,21 +134,21 @@ class AdminManager {
    * Client Detail
    */
   public function getClientDetail($guid) {
-     $result = new Result();
+    $result = new Result();
 
-      $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
 
-      $where = array(
-          'guid' => $guid
-      );
-      $orderBy = null;
-      $dataset = $this->db->select('clients', $select, $orderBy, $where);
+    $where = array(
+        'guid' => $guid
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('clients', $select, $orderBy, $where);
 
-      $result->data = $dataset[0];
+    $result->data = $dataset[0];
 
-      $result->message = 'client detail';
+    $result->message = 'client detail';
 
-      return $result;      
+    return $result;      
   }
 
   /*
@@ -183,17 +183,16 @@ class AdminManager {
   /*
    * Client User
    */
-  public function saveClientUser($firstName, $lastName, $email, $comfirmEmail, $phone, $phone2, $companyID, $id = null) {
+  public function saveClientUser($firstName, $lastName, $email, $confirmEmail, $phone, $phone2, $companyID, $id = null) {
     $result = new Result();
 
     $newUser = $id == null;
 
     $user = new ClientUser();
-    $user->companyID = $companyID;
-    $user->firstName = $firstName;
-    $user->lastName = $lastName;
+    $user->first_name = $firstName;
+    $user->last_name = $lastName;
     $user->email = $email;
-    $user->confirmEmail = $confirmEmail;
+    $user->confirmation_email = $confirmEmail;
     $user->phone = $phone;
     $user->phone2 = $phone2;
     $user->guid = $newUser ? $this->db->generateGUID() : $id;
@@ -201,7 +200,10 @@ class AdminManager {
     $result->data = $user;
 
     if ($newUser) {
-      $dbResult = $this->db->add('clients', $user);
+      $clientKey = $this->db->getCompanyIDFromGUID($companyID);
+      $user->client_id = $clientKey;
+      
+      $dbResult = $this->db->add('clientUsers', $user);
       if ($dbResult) {
         $result->success = true;
         $result->message = "Client added.";
@@ -215,7 +217,7 @@ class AdminManager {
       $where = array(
           'guid' => $id
       );
-      $dbResult = $this->db->update('clients', $user->getUpdateModel(), $where);
+      $dbResult = $this->db->update('clientUsers', $user->getUpdateModel(), $where);
       if ($dbResult) {
         $result->success = true;
         $result->message = "Client updated.";
@@ -229,5 +231,97 @@ class AdminManager {
 
     return $result;
   }
+  
+  /*
+   * List Client Users
+   */
+  public function getClientUserList($clientID) {
+      $result = new Result();
+      
+      $clientKey = $this->db->getCompanyIDFromGUID($clientID);
 
+      $select = array('first_name', 'last_name', 'email', 'confirmation_email', 'phone', 'phone2', 'guid');
+
+      $orderBy = array('last_name' => 'ASC', 'first_name' => 'ASC');
+      $where = array('client_id' => $clientKey, 'active' => '1');
+      $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
+
+      $result->data = array();
+
+      if ($dataset) {
+        $result->success = true;
+        $result->message = "Client User List";
+        $result->code = 200;
+        $result->data['list'] = $dataset;
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->data['list'] = array();
+        $result->message = "No client users.";
+      }
+
+      return $result;
+  }
+  
+  public function loadClientUserDetails($guid) {
+    $result = new Result();
+    $result->data = array();
+
+    // get user detail
+    $select = array('guid', 'first_name', 'last_name', 'email', 'confirmation_email', 'phone', 'phone2', 'active', 'password_set', 'client_id');
+    $where = array(
+        'guid' => $guid
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
+    
+    $result->data['user'] = $dataset[0];
+
+    // client info
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $where = array(
+        'id' => $dataset[0]['client_id']
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('clients', $select, $orderBy, $where);
+    $result->data['company'] = $dataset[0];
+
+    $result->message = 'client user detail';
+
+    return $result;      
+  }
+  
+  /*
+   * Deactivate Client
+   */
+  public function deactivateClientUser($guid) {
+    return $this->setClientUserActive($guid, '0');
+  }
+  
+  public function reactivateClientUser($guid) {
+    return $this->setClientUserActive($guid, '1');
+  }
+  
+  private function setClientUserActive($guid, $active) {
+    $insert = array('active' => $active == '1');
+    $where = array('guid' => $guid);
+    $dbResult = $this->db->update('clientUsers', $insert, $where);
+    if ($dbResult) {
+      $result->success = true;
+      $result->message = $active ? "User reactivated." : "User deactivated.";
+      $result->code = 200;
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->message = $active ? "User reactivation failed." : "User deactivation failed.";
+    }    
+    
+    return $result;
+  }
+  
+  /*
+   * Admin Users
+   */
+  
+  
 }

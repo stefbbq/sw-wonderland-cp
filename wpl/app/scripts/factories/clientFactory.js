@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('wplAdmin')
 .factory('clientService', ['$http', '$rootScope', function($http, $rootScope) {
   var pageSize = $rootScope.clientList.pageSize;

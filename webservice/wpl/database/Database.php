@@ -319,6 +319,22 @@ class Database {
         );
     }
 
+    public function getCompanyIDFromGUID($guid) {
+      $return = -1;
+      if (strlen($guid) == 36) {
+        $sql = "SELECT id FROM clients WHERE guid = '$guid'";
+        $query = $this->db->prepare($sql);
+        try {
+            $query->execute();
+            $row = $query->fetch();
+            $return = $row[0];
+        }catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+        $query->closeCursor();
+      }
+      return $return;
+    }
 
     /****************************************************************************************************
      * Get Member ID from Token

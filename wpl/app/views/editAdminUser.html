@@ -1,0 +1,42 @@
+<div class="edit_admin_user">
+
+    <h1>{{title}}</h1>
+
+    <form id="edit_form" novalidate name="form">
+        <div class="fields-row">
+          <div class="field-group col-2">
+              <label for="last_name">User Name</label>
+              <input id="last_name" type="text" ng-model="user.last_name" required ng-minlength="2" ng-maxlength="45" />
+          </div>
+          
+          <div class="field-group col-2">
+              <label for="email">Email</label>
+              <input id="email" type="email" ng-model="user.email" required>
+          </div>
+        </div>
+
+        <div class="fields-row">
+          <div class="field-group col-2">
+              <label for="password">Password</label>
+              <input id="password" type="password" ng-model="user.password" required name="password">
+          </div>        
+
+          <div class="field-group col-2">
+              <label for="password2">Password</label>
+              <input id="password2" type="password" ng-model="user.password2" required match="user.password" name="myConfirmField">
+          </div>        
+        </div>
+ 
+       <div ng-show="form.myConfirmField.$error.match">Fields do not match!</div>
+       
+        <div class="buttons">
+            <button ng-click="cancel()">Cancel</button>
+            <button ng-click="save(user)" ng-disabled="form.$invalid" >Save</button>
+            <!-- button ng-click="autofill()">Auto Fill</button -->
+        </div>
+    </form>
+    <!--
+    <pre>form = {{company | json}}</pre>
+    -->
+    
+</div>

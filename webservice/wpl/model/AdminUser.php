@@ -13,9 +13,9 @@ namespace wpl\model;
  *
  * @author Scott David Garson
  */
-class ClientUser {
+class AdminUser {
 
-  public $client_id, $first_name, $last_name, $email, $confirmation_email, $phone, $phone2, $guid;
+  public $username, $email, $password, $guid;
 
   public function __construct() {
 
@@ -23,12 +23,9 @@ class ClientUser {
 
   public function getUpdateModel() {
     return array(
-      'first_name' => $this->first_name,
-      'last_name' => $this->last_name,
+      'username' => $this->$username,
       'email' => $this->email,
-      'confirmation_email' => $this->confirmation_email,
-      'phone' => $this->phone,
-      'phone2' => $this->phone2
+      'password' => $this->password,
     );
   }  
 }

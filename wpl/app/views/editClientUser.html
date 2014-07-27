@@ -1,8 +1,8 @@
-<div class="add_client">
+<div class="edit_client_user">
 
     <h1>{{title}}</h1>
 
-    <form id="company_form" name="newCompany" novalidate>
+    <form id="edit_form" novalidate>
         <div class="fields-row">
           <div class="field-group col-2">
               <label for="first_name">First Name</label>
@@ -23,7 +23,7 @@
 
           <div class="field-group col-2">
               <label for="confirm_email">Order Confirmation Email</label>
-              <input id="confirm_email" type="email" ng-model="user.confirm_email" required>
+              <input id="confirm_email" type="email" ng-model="user.confirmation_email" required>
           </div>        
         </div>
 
@@ -42,7 +42,7 @@
         <div class="buttons">
             <button ng-click="cancel()">Cancel</button>
             <button ng-click="save(user)">Save</button>
-            <button ng-click="autofill()">Auto Fill</button>
+            <!-- button ng-click="autofill()">Auto Fill</button -->
         </div>
     </form>
     <!--

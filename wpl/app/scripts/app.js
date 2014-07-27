@@ -44,6 +44,18 @@ angular
         templateUrl: basePath + 'views/clientDetail' + viewExt,
         controller: 'ClientDetailCtrl'
       })
+      .when('/clientUserDetail', {
+        templateUrl: basePath + 'views/clientUserDetail' + viewExt,
+        controller: 'ClientUserDetailCtrl'
+      })
+      .when('/addAdminUser', {
+        templateUrl: basePath + 'views/editAdminUser' + viewExt,
+        controller: 'EditAdminUserCtrl'
+      })
+      .when('/editAdminUser', {
+        templateUrl: basePath + 'views/editAdminUser' + viewExt,
+        controller: 'EditAdminUserCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });
@@ -64,6 +76,8 @@ angular
         break;
     }
 
+    $rootScope.jsonHeader = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
     // settings
     $rootScope.clientList = {
       pageSize:3
@@ -80,53 +94,7 @@ angular
     };
     
   })
-  .directive('capitalizeFirst', function() {
-      return {
-          require: 'ngModel',
-          link:function(scope, element, attrs, modelCtrl) {
-              var capitalize = function(inputValue) {
-                  if (inputValue !== undefined) {
-                    var capitalized = inputValue.charAt(0).toUpperCase() + inputValue.substr(1);
-                    if (capitalized !== inputValue) {
-                        modelCtrl.$setViewValue(capitalized);
-                        modelCtrl.$render();
-                    }
-                    return capitalized;
-                } else {
-                    return '';
-                }
-              };
-              
-              modelCtrl.$parsers.push(capitalize);
-              capitalize(scope[attrs.ngModel]); // capitalize initial value
-          }
-          
-      };
-  })
-  .directive('capitalize', function() {
-      return {
-          require: 'ngModel',
-          link:function(scope, element, attrs, modelCtrl) {
-              var capitalize = function(inputValue) {
-                  if (inputValue !== undefined) {
-
-                    var capitalized = inputValue.toUpperCase();
-                    if (capitalized !== inputValue) {
-                        modelCtrl.$setViewValue(capitalized);
-                        modelCtrl.$render();
-                    }
-                    return capitalized;
-                } else {
-                    return '';
-                }
-              };
-              
-              modelCtrl.$parsers.push(capitalize);
-              capitalize(scope[attrs.ngModel]); // capitalize initial value
-          }
-          
-      };
-  })
+  
   .controller('MenuController', ['$scope', function($scope) {
           
     /*

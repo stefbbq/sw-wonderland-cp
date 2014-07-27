@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('wplAdmin')
-  .controller('EditClientUserCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientUserService', function ($scope, $http, $location, $rootScope, clientUserService) {
+  .controller('EditAdminUserCtrl', ['$scope', '$http', '$location', '$rootScope', 'adminUserService', function ($scope, $http, $location, $rootScope, adminUserService) {
     var addMode;
     var action;
     var companyID = $location.search().companyID;
@@ -14,33 +14,36 @@ angular.module('wplAdmin')
         initializeTestData();
         
         switch ($location.path()) {
-            case '/addClientUser': 
+            case '/addAdminUser': 
               addMode = true;
-              $scope.title = 'Add New Client User';
-              action = 'addClientUser'; 
+              $scope.title = 'Add New Admin User';
+              action = 'addWPLUser'; 
               break;
-            case '/editClientUser': 
+            case '/editAdminUser': 
               addMode = false;
-              $scope.title = 'Edit Client User';
-              action = 'updateClientUser'; 
-              $scope.clientUserService = clientUserService;
-              loadClientUserDetails();
+              $scope.title = 'Edit Admin User';
+              action = 'updateWPLUser'; 
+              $scope.adminUserService = adminUserService;
+              loadAdminUserDetails();
               break;
         }
       }
       
-      function loadClientUserDetails() {
+      function loadAdminUserDetails() {
         var id = $location.search().id;
-        $scope.clientUserService.loadDetails(id, function(details) {
+        $scope.adminUserService.loadDetails(id, function(details) {
           angular.copy(details, $scope.user);
         });
       }
       
       $scope.save = function(user) {
+        alert('would save');
+        return;
+        
         user = angular.copy($scope.user);
         user.company_id = companyID;
         
-        clientUserService.save(user, action, function() {
+        adminUserService.save(user, action, function() {
           var msg;
           if (addMode) {
             msg = 'user added';
@@ -68,10 +71,10 @@ angular.module('wplAdmin')
       
       var testDataList = [];
       function initializeTestData() {
-          testDataList.push(new ClientUser('Test', 'User', 'testUser@company.com'));
+          testDataList.push(new AdminUser('Test', 'User', 'testUser@company.com'));
       }
       
-      function ClientUser(firstName, lastName, email) {
+      function AdminUser(firstName, lastName, email) {
         var me = {};
         me.first_name     = firstName;
         me.last_name      = lastName;

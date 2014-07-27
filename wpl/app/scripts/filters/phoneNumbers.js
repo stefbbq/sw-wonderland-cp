@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('wplAdmin')
 .filter('tel', function() {
   return function(tel) {

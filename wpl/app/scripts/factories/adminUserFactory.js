@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('wplAdmin')
-.factory('clientUserService', ['$http', '$rootScope', function($http, $rootScope) {
-  
+.factory('adminUserService', ['$http', '$rootScope', function($http, $rootScope) {
   var userDetails = {};
   var clientDetails = {};
   var list = [];

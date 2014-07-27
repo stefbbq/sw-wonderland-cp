@@ -1,0 +1,47 @@
+<div class="client_detail">
+  <section id="client_detail">
+    <h1>Client User Detail</h1>
+    <h2><a href="javascript:void(0);" ng-click="showClient(clientUserService.client.guid);">{{clientUserService.client.name}}</a></h2>
+    <p>{{clientUserService.client.address}}<br/>
+      {{clientUserService.client.city}}, {{clientUserService.client.province}}<br/>
+      {{clientUserService.client.postal_code}}<br/>
+      {{clientUserService.client.phone | tel}}<br/>
+      {{clientUserService.client.phone2 | tel}}
+    </p>
+    
+    <button ng-click="showClient(clientUserService.client.guid);">Back to Client</button>
+    
+  </section>
+    
+  <section id="user">
+    <h3>User Details</h3>
+    <table class="">
+      <tr>
+        <th>Name</th>
+        <td>{{clientUserService.user.first_name}} {{clientUserService.user.last_name}}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{clientUserService.user.email}}</td>
+      </tr>
+      <tr>
+        <th>Confirm Email</th>
+        <td>{{clientUserService.user.confirmation_email}}</td>
+      </tr>
+      <tr>
+        <th>Phone</th>
+        <td>{{clientUserService.user.phone | tel}}</td>
+      </tr>
+      <tr>
+        <th>Phone2</th>
+        <td>{{clientUserService.user.phone2 | tel}}</td>
+      </tr>
+    </table>
+    <div class="util">
+      <button id="edit_user_btn" ng-click="edit();">Edit Details</button>
+      <button id="reset_password_btn" ng-click="resetPassword();">Reset Password</button>
+      <button id="edit_client_btn" ng-click="changeActiveStatus();" >{{activeStatusLabel}}</button>
+    </div>
+  </section>
+
+</div>

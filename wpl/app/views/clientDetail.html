@@ -36,7 +36,7 @@
         <th>Phone2</th>
       </tr>
 
-      <tr class="record" ng-repeat="user in clientUserService.list" ng-click="editUser(user.guid);">
+      <tr class="record" ng-repeat="user in clientUserService.list" ng-click="showClientUser(user.guid);">
         <td>{{user.first_name}}</td>
         <td>{{user.last_name}}</td>
         <td>{{user.email}}</td>

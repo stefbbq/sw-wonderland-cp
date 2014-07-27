@@ -13,6 +13,9 @@ $clr_button_active_label:hsl(0, 0, 100);
 
 $tableWidth:600px;
 
+button:disabled {
+  color:hsl(0, 0, 80);
+}
 
 .spa {
   //border:1px solid green;
