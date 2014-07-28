@@ -20,7 +20,7 @@
             <ul class="nav">
               <li ng-class="getClass('/listClients')"><a ng-href="#/listClients">Client List</a></li>
               <li ng-class="getClass('/addClient')"><a ng-href="#/addClient">Add New Client</a></li>
-              <li ng-class="getClass('/addAdminUser')"><a ng-href="#/addAdminUser">User Admin</a></li>
+              <li ng-class="getClass('/listAdminUsers')"><a ng-href="#/listAdminUsers">User Admin</a></li>
               <!--
               <li ng-class="getClass('/addCollateral')"><a ng-href="#/addCollateral">Add New Collateral</a></li>
               <li ng-class="getClass('/viewCollateral')"><a ng-href="#/viewCollateral">View All Collateral</a></li>
@@ -83,6 +83,9 @@
         <script src="scripts/controllers/editClientUserCtrl.js"></script>
         <script src="scripts/controllers/clientUserDetailCtrl.js"></script>
         <script src="scripts/controllers/editAdminUserCtrl.js"></script>
+        <script src="scripts/controllers/adminListCtrl.js"></script>
+        <script src="scripts/controllers/changeAdminPasswordCtrl.js"></script>
+        <script src="scripts/lib/md5.js"></script>
         <!-- endbuild -->
 </body>
 </html>

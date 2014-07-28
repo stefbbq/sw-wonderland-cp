@@ -45,10 +45,10 @@ switch ($action) {
                 );
         break;
     case 'deactivateClient':
-      $result = $manager->deactivateClient(getValue('guid'));
+      $result = $manager->setClientActive(getValue('guid'), '0');
       break;
     case 'reactivateClient':
-      $result = $manager->reactivateClient(getValue('guid'));
+      $result = $manager->setClientActive(getValue('guid'), '1');
       break;
     case 'clientList':
       $result = $manager->getClientList(getValue('s'), getValue('c'), getValue('a'));
@@ -59,6 +59,11 @@ switch ($action) {
     case 'clientDetail':
       $result = $manager->getClientDetail(getValue('q'));
       break;
+    
+    /*
+     * Client Users
+     */
+    
     case 'addClientUser':
       $result = $manager->saveClientUser(
               getValue('first_name'), 
@@ -94,12 +99,57 @@ switch ($action) {
       );
       break;
     case 'deactivateClientUser':
-      $result = $manager->deactivateClientUser(getValue('guid'));
+      $result = $manager->setClientUserActive(getValue('guid'), '0');
       break;
     case 'reactivateClientUser':
-      $result = $manager->reactivateClientUser(getValue('guid'));
+      $result = $manager->setClientUserActive(getValue('guid'), '1');
       break;
-     
+    
+    /*
+     * Admin Users
+     */
+    case 'addAdminUser':
+      $result = $manager->saveAdminUser(
+              getValue('username'), 
+              getValue('email'), 
+              getValue('password')
+              );
+      break;
+     case 'updateAdminUser':
+      $result = $manager->saveAdminUser(
+              getValue('username'), 
+              getValue('email'), 
+              getValue('password'),
+              getValue('guid')
+              );
+      break;
+    case 'changeAdminPassword':
+      $result = $manager->changeAdminPassword(
+              getValue('id'),
+              getValue('old_password'),
+              getValue('password')
+              );
+      break;
+    case 'adminUserList':
+      $result = $manager->getAdminUserList(
+              getValue('a')
+              );
+      break;
+    case 'adminUserDetail':
+      $result = $manager->getAdminUserDetail(
+              getValue('id')
+              );
+      break;
+    case 'deactivateAdminUser':
+      $result = $manager->setAdminUserActive(getValue('guid'), '0');
+      break;
+    case 'reactivateAdminUser':
+      $result = $manager->setAdminUserActive(getValue('guid'), '1');
+      break;
+    case 'adminLogin':
+      $result = $manager->login(getValue('username'), getValue('password'));
+      break;
+    
     default : 
         $result->success = false;
         $result->message = 'no action';

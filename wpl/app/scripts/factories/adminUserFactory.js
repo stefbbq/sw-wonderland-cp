@@ -8,8 +8,8 @@ angular.module('wplAdmin')
   /*
    * Load List
    */
-  function loadList(id, callback) {
-    var args = {action:'clientUserList', id:id};
+  function loadList(id, active, callback) {
+    var args = {action:'adminUserList', id:id, a:active ? 1:0};
     $http.jsonp($rootScope.wsURL, {
       params:args,
       headers: $rootScope.jsonHeader
@@ -40,9 +40,26 @@ angular.module('wplAdmin')
       console.log('error', data);
     });  
   }
+  
+  function changePassword (payload, onSuccess) {
+    var params = payload;
+    params.action = 'changeAdminPassword';
+
+    $http.jsonp($rootScope.wsURL, 
+    {
+      params : params,
+      headers: $rootScope.jsonHeader
+    })
+    .success(function(data) {
+      if (onSuccess) onSuccess(data);
+    })          
+    .error (function(data) {
+      console.log('error', data);
+    });  
+  };
 
   function loadDetails(id, callback) {
-    var args = {action:'clientUserDetail', id:id};
+    var args = {action:'adminUserDetail', id:id};
     
     $http.jsonp($rootScope.wsURL, 
     {
@@ -50,8 +67,7 @@ angular.module('wplAdmin')
       headers: $rootScope.jsonHeader
     }).success(function(result) {
         console.log(result);
-        angular.copy(result.data.user, userDetails);
-        angular.copy(result.data.company, clientDetails);
+        angular.copy(result.data, userDetails);
         if (callback) {
           callback(userDetails);
         }
@@ -94,6 +110,7 @@ angular.module('wplAdmin')
     list:list,
     loadDetails:loadDetails,
     user:userDetails,
+    changePassword:changePassword,
     client:clientDetails,
     save:saveUser,
     deactivate:deactivateUser,

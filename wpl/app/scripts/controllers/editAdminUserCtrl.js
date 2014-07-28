@@ -4,8 +4,6 @@ angular.module('wplAdmin')
   .controller('EditAdminUserCtrl', ['$scope', '$http', '$location', '$rootScope', 'adminUserService', function ($scope, $http, $location, $rootScope, adminUserService) {
     var addMode;
     var action;
-    var companyID = $location.search().companyID;
-    //console.log(companyID);
     
     $scope.form = {};
     $scope.user = {};
@@ -17,12 +15,12 @@ angular.module('wplAdmin')
             case '/addAdminUser': 
               addMode = true;
               $scope.title = 'Add New Admin User';
-              action = 'addWPLUser'; 
+              action = 'addAdminUser'; 
               break;
             case '/editAdminUser': 
               addMode = false;
               $scope.title = 'Edit Admin User';
-              action = 'updateWPLUser'; 
+              action = 'updateAdminUser'; 
               $scope.adminUserService = adminUserService;
               loadAdminUserDetails();
               break;
@@ -35,23 +33,20 @@ angular.module('wplAdmin')
           angular.copy(details, $scope.user);
         });
       }
-      
+     
       $scope.save = function(user) {
-        alert('would save');
-        return;
-        
         user = angular.copy($scope.user);
-        user.company_id = companyID;
+        user.action = action;
         
         adminUserService.save(user, action, function() {
           var msg;
           if (addMode) {
-            msg = 'user added';
+            msg = 'Admin user added';
           } else {
-            msg = 'user updated';
+            msg = 'Admin user updated';
           }
           alert(msg);
-          $location.path('clientDetail').search({id:companyID});
+          $location.path('listAdminUsers');
         });
         
       };
@@ -71,17 +66,13 @@ angular.module('wplAdmin')
       
       var testDataList = [];
       function initializeTestData() {
-          testDataList.push(new AdminUser('Test', 'User', 'testUser@company.com'));
+          testDataList.push(new AdminUser('admin', 'admin@wpl.com'));
       }
       
-      function AdminUser(firstName, lastName, email) {
+      function AdminUser(username, email) {
         var me = {};
-        me.first_name     = firstName;
-        me.last_name      = lastName;
-        me.email          = email;
-        me.confirm_email  = 'confirmationEmail@company.com';
-        me.phone          = '5555555555';
-        me.phone2         = '5555555556';
+        me.username     = username;
+        me.email        = email;
        
         return me;
       }

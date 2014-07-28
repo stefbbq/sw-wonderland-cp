@@ -56,6 +56,14 @@ angular
         templateUrl: basePath + 'views/editAdminUser' + viewExt,
         controller: 'EditAdminUserCtrl'
       })
+      .when('/changeAdminPassword', {
+        templateUrl: basePath + 'views/changeAdminPassword' + viewExt,
+        controller: 'ChangeAdminPasswordCtrl'
+      })
+      .when('/listAdminUsers', {
+        templateUrl: basePath + 'views/listAdminUsers' + viewExt,
+        controller: 'AdminListCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });

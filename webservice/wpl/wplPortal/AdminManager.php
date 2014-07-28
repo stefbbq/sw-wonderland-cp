@@ -4,6 +4,7 @@ namespace wpl\wplPortal;
 use wpl\database\Database;
 use wpl\model\Client;
 use wpl\model\ClientUser;
+use wpl\model\AdminUser;
 use sdg\data\Result;
 /**
  * Description of AdminManager
@@ -158,15 +159,9 @@ class AdminManager {
   /*
    * Deactivate Client
    */
-  public function deactivateClient($guid) {
-    return $this->setClientActive($guid, '0');
-  }
-  
-  public function reactivateClient($guid) {
-    return $this->setClientActive($guid, '1');
-  }
-  
-  private function setClientActive($guid, $active) {
+  public function setClientActive($guid, $active) {
+    $result = new Result();
+
     $insert = array('active' => $active == '1');
     $where = array('guid' => $guid);
     
@@ -298,15 +293,9 @@ class AdminManager {
   /*
    * Deactivate Client
    */
-  public function deactivateClientUser($guid) {
-    return $this->setClientUserActive($guid, '0');
-  }
-  
-  public function reactivateClientUser($guid) {
-    return $this->setClientUserActive($guid, '1');
-  }
-  
-  private function setClientUserActive($guid, $active) {
+  public function setClientUserActive($guid, $active) {
+    $result = new Result();
+    
     $insert = array('active' => $active == '1');
     $where = array('guid' => $guid);
     $dbResult = $this->db->update('clientUsers', $insert, $where);
@@ -326,6 +315,177 @@ class AdminManager {
   /*
    * Admin Users
    */
+  public function saveAdminUser($username, $email, $password, $id = null) {
+    $result = new Result();
+
+    $newUser = $id == null;
+    
+    $user = new AdminUser();
+    $user->username = $username;
+    $user->email = $email;
+    $user->temp_password = $this->db->generateTempPassword();
+    $user->password = md5($user->temp_password);
+    $user->guid = $newUser ? $this->db->generateGUID() : $id;
+
+    $result->data = $user;
+
+    if ($newUser) {
+      $dbResult = $this->db->add('adminUsers', $user);
+      if ($dbResult) {
+        $result->success = true;
+        $result->message = "Admin user added.";
+        $result->code = 200;
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error adding admin user.";
+      }
+    } else {
+      $where = array(
+          'guid' => $id
+      );
+      $dbResult = $this->db->update('clientUsers', $user->getUpdateModel(), $where);
+      if ($dbResult) {
+        $result->success = true;
+        $result->message = "Client updated.";
+        $result->code = 200;
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error updating client.";
+      }
+    }
+    
+    // TODO: Email user temporary password and link to change password
+
+    return $result;
+  }  
   
+  public function changeAdminPassword($id, $oldPassword, $password) {
+    $result = new Result();
+    
+    $user = array(
+     'password' => $password,
+     'password_set' => '1',
+     'temp_password' => ''
+    );
+    
+    $where = array(
+     'guid' => $id,
+     'password' => $oldPassword
+    );
+    
+    $dbResult = $this->db->update('adminUsers', $user, $where);
+    if ($dbResult) {
+      $result->success = true;
+      $result->message = "Admin password updated.";
+      $result->code = 200;
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->message = "Error updating admin password.";
+    }    
+
+    return $result;
+  }
+  
+  public function getAdminUserList($active) {
+    $result = new Result();
+
+    $select = array('username', 'email', 'guid');
+
+    $orderBy = array('email' => 'ASC');
+    $where = array('active' => $active);
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+
+    $result->data = array();
+
+    if ($dataset) {
+      $result->success = true;
+      $result->message = "Admin User List";
+      $result->code = 200;
+      $result->data['list'] = $dataset;
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->data['list'] = array();
+      $result->message = "No admin users.";
+    }
+
+    return $result;
+  }  
+  
+  public function getAdminUserDetail($id) {
+    $result = new Result();
+    $result->data = array();
+
+    // get user detail
+    $select = array('guid', 'username', 'email');
+    $where = array(
+        'guid' => $id
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+
+    $result->success = true;
+    $result->code = 200;
+    $result->data = $dataset[0];
+    $result->message = 'admin user detail';
+
+    return $result;     
+    
+  }
+  
+  /*
+   * Deactivate
+   */
+  public function setAdminUserActive($guid, $active) {
+    $result = new Result();
+    
+    $insert = array('active' => $active == '1');
+    $where = array('guid' => $guid);
+    
+    $dbResult = $this->db->update('adminUsers', $insert, $where);
+    if ($dbResult) {
+      $result->success = true;
+      $result->message = $active ? "Admin user reactivated." : "Admin user deactivated.";
+      $result->code = 200;
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->message = $active ? "Admin user reactivation failed." : "Admin user deactivation failed.";
+    }    
+    
+    return $result;
+  }  
+  
+  public function login($username, $password) {
+    $result = new Result();
+    $result->data = array();
+
+    // get user detail
+    $select = array('guid');
+    $where = array(
+        'username' => $username,
+        'password' => $password
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+
+    if ($dataset) {
+      $result->success = true;
+      $result->code = 200;
+      $result->data = $dataset[0];
+      $result->message = 'login success';
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->data = null;
+      $result->message = 'login failed';
+    }
+    
+
+    return $result;    
+  }
   
 }

@@ -318,6 +318,18 @@ class Database {
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
     }
+    
+    public function generateTempPassword() {
+      $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+      $pass = array(); //remember to declare $pass as an array
+      $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+      for ($i = 0; $i < 8; $i++) {
+          $n = rand(0, $alphaLength);
+          $pass[] = $alphabet[$n];
+      }
+      return implode($pass); //turn the array into a string
+    }
+    
 
     public function getCompanyIDFromGUID($guid) {
       $return = -1;
