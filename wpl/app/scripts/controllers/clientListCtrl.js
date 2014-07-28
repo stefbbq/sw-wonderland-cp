@@ -17,6 +17,16 @@ angular.module('wplAdmin')
     $scope.companies = [];
     $scope.clientService = clientService;
     $scope.clientService.list = clientService.list;
+    
+    var listActive = true;
+    var LIST_MODE__LIST = 'list';
+    var LIST_MODE__SEARCH = 'search';
+    
+    var listMode = LIST_MODE__LIST;
+
+    var searchString;
+    var startPage;
+    
     /*
      * Load Client Page
      */
@@ -29,14 +39,17 @@ angular.module('wplAdmin')
       searchClients(startPage, searchString);
     });
     
-    function loadClientPage(startPage) {
-      $scope.clientService.loadList(startPage, function(count) {
+    function loadClientPage(_startPage) {
+      startPage = _startPage;
+      $scope.clientService.loadList(startPage, listActive, function(count) {
         $scope.$broadcast('clientResultsLoaded', count);
       });
     }
     
-    function searchClients(startPage, searchString) {
-      $scope.clientService.search(startPage, searchString, function(count) {
+    function searchClients(_startPage, _searchString) {
+      startPage = _startPage;
+      searchString = _searchString;
+      $scope.clientService.search(startPage, searchString, listActive, function(count) {
         $scope.$broadcast('clientResultsLoaded', count);
       });
     }
@@ -49,6 +62,23 @@ angular.module('wplAdmin')
     $scope.showClient = function(guid) {
       $location.path('/clientDetail').search({id:guid});
     };
+    
+    
+    $scope.listActive = function(value) {
+      listActive = value;
+      if (listMode === LIST_MODE__SEARCH) {
+        searchClients(0, searchString);
+      } else {
+        loadClientPage(0);
+      }
+    };
+    
+    $scope.getActiveClass = function(value) {
+      if (listActive === value) {
+        return 'active';
+      }
+    };    
+    
     
     loadClientPage(0);
     
@@ -108,5 +138,7 @@ angular.module('wplAdmin')
       var $item = $($('.page-numbers a')[pageIndex]);
       $item.addClass('selected');
     }
+
+    
   });
 

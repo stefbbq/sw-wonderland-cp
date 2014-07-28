@@ -74,10 +74,10 @@ class AdminManager {
   /*
    * List Clients
    */
-  public function getClientList($startRecord, $pageSize) {
+  public function getClientList($startRecord, $pageSize, $active) {
       $result = new Result();
 
-      $sql = "select count(*) from clients where active = '1'";
+      $sql = "select count(*) from clients where active = '$active'";
       $dbResult = $this->db->db->prepare($sql);
       $dbResult->execute();
       $recordCount = $dbResult->fetchColumn();        
@@ -85,9 +85,11 @@ class AdminManager {
       $select = array('guid', 'name', 'address', 'city', 'province', 'phone', 'phone2');
 
       $orderBy = array('name' => 'ASC');
-      $where = array('active' => true);
+      $where = array('active' => $active);
       $dataset = $this->db->select('clients', $select, $orderBy, $where, $startRecord, $pageSize);
 
+      $result->success = true;
+      $result->code = 200;
       $result->data = array();
       $result->data['list'] = $dataset;
       $result->data['count'] = $recordCount;
@@ -100,10 +102,10 @@ class AdminManager {
   /*
    * Search Clients
    */
-  public function searchClients($searchString, $startRecord, $pageSize) {
+  public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result = new Result();
 
-      $searchQuery = ' name LIKE :search OR address LIKE :search OR city LIKE :search';
+      $searchQuery = " name LIKE :search OR address LIKE :search OR city LIKE :search AND active='$active'";
 
       $sql = 'SELECT COUNT(*) FROM clients WHERE' . $searchQuery;
       $dbResult = $this->db->db->prepare($sql);
@@ -117,10 +119,12 @@ class AdminManager {
           'address'=>$searchString,
           'city'=>$searchString
       );
-      $whereAnd = array('active'=>true);
+      $whereAnd = array('active'=>$active);
       $orderBy = array('name' => 'ASC');
       $dataset = $this->db->search('clients', $select, $orderBy, $where, $whereAnd, $startRecord, $pageSize);
 
+      $result->success = true;
+      $result->code = 200;
       $result->data = array();
       $result->data['list'] = $dataset;
       $result->data['count'] = $recordCount;
@@ -235,7 +239,7 @@ class AdminManager {
   /*
    * List Client Users
    */
-  public function getClientUserList($clientID) {
+  public function getClientUserList($clientID, $active) {
       $result = new Result();
       
       $clientKey = $this->db->getCompanyIDFromGUID($clientID);
@@ -243,7 +247,7 @@ class AdminManager {
       $select = array('first_name', 'last_name', 'email', 'confirmation_email', 'phone', 'phone2', 'guid');
 
       $orderBy = array('last_name' => 'ASC', 'first_name' => 'ASC');
-      $where = array('client_id' => $clientKey, 'active' => '1');
+      $where = array('client_id' => $clientKey, 'active' => $active);
       $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
 
       $result->data = array();

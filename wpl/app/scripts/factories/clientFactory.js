@@ -7,8 +7,8 @@ angular.module('wplAdmin')
   var details = {};
   var users = [];
   
-  function loadList(startPage, callback) {
-    var args = {action:'clientList', s:startPage, c:pageSize};
+  function loadList(startPage, active, callback) {
+    var args = {action:'clientList', s:startPage, c:pageSize, a:active ? '1':'0'};
 
     $http.jsonp($rootScope.wsURL, 
     {
@@ -25,8 +25,8 @@ angular.module('wplAdmin')
     });        
   }
 
-  function search(startPage, searchString, callback) {
-    var args = {action:'clientSearch', s:startPage, c:pageSize, q:searchString};
+  function search(startPage, searchString, active, callback) {
+    var args = {action:'clientSearch', s:startPage, c:pageSize, q:searchString, a:active ? '1':'0'};
 
     $http.jsonp($rootScope.wsURL, 
     {

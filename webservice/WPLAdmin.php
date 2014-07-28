@@ -51,10 +51,10 @@ switch ($action) {
       $result = $manager->reactivateClient(getValue('guid'));
       break;
     case 'clientList':
-      $result = $manager->getClientList(getValue('s'), getValue('c'));
+      $result = $manager->getClientList(getValue('s'), getValue('c'), getValue('a'));
       break;
     case 'clientSearch':
-      $result = $manager->searchClients(getValue('q'), getValue('s'), getValue('c'));
+      $result = $manager->searchClients(getValue('q'), getValue('s'), getValue('c'), getValue('a'));
       break;
     case 'clientDetail':
       $result = $manager->getClientDetail(getValue('q'));
@@ -84,7 +84,8 @@ switch ($action) {
       break;
     case 'clientUserList':
        $result = $manager->getClientUserList(
-          getValue('id')
+          getValue('id'),
+          getValue('a')
         );
       break;
     case 'clientUserDetail':

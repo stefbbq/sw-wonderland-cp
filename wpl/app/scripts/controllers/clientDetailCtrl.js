@@ -11,6 +11,8 @@ angular.module('wplAdmin')
     $scope.clientService = clientService;
     $scope.clientUserService = clientUserService;
     
+    var listActive = true;
+    
     function construct() {
       setClientActiveStatus(true);
     }
@@ -26,9 +28,13 @@ angular.module('wplAdmin')
     
     // Load user list
     $scope.users = clientUserService.users;
-    clientUserService.loadList(id, function() {
-      
-    });
+    function loadClientUsers() {
+      clientUserService.loadList(id, listActive, function() {
+
+      });
+    }
+    
+    loadClientUsers();
     
     $scope.showClientUser = function(id) {
       $location.path('/clientUserDetail').search({id:id});
@@ -66,7 +72,18 @@ angular.module('wplAdmin')
     $scope.addUser = function() {
       $location.path('addClientUser').search({companyID:id});
     };
+
     
+    $scope.listActive = function(value) {
+      listActive = value;
+      loadClientUsers();
+    };    
+    
+    $scope.getActiveClass = function(value) {
+      if (listActive === value) {
+        return 'active';
+      }
+    };      
     
     construct();
 }])

@@ -9,8 +9,8 @@ angular.module('wplAdmin')
   /*
    * Load List
    */
-  function loadList(id, callback) {
-    var args = {action:'clientUserList', id:id};
+  function loadList(id, active, callback) {
+    var args = {action:'clientUserList', id:id, a:active ? '1' : '0'};
     $http.jsonp($rootScope.wsURL, {
       params:args,
       headers: $rootScope.jsonHeader

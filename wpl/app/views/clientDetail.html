@@ -26,6 +26,10 @@
       </form>
       -->
     </div>
+    <ul class="nav tab-menu">
+      <li ng-class="getActiveClass(true);"><a href="javascript:void(0);" ng-click="listActive(true);">Active</a></li>
+      <li ng-class="getActiveClass(false);"><a href="javascript:void(0);" ng-click="listActive(false);">Inactive</a></li>
+    </ul>
     <table class="list selectable">
       <tr>
         <th>First Name</th>

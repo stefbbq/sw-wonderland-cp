@@ -11,7 +11,7 @@ $clr_button_hover_bk:hsl(0, 0, 75);
 $clr_button_active_bk:hsl(0, 0, 50);
 $clr_button_active_label:hsl(0, 0, 100);
 
-$tableWidth:600px;
+$tableWidth:800px;
 
 button:disabled {
   color:hsl(0, 0, 80);
@@ -59,6 +59,24 @@ button:disabled {
             
             
         }
+    }
+    
+    .tab-menu {
+      li {
+        width:auto;
+        display:inline-block;
+        
+        a {
+          display:initial;
+          padding:5px;
+        }
+      }
+      
+      padding:0px;
+      margin:20px 0px 3px 0px;
+      text-align:right;
+      width:$tableWidth;
+      
     }
     
     input.ng-invalid.ng-dirty {
@@ -154,7 +172,7 @@ button:disabled {
       
       table {
         border:2px solid black;
-        width:100%;
+        width:$tableWidth;
         th {
           background-color:hsl(0, 0, 70);
         }
