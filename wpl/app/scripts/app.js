@@ -1,4 +1,10 @@
 'use strict';
+
+/*
+ * 
+ * TODO: move login status to server session variable, and do redirects on the back-end.
+ */
+
 var basePath = basePath || '';
 var viewExt = viewExt || '.html';
 /**
@@ -68,8 +74,14 @@ angular
         redirectTo: '/listClients'
       });
   })
-  .run(function ($rootScope, $location) {
+  .run(function ($rootScope, $location, $cookieStore) {
     //console.log($location.host());
+    
+    $rootScope.adminData = $cookieStore.get('adminData');
+    if ($rootScope.adminData === undefined || !$rootScope.adminData.isAdmin) {
+      window.location.href = '/login.html';
+      return; 
+    }
     
     // web service
     var forceStaging = false;

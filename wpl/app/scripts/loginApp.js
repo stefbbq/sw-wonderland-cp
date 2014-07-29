@@ -22,13 +22,18 @@ angular.module('wplLogin', [
   $rootScope.jsonHeader = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
 })
-.controller('loginController', ['$scope', '$rootScope', 'loginService', function($scope, $rootScope, loginService) {
-
+.controller('loginController', ['$scope', '$rootScope', '$cookieStore', 'loginService', function($scope, $rootScope, $cookieStore, loginService) {
     $scope.login = function() {
       loginService.login($scope.user.username, $scope.user.password, function(result) {
+        if (result.success) {
+          var data = {isAdmin:true, id:result.data.guid, superUser:result.data.super_user == '1'};
+          $cookieStore.put('adminData', data);
+          location.href = '/';
+        } else {
+          alert('Login Failed');
+        }
         
-        console.log(result);
-      })
+      });
     };
 
 }])

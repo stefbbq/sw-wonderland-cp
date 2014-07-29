@@ -56,7 +56,7 @@ angular.module('wplAdmin')
     .error (function(data) {
       console.log('error', data);
     });  
-  };
+  }
 
   function loadDetails(id, callback) {
     var args = {action:'adminUserDetail', id:id};
