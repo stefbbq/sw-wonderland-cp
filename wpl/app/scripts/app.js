@@ -22,7 +22,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ui.mask'
+    'ui.mask',
+    'angularFileUpload'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -70,6 +71,14 @@ angular
         templateUrl: basePath + 'views/listAdminUsers' + viewExt,
         controller: 'AdminListCtrl'
       })
+      .when('/addCollateral', {
+        templateUrl: basePath + 'views/editCollateral' + viewExt,
+        controller: 'EditCollateralCtrl'
+      })
+      .when('/editCollateral', {
+        templateUrl: basePath + 'views/editCollateral' + viewExt,
+        controller: 'EditCollateralCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });
@@ -102,6 +111,10 @@ angular
     $rootScope.clientList = {
       pageSize:3
     };
+    $rootScope.collateralList = {
+      pageSize:3
+    };
+    
     
     $rootScope.getFormVars = function(model) {
       var result = {};

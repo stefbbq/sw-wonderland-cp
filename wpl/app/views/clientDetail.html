@@ -60,7 +60,7 @@
           <input type="submit" value="Search">
         </form>
       </div>
-      <table>
+      <table class="list selectable">
         <tr>
           <th>Thumb</th>
           <th>Name</th>
@@ -69,15 +69,23 @@
           <th>Date Uploaded</th>
         </tr>
         
-        <tr>
+        <tr class="record" ng-repeat="item in collateralService.list"  ng-click="showCollateral(item.guid);">
           <td><img src="blank.png" width="25" height="25"></td>
-          <td>Name</td>
-          <td>Type</td>
-          <td>Description</td>
-          <td>Uploaded</td>
+          <td>{{item.name}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.description}}</td>
+          <td>{{item.last_upload}}</td>
         </tr>
         
       </table>
+      <div ng-controller="CollateralPager" class="pages">
+        <a href="javascript:void(0);" ng-click="prevCollateralPage();">Prev</a>
+        <span class="page-numbers">
+          <a href="javascript:void(0);" ng-repeat="page in collateralPages" ng-click="loadCollateralPage($index)" pager-complete>{{page.num}}</a>
+        </span>
+        <a href="javascript:void(0);" ng-click="nextCollateralPage();">Next</a>
+      </div>      
+      
     </section>
 
     

@@ -1,0 +1,46 @@
+<div class="edit_collateral">
+
+    <h1>{{title}}</h1>
+
+    <form id="form" name="form" novalidate>
+      <div class="field-group col-2">
+          <label for="client">Client</label>
+          <select id="client" ng-model="collateral.client" required ng-options="client.guid as client.name for client in clientService.list">
+            <option value="">-- choose client --</option>
+          </select>
+      </div>
+      <div class="field-group col-2">
+          <label for="name">Collateral Name</label>
+          <input id="name" type="text" ng-model="collateral.name" required ng-minlength="2" ng-maxlength="50" />
+      </div>
+      <div class="field-group col-2">
+          <label for="type">Type</label>
+          <select id="type" ng-model="collateral.type" required ng-options="type.id as type.name for type in collateralService.types">
+            <option value="">-- select type --</option>
+          </select>
+      </div>
+      <div class="field-group col-2">
+          <label for="description">Description</label>
+          <textarea id="description" ng-model="collateral.description" required></textarea>
+      </div>
+
+      <div class="field-group col-2">
+        <label for="file">Attach thumbnail</label>
+        <input id="file" type="file" ng-model="collateral.thumbnail" ng-file-select="onThumbSelect($files)" accept="image/*">
+        <img ng-src="{{thumb.image}}" height="100">
+      </div>
+
+      <div class="field-group col-2">
+        <label for="file">Attach file</label>
+        <input id="file" type="file" ng-model="collateral.file" ng-file-select="onFileSelect($files)">
+      </div>
+
+      <div class="buttons">
+          <button ng-click="cancel()">Cancel</button>
+          <button ng-click="save()" ng-disabled="form.$invalid || !filesSelected()">Save</button>
+          <!-- <button ng-click="autofill()">Auto Fill</button> -->
+      </div>
+    </form>
+    <pre>{{collateral}}</pre>
+    
+</div>

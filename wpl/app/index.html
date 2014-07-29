@@ -21,8 +21,8 @@
               <li ng-class="getClass('/listClients')"><a ng-href="#/listClients">Client List</a></li>
               <li ng-class="getClass('/addClient')"><a ng-href="#/addClient">Add New Client</a></li>
               <li ng-class="getClass('/listAdminUsers')"><a ng-href="#/listAdminUsers">User Admin</a></li>
-              <!--
               <li ng-class="getClass('/addCollateral')"><a ng-href="#/addCollateral">Add New Collateral</a></li>
+              <!--
               <li ng-class="getClass('/viewCollateral')"><a ng-href="#/viewCollateral">View All Collateral</a></li>
               -->
             </ul>
@@ -43,6 +43,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/ng-file-upload-shim/angular-file-upload-shim.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
     <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
@@ -65,6 +66,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+    <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -73,6 +75,7 @@
   <script src="scripts/factories/clientFactory.js"></script>
   <script src="scripts/factories/clientUserFactory.js"></script>
   <script src="scripts/factories/adminUserFactory.js"></script>
+  <script src="scripts/factories/collateralFactory.js"></script>
   <script src="scripts/directives/capitalize.js"></script>
   <script src="scripts/directives/match.js"></script>
   <script src="scripts/directives/pagerComplete.js"></script>
@@ -83,6 +86,7 @@
   <script src="scripts/controllers/editClientUserCtrl.js"></script>
   <script src="scripts/controllers/clientUserDetailCtrl.js"></script>
   <script src="scripts/controllers/editAdminUserCtrl.js"></script>
+  <script src="scripts/controllers/editCollateralCtrl.js"></script>
   <script src="scripts/controllers/adminListCtrl.js"></script>
   <script src="scripts/controllers/changeAdminPasswordCtrl.js"></script>
   <script src="scripts/lib/md5.js"></script>

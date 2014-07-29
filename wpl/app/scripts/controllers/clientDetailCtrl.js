@@ -7,24 +7,41 @@ angular.module('wplAdmin')
 /*
  * Client Detail
  */
-.controller('ClientDetailCtrl', ['$scope', '$location', 'clientService', 'clientUserService', function($scope, $location, clientService, clientUserService) {
+.controller('ClientDetailCtrl', ['$scope', '$location', 'clientService', 'clientUserService', 'collateralService', function($scope, $location, clientService, clientUserService, collateralService) {
     $scope.clientService = clientService;
     $scope.clientUserService = clientUserService;
+    $scope.collateralService = collateralService;
     
     var listActive = true;
     
+    var LIST_MODE__LIST = 'list';
+    var LIST_MODE__SEARCH = 'search';
+    
+    var listMode = LIST_MODE__LIST;
+
+    var listCollateralActive = true;
+    var searchString = null;
+    var startPage;
+    
+    
+    
     function construct() {
       setClientActiveStatus(true);
+      loadClientDetails();
+      loadClientUsers();
+      loadCollateralPage(0);
     }
     
     var id = $location.search().id;
     var clientActive;
     
     // load detail
-    $scope.clientDetails = clientService.clientDetails;
-    clientService.loadDetails(id, function(data) {
-      setClientActiveStatus(data.active === '1');
-    });
+    function loadClientDetails() {
+      $scope.clientDetails = clientService.clientDetails;
+      clientService.loadDetails(id, function(data) {
+        setClientActiveStatus(data.active === '1');
+      });
+    }
     
     // Load user list
     $scope.users = clientUserService.users;
@@ -34,7 +51,30 @@ angular.module('wplAdmin')
       });
     }
     
-    loadClientUsers();
+    
+    $scope.$on('loadCollateralPage', function(e, startPage) {
+      if (searchString == null) {
+        loadCollateralPage(startPage);
+      } else {
+        searchClients(id, startPage, searchString);
+      }
+    });    
+    
+    $scope.$on('searchCollateral', function(e, startPage, searchString) {
+      searchClients(id, startPage, searchString);
+    });
+
+    function loadCollateralPage(_startPage) {
+      startPage = _startPage;
+      $scope.collateralService.loadList(id, startPage, listCollateralActive, function(count) {
+        $scope.$broadcast('collateralResultsLoaded', count);
+      });
+    }    
+    
+    $scope.showCollateral = function(id) {
+      $location.path('/editCollateral').search({id:id});
+    };
+    
     
     $scope.showClientUser = function(id) {
       $location.path('/clientUserDetail').search({id:id});
@@ -92,9 +132,61 @@ angular.module('wplAdmin')
 }])
 .controller('CollateralSearchCtrl', ['$scope', function($scope) {
     var a = $scope;
-}]);
+}])
+ /*
+   * Pager
+   * This is the view which displays the pagination.
+   * It listens for the 'collateralResultsLoaded' event 
+   * and draws based on the number of records available.
+   */
+.controller('CollateralPager', function($scope, $http, $rootScope) {
+    var pageList = [];
+    var pageIndex = 0;
+    $scope.collateralPages = [];
+    
+    $scope.$on('collateralResultsLoaded', function(e, recordCount) {
+      var pageSize = $rootScope.collateralList.pageSize;
+      var pageCount = Math.ceil(recordCount / pageSize);
+      var recordNum = 0;
+      pageList.length = 0;
+      for (var i=0; i<pageCount; i++) {
+        pageList.push({num:i + 1, recordNum:recordNum});
+        recordNum += pageSize;
+      }
+      
+      angular.copy(pageList, $scope.collateralPages);
+    });
+    
+  
+    $scope.prevCollateralPage = function() {
+      if (pageIndex > 0) {
+        $scope.loadPage(pageIndex - 1);
+      }
+    };
 
+    $scope.nextCollateralPage = function() {
+      if (pageIndex < pageList.length - 1) {
+        $scope.loadPage(pageIndex + 1);
+      }
+    };
+  
+    $scope.loadCollateralPage = function(index) {
+      pageIndex = index;
+      var data = pageList[index];
+      $scope.$emit('loadCollateralPage', data.recordNum);
+      hilightCurrentPage();
 
-/*
- * Factories
- */
+    };
+    
+    $scope.$on('pagerComplete', function() {
+      hilightCurrentPage();
+    });
+    
+    function hilightCurrentPage() {
+      $('.page-numbers a').removeClass('selected');
+      var $item = $($('.page-numbers a')[pageIndex]);
+      $item.addClass('selected');
+    }
+
+    
+  });
