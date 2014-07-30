@@ -267,7 +267,7 @@ module.exports = function (grunt) {
     //    }
     //  }
 		options: {
-			beautify : true,
+			beautify : false,
 			mangle   : true
 		}
     },

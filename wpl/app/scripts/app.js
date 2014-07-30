@@ -102,6 +102,7 @@ angular
     switch ($location.host()) {
       case 'wonderland-cp.stagebot.net':
         $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+        $rootScope.wsUploadURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
         break;
       case 'localhost':
         $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
