@@ -114,7 +114,7 @@ angular.module('wplAdmin')
         if (addMode) {
           msg = 'collateral added';
           alert(msg);
-          $location.path('/listClients');
+          $location.path('/clientDetail').search({id:$scope.collateral.client_id});
         } else {
           msg = 'collateral updated';
           alert(msg);

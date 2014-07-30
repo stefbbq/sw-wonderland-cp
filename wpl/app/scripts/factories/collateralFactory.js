@@ -47,7 +47,7 @@ angular.module('wplAdmin')
     console.log(collateral);
     var params = {
       id:collateral.guid,
-      clientID:collateral.client,
+      client_id:collateral.client_id,
       name:collateral.name,
       type:collateral.type,
       description:collateral.description
@@ -61,7 +61,7 @@ angular.module('wplAdmin')
     })
     .success(function(data) {
       console.log(data);
-      //onSuccess();
+      onSuccess(); // TODO: defer until assets uploaded.
     })          
     .error (function(data) {
       console.log('error', data);

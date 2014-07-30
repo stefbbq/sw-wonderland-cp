@@ -90,7 +90,7 @@ angular.module('wplAdmin')
    * It listens for the 'clientResultsLoaded' event 
    * and draws based on the number of records available.
    */
-.controller('Pager', function($scope, $http, $rootScope) {
+.controller('ClientListPager', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope) {
     var pageList = [];
     var pageIndex = 0;
     $scope.pages = [];
@@ -140,5 +140,5 @@ angular.module('wplAdmin')
     }
 
     
-  });
+  }]);
 

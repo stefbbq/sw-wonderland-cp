@@ -51,7 +51,6 @@
 
     </table>
   </section>
-
     <section id="collateral">
       <h3>Collateral</h3>
       <div class="util">
@@ -75,9 +74,9 @@
         
         <tr class="record" ng-repeat="item in collateralService.list"  ng-click="showCollateral(item.guid);">
           <td><img src="blank.png" width="25" height="25"></td>
-          <td>{{item.name}}</td>
+          <td>{{item.name | cleanup}}</td>
           <td>{{item.type}}</td>
-          <td>{{item.description}}</td>
+          <td>{{item.description | cleanup}}</td>
           <td>{{item.last_upload}}</td>
         </tr>
         
@@ -91,6 +90,5 @@
       </div>      
       
     </section>
-
     
 </div>

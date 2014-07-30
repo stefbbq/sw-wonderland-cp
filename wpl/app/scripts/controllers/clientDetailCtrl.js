@@ -1,5 +1,5 @@
 'use strict';
-
+var $ = $;
 /*
  * Controllers
  */
@@ -22,8 +22,6 @@ angular.module('wplAdmin')
     var listCollateralActive = true;
     var searchString = null;
     var startPage;
-    
-    
     
     function construct() {
       setClientActiveStatus(true);
@@ -50,23 +48,31 @@ angular.module('wplAdmin')
 
       });
     }
-    
+
     
     $scope.$on('loadCollateralPage', function(e, startPage) {
-      if (searchString == null) {
+      if (searchString === null) {
         loadCollateralPage(startPage);
       } else {
-        searchClients(id, startPage, searchString);
+        loadCollateralSearchPage(id, startPage, searchString);
       }
     });    
     
-    $scope.$on('searchCollateral', function(e, startPage, searchString) {
-      searchClients(id, startPage, searchString);
+    $scope.$on('searchCollateral', function(e, startPage, _searchString) {
+      if (_searchString === '') searchString = null;
+      loadCollateralSearchPage(id, startPage, searchString);
     });
-
     function loadCollateralPage(_startPage) {
       startPage = _startPage;
       $scope.collateralService.loadList(id, startPage, listCollateralActive, function(count) {
+        $scope.$broadcast('collateralResultsLoaded', count);
+      });
+    }  
+    
+    function loadCollateralSearchPage(_startPage, _searchString) {
+      startPage = _startPage;
+      searchString = _searchString;
+      $scope.collateralService.search(id, startPage, listCollateralActive, function(count) {
         $scope.$broadcast('collateralResultsLoaded', count);
       });
     }    
@@ -75,11 +81,9 @@ angular.module('wplAdmin')
       $location.path('/collateralDetail').search({id:collateralID, clientID:id});
     };
     
-    
     $scope.showClientUser = function(id) {
       $location.path('/clientUserDetail').search({id:id});
     };
-    
     
     function setClientActiveStatus(value) {
       clientActive = value;
@@ -134,7 +138,7 @@ angular.module('wplAdmin')
       if (listCollateralActive === value) {
         return 'active';
       }
-    };      
+    };
     
     construct();
 }])
@@ -150,7 +154,7 @@ angular.module('wplAdmin')
    * It listens for the 'collateralResultsLoaded' event 
    * and draws based on the number of records available.
    */
-.controller('CollateralPager', function($scope, $http, $rootScope) {
+.controller('CollateralPager', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope) {
     var pageList = [];
     var pageIndex = 0;
     $scope.collateralPages = [];
@@ -200,4 +204,4 @@ angular.module('wplAdmin')
     }
 
     
-  });
+  }]);

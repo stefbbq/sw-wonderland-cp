@@ -28,7 +28,7 @@ angular.module('wplLogin', [
         if (result.success) {
           var data = {isAdmin:true, id:result.data.guid, superUser:result.data.super_user == '1'};
           $cookieStore.put('adminData', data);
-          location.href = '/';
+          location.href = './';
         } else {
           alert('Login Failed');
         }

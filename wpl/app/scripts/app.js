@@ -25,7 +25,7 @@ angular
     'ui.mask',
     'angularFileUpload'
   ])
-  .config(function ($routeProvider) {
+  .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
       .when('/listClients', {
         templateUrl: basePath + 'views/listClients' + viewExt,
@@ -86,13 +86,13 @@ angular
       .otherwise({
         redirectTo: '/listClients'
       });
-  })
-  .run(function ($rootScope, $location, $cookieStore) {
+  }])
+  .run(['$rootScope', '$location', '$cookieStore', function ($rootScope, $location, $cookieStore) {
     //console.log($location.host());
     
     $rootScope.adminData = $cookieStore.get('adminData');
     if ($rootScope.adminData === undefined || !$rootScope.adminData.isAdmin) {
-      window.location.href = '/login.html';
+      window.location.href = './login.html';
       return; 
     }
     
@@ -130,7 +130,7 @@ angular
       return result;
     };
     
-  })
+  }])
   
   .controller('MenuController', ['$scope', function($scope) {
           
