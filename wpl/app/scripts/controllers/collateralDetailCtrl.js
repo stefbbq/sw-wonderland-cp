@@ -47,19 +47,15 @@ angular.module('wplAdmin')
     
     // edit button
     $scope.edit = function() {
-      $location.path('/editCollateral').search({id:id, companyID:clientService.client.guid});
+      console.log(clientService.details);
+      $location.path('/editCollateral').search({id:id, companyID:clientService.details.guid});
     };
     
-    // reset password
-    $scope.resetPassword = function() {
-      alert("Will generate a new password and email a reset link to the user's email address.");
-    };
-
     
     // active status button
     $scope.changeActiveStatus = function() {
       if (active) {
-        if (confirm('Are you sure you want to deactivate this user?')) {
+        if (confirm('Are you sure you want to deactivate this collateral?')) {
           collateralService.deactivate(id, function() {
             setActiveStatus(false);
             alert('Collateral deactivated');

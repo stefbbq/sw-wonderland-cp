@@ -37,10 +37,12 @@
 
       <div class="buttons">
           <button ng-click="cancel()">Cancel</button>
-          <button ng-click="save()" ng-disabled="form.$invalid || !filesSelected()">Save</button>
+          <button ng-click="save()" ng-disabled="form.$invalid">Save</button>
           <!-- <button ng-click="autofill()">Auto Fill</button> -->
       </div>
     </form>
     <pre>{{collateral}}</pre>
+    
+    <div id="server_response"></div>
     
 </div>

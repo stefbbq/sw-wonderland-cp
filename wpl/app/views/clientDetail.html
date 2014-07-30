@@ -71,9 +71,8 @@
           <th>Description</th>
           <th>Date Uploaded</th>
         </tr>
-        
         <tr class="record" ng-repeat="item in collateralService.list"  ng-click="showCollateral(item.guid);">
-          <td><img src="blank.png" width="25" height="25"></td>
+          <td><img src="{{item.thumb_path}}" width="50"></td>
           <td>{{item.name | cleanup}}</td>
           <td>{{item.type}}</td>
           <td>{{item.description | cleanup}}</td>

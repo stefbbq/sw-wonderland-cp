@@ -43,8 +43,10 @@ angular.module('wplAdmin')
     });         
   }
 
-  function save(collateral, action, onSuccess) {
+  function save(collateral, action, onProgress, onSuccess) {
     console.log(collateral);
+    
+    
     var params = {
       id:collateral.guid,
       client_id:collateral.client_id,
@@ -59,42 +61,43 @@ angular.module('wplAdmin')
       params : params,
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
-    .success(function(data) {
-      console.log(data);
-      onSuccess(); // TODO: defer until assets uploaded.
-    })          
-    .error (function(data) {
-      console.log('error', data);
-    });
-    
-    
-    
-
-    // upload thumbnail
-
-
-    // upload document    
-
-    return;
-    
-    var params = client;
-    params.action = action;
-
-    $http.jsonp($rootScope.wsURL, 
-    {
-      params : params,
-      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-    })
-    .success(function(data) {
-      onSuccess();
+    .success(function(result) {
+      var collateralID = result.data.id;
+      uploadFile('thumb', collateralID, collateral.thumbFile, onProgress, function() {
+        uploadFile('file', collateralID, collateral.file, onProgress, function() {
+          onSuccess();
+        });
+      });
       
+      //onSuccess(); // TODO: defer until assets uploaded.
     })          
     .error (function(data) {
       console.log('error', data);
     });
-    
+  
   }
   
+  function uploadFile(type, collateralID, file, onProgress, onComplete) {
+    console.log("collateralID", collateralID);
+    if (file == null) {
+      onComplete();
+      return;
+    }
+    console.log('uploadingFile');
+    
+    var url = $rootScope.wsUploadURL + '?action=upload' + (type == "thumb" ? 'Thumb' : 'File') ;
+    $upload.upload({
+      url:url,
+      method:'POST',
+      data:{id:collateralID},
+      file:file
+    }).progress(function(e) {
+      if (onProgress) onProgress(e);
+    }).success(function(data, status, headers, config) {
+      $('#server_response').html($('#server_response').html() + data);
+        onComplete();
+    });
+  }
   
   function loadDetails(id, callback) {
     var args = {action:'collateralDetail', id:id};

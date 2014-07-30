@@ -22,8 +22,8 @@ angular.module('wplAdmin')
     function ($scope, $http, $location, $rootScope, $cookieStore, $upload, $timeout, collateralService, clientService) {
   var addMode;
   var action;
-  
-	$scope.fileReaderSupported = window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
+
+  $scope.fileReaderSupported = window.FileReader != null && (window.FileAPI == null || FileAPI.html5 != false);
 
   $scope.collateral = {};
 
@@ -77,14 +77,14 @@ angular.module('wplAdmin')
 			if ($scope.fileReaderSupported && file.type.indexOf('image') > -1) {
 				var fileReader = new FileReader();
 				fileReader.readAsDataURL(file);
-				var loadFile = function(fileReader) {
+				var loadFile = (function(fileReader) {
 					fileReader.onload = function(e) {
 						$timeout(function() {
               $scope.thumb.image = e.target.result;
               $scope.$apply();
 						});
 					};
-				}(fileReader);
+				})(fileReader);
 			}
       
       
@@ -103,22 +103,28 @@ angular.module('wplAdmin')
     
           */
     $scope.filesSelected = function() {
-      return $scope.file.file != null && $scope.thumb.file != null;
+      return $scope.thumb.file !== null;
+      
+      //return $scope.file.file !== null && $scope.thumb.file !== null;
     };
+    
+    function onProgress(e) {
+      console.log("onProgress", e);
+    }
     
     
     $scope.save = function() {
-      collateralService.save($scope.collateral, action,
+      collateralService.save($scope.collateral, action, onProgress,
       function() {
         var msg;
         if (addMode) {
           msg = 'collateral added';
           alert(msg);
-          $location.path('/clientDetail').search({id:$scope.collateral.client_id});
+          //$location.path('/clientDetail').search({id:$scope.collateral.client_id});
         } else {
           msg = 'collateral updated';
           alert(msg);
-          $location.path('/listClients');
+          //$location.path('/clientDetail').search({id:$scope.collateral.client_id});
         }          
       });
      

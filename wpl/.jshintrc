@@ -21,5 +21,5 @@
   "globals": {
     "angular": false
   },
-  "predef": ["alert", "confirm", "md5"]
+  "predef": ["alert", "confirm", "md5", "FileAPI"]
 }

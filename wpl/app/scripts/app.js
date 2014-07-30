@@ -105,6 +105,7 @@ angular
         break;
       case 'localhost':
         $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
+        $rootScope.wsUploadURL = 'http://localhost:81/wonderlandws/WPLAdmin.php';
         if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
         break;
     }
