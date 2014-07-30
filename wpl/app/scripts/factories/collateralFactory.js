@@ -97,7 +97,7 @@ angular.module('wplAdmin')
   
   
   function loadDetails(id, callback) {
-    var args = {action:'clientDetail', q:id};
+    var args = {action:'collateralDetail', id:id};
     
     $http.jsonp($rootScope.wsURL, 
     {
@@ -114,7 +114,7 @@ angular.module('wplAdmin')
   }
   
   function deactivate(id, callback) {
-    var args = {action:'deactivateClient', guid:id};
+    var args = {action:'deactivateCollateral', guid:id};
     $http.jsonp($rootScope.wsURL, 
     {
       params:args,
@@ -127,7 +127,7 @@ angular.module('wplAdmin')
   }
   
   function reactivate(id, callback) {
-    var args = {action:'reactivateClient', guid:id};
+    var args = {action:'reactivateCollateral', guid:id};
     $http.jsonp($rootScope.wsURL,
     {
       params:args,
@@ -139,7 +139,7 @@ angular.module('wplAdmin')
     });
   }
   
-  function loadCollateralTypes() {
+  function loadCollateralTypes(callback) {
     var items = [];
     
     
@@ -158,13 +158,30 @@ angular.module('wplAdmin')
     items.push({id:'special_other', name:'Special / Other'});
     
     angular.copy(items, types);
+    
+    if (callback) callback(items);
+    return items;
   }
-
+  
+  function getCollateralTypeLabel(key) {
+    var items = loadCollateralTypes();
+    var value = '';
+    for (var i=0; i<items.length; i++) {
+      if (items[i].id === key) {
+        value = items[i].name;
+        break;
+      }
+    }
+    
+    return value;
+  }
+  
   
   return {
     loadList:loadList,
     list:list,
     types:types,
+    getCollateralTypeLabel:getCollateralTypeLabel,
     loadTypeList:loadCollateralTypes,
     search:search,
     save:save,

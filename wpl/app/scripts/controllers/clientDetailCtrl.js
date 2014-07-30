@@ -71,8 +71,8 @@ angular.module('wplAdmin')
       });
     }    
     
-    $scope.showCollateral = function(id) {
-      $location.path('/editCollateral').search({id:id});
+    $scope.showCollateral = function(collateralID) {
+      $location.path('/collateralDetail').search({id:collateralID, clientID:id});
     };
     
     
@@ -121,6 +121,17 @@ angular.module('wplAdmin')
     
     $scope.getActiveClass = function(value) {
       if (listActive === value) {
+        return 'active';
+      }
+    };      
+    
+    $scope.listActiveCollateral = function(value) {
+      listCollateralActive = value;
+      loadCollateralPage(0);
+    };  
+    
+    $scope.getActiveCollateralClass = function(value) {
+      if (listCollateralActive === value) {
         return 'active';
       }
     };      

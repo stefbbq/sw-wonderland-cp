@@ -79,6 +79,10 @@ angular
         templateUrl: basePath + 'views/editCollateral' + viewExt,
         controller: 'EditCollateralCtrl'
       })
+      .when('/collateralDetail', {
+        templateUrl: basePath + 'views/collateralDetail' + viewExt,
+        controller: 'CollateralDetailCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });

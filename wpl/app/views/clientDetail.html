@@ -60,6 +60,10 @@
           <input type="submit" value="Search">
         </form>
       </div>
+    <ul class="nav tab-menu">
+      <li ng-class="getActiveCollateralClass(true);"><a href="javascript:void(0);" ng-click="listActiveCollateral(true);">Active</a></li>
+      <li ng-class="getActiveCollateralClass(false);"><a href="javascript:void(0);" ng-click="listActiveCollateral(false);">Inactive</a></li>
+    </ul>
       <table class="list selectable">
         <tr>
           <th>Thumb</th>

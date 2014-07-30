@@ -5,7 +5,7 @@
     <form id="form" name="form" novalidate>
       <div class="field-group col-2">
           <label for="client">Client</label>
-          <select id="client" ng-model="collateral.client" required ng-options="client.guid as client.name for client in clientService.list">
+          <select id="client" ng-model="collateral.client_id" required ng-options="client.guid as client.name for client in clientService.list">
             <option value="">-- choose client --</option>
           </select>
       </div>
