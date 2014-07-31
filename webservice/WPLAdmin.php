@@ -180,6 +180,12 @@ switch ($action) {
     case 'collateralSearch':
       $result = $manager->searchCollateral(getValue('clientID'), getValue('q'), getValue('s'), getValue('c'), getValue('a'));
       break;
+    case 'collateralListFull':
+      $result = $manager->getCollateralListFull(getValue('s'), getValue('c'), getValue('a'));
+      break;
+    case 'collateralSearchFull':
+      $result = $manager->searchCollateralFull(getValue('q'), getValue('s'), getValue('c'), getValue('a'));
+      break;
     case 'collateralDetail':
       $result = $manager->loadCollateralDetails(getValue('id'));
       break;

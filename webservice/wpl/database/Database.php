@@ -51,7 +51,7 @@ class Database {
         $this->db = null;
     }
 
-    public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL){
+    public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL, $join=NULL){
         $cols = $conditions = '';
         $return = array();
         $i=0;
@@ -78,10 +78,19 @@ class Database {
               }
 
             }
-            $queryString = "SELECT ".$cols." FROM ".$table." WHERE ".$conditions;
+            $queryString = "SELECT ".$cols." FROM ".$table;
+            
+            if ($join) {
+              $queryString .= ' ' . $join;
+            }
+            
+            $queryString .=" WHERE ".$conditions;
             //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
         }else{
           $queryString = "SELECT ".$cols." FROM ".$table;
+            if ($join) {
+              $queryString .= ' ' . $join;
+            }
           //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
         }
         
@@ -126,7 +135,7 @@ class Database {
         return $return;
     }
 
-    public function search($table, $select, $orderBy=NULL, $where=NULL, $whereAnd=NULL, $start=NULL, $pageSize=NULL){
+    public function search($table, $select, $orderBy=NULL, $where=NULL, $whereAnd=NULL, $start=NULL, $pageSize=NULL, $join=NULL){
         $cols = $conditions = '';
         $return = array();
         $i=0;
@@ -139,6 +148,7 @@ class Database {
             $i++;
         }
         $i=0;
+        
         $queryString = '';
         $conditions = '(';
         if($where){
@@ -163,13 +173,17 @@ class Database {
               }
             }
             
-            $queryString = "SELECT ".$cols." FROM ".$table." WHERE ".$conditions;
+            $queryString = "SELECT ".$cols ." FROM ".$table;
+            
+            if ($join) $queryString.= ' ' . $join;
+            $queryString .= " WHERE ".$conditions;
             //var_dump($queryString);
             //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table." WHERE ".$conditions);
             
         }else{
           $queryString = "SELECT ".$cols." FROM ".$table;
-          //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
+           if ($join) $queryString.= ' ' . $join;
+            //$query = $this->db->prepare("SELECT ".$cols." FROM ".$table);
         }
         
         $i=0;

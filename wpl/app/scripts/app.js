@@ -83,6 +83,10 @@ angular
         templateUrl: basePath + 'views/collateralDetail' + viewExt,
         controller: 'CollateralDetailCtrl'
       })
+      .when('/listCollateral', {
+        templateUrl: basePath + 'views/listCollateral' + viewExt,
+        controller: 'CollateralListCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });
@@ -119,6 +123,10 @@ angular
     };
     $rootScope.collateralList = {
       pageSize:3
+    };
+    
+    $rootScope.collateralList_full = {
+      pageSize:10
     };
     
     

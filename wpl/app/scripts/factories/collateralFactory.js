@@ -7,6 +7,8 @@ angular.module('wplAdmin')
   var details = {};
   var types = [];
   
+
+  
   function loadList(clientID, startPage, active, callback) {
     var args = {action:'collateralList', clientID:clientID, s:startPage, c:pageSize, a:active ? '1':'0'};
 
@@ -44,6 +46,43 @@ angular.module('wplAdmin')
     });         
   }
 
+  function loadListFull(startPage, active, callback) {
+    var args = {action:'collateralListFull', s:startPage, c:$rootScope.collateralList_full.pageSize, a:active ? '1':'0'};
+
+    $http.jsonp($rootScope.wsURL, 
+    {
+        params:args,
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+    .success(function(result) {
+      angular.copy(result.data.list, list);
+      var count = result.data.count;
+      callback(count);
+    })          
+    .error (function(result) {
+        console.log('error', result);
+    });        
+  }
+  
+  function searchAll(searchString, startPage, active, callback) {
+    var args = {action:'collateralSearchFull', s:startPage, c:pageSize, q:searchString, a:active ? '1':'0'};
+
+    $http.jsonp($rootScope.wsURL, 
+    {
+        params:args,
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+    .success(function(result) {
+      angular.copy(result.data.list, list);
+      console.log(list);
+      var count = result.data.count;
+      callback(count);
+    })          
+    .error (function(result) {
+        console.log('error', result);
+    });         
+  }  
+  
   function save(collateral, action, onProgress, onSuccess) {
     console.log(collateral);
     
@@ -95,7 +134,7 @@ angular.module('wplAdmin')
     }).progress(function(e) {
       if (onProgress) onProgress(e);
     }).success(function(data, status, headers, config) {
-      $('#server_response').html($('#server_response').html() + data);
+      //$('#server_response').html($('#server_response').html() + data);
         onComplete();
     });
   }
@@ -183,11 +222,13 @@ angular.module('wplAdmin')
   
   return {
     loadList:loadList,
+    loadListFull:loadListFull,
     list:list,
     types:types,
     getCollateralTypeLabel:getCollateralTypeLabel,
     loadTypeList:loadCollateralTypes,
     search:search,
+    searchAll:searchAll,
     save:save,
     loadDetails:loadDetails,
     deactivate:deactivate,

@@ -625,6 +625,90 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
       return $result;
   } 
 
+  /*
+   * List Collateral
+   */
+  public function getCollateralListFull($startRecord, $pageSize, $active) {
+      $result = new Result();
+      
+      $sql = "select count(*) from collateral where active = '$active'";
+      $dbResult = $this->db->db->prepare($sql);
+      $dbResult->execute();
+      $recordCount = $dbResult->fetchColumn();        
+
+      $select = array('collateral.guid', 'clients.guid AS client_id', 'clients.name as client_name', 'collateral.name', 'type', 'description', 'last_upload', 'thumb_path');
+
+      $orderBy = array('clients.name' => 'ASC', 'collateral.name' => 'ASC');
+      $where = array('collateral.active' => $active);
+      $join = 'inner join clients on clients.id = collateral.client_id';
+      
+      $dataset = $this->db->select('collateral', $select, $orderBy, $where, $startRecord, $pageSize, $join);
+
+      $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+
+      foreach ($dataset as $index => $item) {
+        $dataset[$index]['thumb_path'] = $baseURL . $item['thumb_path'];
+        $dataset[$index]['name'] = str_replace('\\', '', $item['name']);
+        $dataset[$index]['description'] = str_replace('\\', '', $item['description']);
+      }
+      
+      $result->success = true;
+      $result->code = 200;
+      $result->data = array();
+      $result->data['list'] = $dataset;
+      $result->data['count'] = $recordCount;
+
+      $result->message = 'full collateral list';
+
+      return $result;
+  }  
+ 
+ /*
+   * Search Collateral - Full
+   */
+  public function searchCollateralFull($searchString, $startRecord, $pageSize, $active) {
+      $result = new Result();
+      
+      $searchQuery = " (name LIKE :search OR description LIKE :search OR asset_path LIKE :search) AND active='$active'";
+      $sql = 'SELECT COUNT(*) FROM collateral WHERE' . $searchQuery;
+      
+      $dbResult = $this->db->db->prepare($sql);
+      $dbResult->bindValue(':search', '%'.$searchString.'%');
+      $dbResult->execute();
+      $recordCount = $dbResult->fetchColumn();
+      
+      $select = array('collateral.guid', 'clients.guid AS client_id', 'clients.name as client_name', 'collateral.name', 'type', 'description', 'last_upload', 'thumb_path');
+      $join = 'inner join clients on clients.id = collateral.client_id';
+
+      $where = array(
+          'collateral.name'=>$searchString,
+          'description'=>$searchString,
+          'asset_path'=>$searchString
+      );
+      $whereAnd = array('collateral.active'=>$active);
+      $orderBy = array('clients.name' => 'ASC', 'collateral.name' => 'ASC');
+      $dataset = $this->db->search('collateral', $select, $orderBy, $where, $whereAnd, $startRecord, $pageSize, $join);
+
+      $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+
+      foreach ($dataset as $index => $item) {
+        $dataset[$index]['thumb_path'] = $baseURL . $item['thumb_path'];
+        $dataset[$index]['name'] = str_replace('\\', '', $item['name']);
+        $dataset[$index]['description'] = str_replace('\\', '', $item['description']);
+      }
+      
+      $result->success = true;
+      $result->code = 200;
+      $result->data = array();
+      $result->data['list'] = $dataset;
+      $result->data['count'] = $recordCount;
+
+      $result->message = 'full collateral list';
+
+      return $result;
+  }   
   
   public function loadCollateralDetails($guid) {
     $result = new Result();
@@ -715,9 +799,9 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
         'id' => $id
     );
     
-    $item = array($field => $dest);
+    $items = array($field => $dest, 'last_upload' => date("Y-m-d H:i:s"));
     
-    $dbResult = $this->db->update('collateral', $item, $where);
+    $dbResult = $this->db->update('collateral', $items, $where);
     
     return $result;
   }
