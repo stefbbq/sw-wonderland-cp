@@ -3,14 +3,8 @@ var $ = $;
 
 angular.module('wplAdmin')
 .controller('SearchCtrl', ['$scope', function($scope) {
-    
     $scope.doSearch = function() {
-      if ($scope.searchString.length === 0) {
-        // nothing entered; show all
-        $scope.$emit('loadClientPage', 0);
-      } else {
-        $scope.$emit('searchClients', 0, $scope.searchString);
-      }
+      $scope.$emit('searchClients', 0, $scope.searchString);
     };
 }])
 .controller('ClientListCtrl', ['$scope', '$http', '$location', '$rootScope', 'clientService', function ($scope, $http, $location, $rootScope, clientService) {
@@ -35,8 +29,14 @@ angular.module('wplAdmin')
       loadClientPage(startPage);
     });
     
-    $scope.$on('searchClients', function(e, startPage, searchString) {
-      searchClients(startPage, searchString);
+    $scope.$on('searchClients', function(e, startPage, _searchString) {
+      searchString = _searchString;
+      
+      if (searchString === undefined || searchString.length === 0) {
+        loadClientPage(startPage);
+      } else {
+        searchClients(startPage, searchString);
+      }
     });
     
     function loadClientPage(_startPage) {

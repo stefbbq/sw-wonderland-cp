@@ -51,16 +51,17 @@ angular.module('wplAdmin')
 
     
     $scope.$on('loadCollateralPage', function(e, startPage) {
-      if (searchString === null) {
         loadCollateralPage(startPage);
-      } else {
-        loadCollateralSearchPage(id, startPage, searchString);
-      }
     });    
     
     $scope.$on('searchCollateral', function(e, startPage, _searchString) {
-      if (_searchString === '') searchString = null;
-      loadCollateralSearchPage(id, startPage, searchString);
+      searchString = _searchString;
+      
+      if (searchString === undefined || searchString.length === 0) {
+        loadCollateralPage(startPage);
+      } else {
+        loadCollateralSearchPage(startPage, _searchString);
+      }
     });
     function loadCollateralPage(_startPage) {
       startPage = _startPage;
@@ -72,7 +73,8 @@ angular.module('wplAdmin')
     function loadCollateralSearchPage(_startPage, _searchString) {
       startPage = _startPage;
       searchString = _searchString;
-      $scope.collateralService.search(id, startPage, listCollateralActive, function(count) {
+      console.log(id, startPage, searchString, listCollateralActive)
+      $scope.collateralService.search(id, searchString, startPage, listCollateralActive, function(count) {
         $scope.$broadcast('collateralResultsLoaded', count);
       });
     }    
@@ -142,12 +144,26 @@ angular.module('wplAdmin')
     
     construct();
 }])
-.controller('UserSearchCtrl', ['$scope', function($scope) {
-    var a = $scope;
-}])
 .controller('CollateralSearchCtrl', ['$scope', function($scope) {
-    var a = $scope;
+    $scope.doSearch = function() {
+      //console.log($scope.searchString, $scope.searchString.length, $scope.searchString.length === 0);
+      $scope.$emit('searchCollateral', 0, $scope.searchString);
+      /*
+      
+      console.log($scope.searchString, $scope.searchString === undefined);
+      if ($scope.searchString === undefined || $scope.searchString.length === 0) {
+        // nothing entered; show all
+        console.log('empty search -- show all');
+        $scope.$emit('loadCollateralPage', 0);
+      } else {
+        console.log('searching');
+        console.log('length', $scope.searchString.length);
+        $scope.$emit('searchCollateral', 0, $scope.searchString);
+      }
+      */
+    };
 }])
+
  /*
    * Pager
    * This is the view which displays the pagination.

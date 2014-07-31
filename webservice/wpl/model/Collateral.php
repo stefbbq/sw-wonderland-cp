@@ -13,9 +13,9 @@ namespace wpl\model;
  *
  * @author Scott David Garson
  */
-class AdminUser {
+class Collateral {
 
-  public $username, $email, $password, $guid;
+  public $client_id, $name, $type, $description, $thumb_path, $asset_path, $last_upload, $guid;
 
   public function __construct() {
 
@@ -23,9 +23,10 @@ class AdminUser {
 
   public function getUpdateModel() {
     return array(
-      'username' => $this->$username,
-      'email' => $this->email,
-      'password' => $this->password,
+      'name' => $this->name,
+      'type' => $this->type,
+      'description' => $this->description,
+      'client_id' => $this->client_id
     );
   }  
 }

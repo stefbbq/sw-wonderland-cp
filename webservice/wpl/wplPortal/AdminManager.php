@@ -5,6 +5,7 @@ use wpl\database\Database;
 use wpl\model\Client;
 use wpl\model\ClientUser;
 use wpl\model\AdminUser;
+use wpl\model\Collateral;
 use sdg\data\Result;
 /**
  * Description of AdminManager
@@ -28,9 +29,9 @@ class AdminManager {
       $newClient = $id == null;
 
       $client = new Client();
-      $client->name = $name;
-      $client->address = $address;
-      $client->city = $city;
+      $client->name = $this->escapeText($name);
+      $client->address = $this->escapeText($address);
+      $client->city = $this->escapeText($city);
       $client->province = $province;
       $client->postal_code = $postal_code;
       $client->email = $email;
@@ -39,7 +40,7 @@ class AdminManager {
       $client->wplEmail = $wplEmail;
       $client->guid = $newClient ? $this->db->generateGUID() : $id;
 
-      $result->data = $client;
+      $result->data = array('id' => $client->guid);
 
       if ($newClient) {
         $client->active = '1';
@@ -103,7 +104,7 @@ class AdminManager {
   /*
    * Search Clients
    */
-  public function searchClients($searchString, $startRecord, $pageSize, $active) {
+public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result = new Result();
 
       $searchQuery = " name LIKE :search OR address LIKE :search OR city LIKE :search AND active='$active'";
@@ -134,6 +135,7 @@ class AdminManager {
 
       return $result;
   }
+  
 
   /*
    * Client Detail
@@ -146,6 +148,7 @@ class AdminManager {
     $where = array(
         'guid' => $guid
     );
+    
     $orderBy = null;
     $dataset = $this->db->select('clients', $select, $orderBy, $where);
 
@@ -185,20 +188,20 @@ class AdminManager {
   public function saveClientUser($firstName, $lastName, $email, $confirmEmail, $phone, $phone2, $companyID, $id = null) {
     $result = new Result();
 
-    $newUser = $id == null;
+    $isNew = $id == null;
 
     $user = new ClientUser();
-    $user->first_name = $firstName;
-    $user->last_name = $lastName;
+    $user->first_name = $this->escapeText($firstName);
+    $user->last_name = $this->escapeText($lastName);
     $user->email = $email;
     $user->confirmation_email = $confirmEmail;
     $user->phone = $phone;
     $user->phone2 = $phone2;
-    $user->guid = $newUser ? $this->db->generateGUID() : $id;
+    $user->guid = $isNew ? $this->db->generateGUID() : $id;
 
     $result->data = $user;
 
-    if ($newUser) {
+    if ($isNew) {
       $clientKey = $this->db->getCompanyIDFromGUID($companyID);
       $user->client_id = $clientKey;
       
@@ -318,18 +321,18 @@ class AdminManager {
   public function saveAdminUser($username, $email, $password, $id = null) {
     $result = new Result();
 
-    $newUser = $id == null;
+    $isNew = $id == null;
     
     $user = new AdminUser();
-    $user->username = $username;
+    $user->username = $this->escapeText($username);
     $user->email = $email;
     $user->temp_password = $this->db->generateTempPassword();
     $user->password = md5($user->temp_password);
-    $user->guid = $newUser ? $this->db->generateGUID() : $id;
+    $user->guid = $isNew ? $this->db->generateGUID() : $id;
 
     $result->data = $user;
 
-    if ($newUser) {
+    if ($isNew) {
       $dbResult = $this->db->add('adminUsers', $user);
       if ($dbResult) {
         $result->success = true;
@@ -344,15 +347,15 @@ class AdminManager {
       $where = array(
           'guid' => $id
       );
-      $dbResult = $this->db->update('clientUsers', $user->getUpdateModel(), $where);
+      $dbResult = $this->db->update('adminUsers', $user->getUpdateModel(), $where);
       if ($dbResult) {
         $result->success = true;
-        $result->message = "Client updated.";
+        $result->message = "Admin user updated.";
         $result->code = 200;
       } else {
         $result->success = false;
         $result->code = 304;
-        $result->message = "Error updating client.";
+        $result->message = "Error updating admin user.";
       }
     }
     
@@ -365,7 +368,7 @@ class AdminManager {
     $result = new Result();
     
     $user = array(
-     'password' => $password,
+     'password' => $this->escapeText($password),
      'password_set' => '1',
      'temp_password' => ''
     );
@@ -464,10 +467,10 @@ class AdminManager {
     $result->data = array();
 
     // get user detail
-    $select = array('guid');
+    $select = array('guid', 'super_user');
     $where = array(
-        'username' => $username,
-        'password' => $password
+        'username' => $this->escapeText($username),
+        'password' => $this->escapeText($password)
     );
     $orderBy = null;
     $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
@@ -486,6 +489,245 @@ class AdminManager {
     
 
     return $result;    
+  }
+  
+  
+  /*
+   * Collateral
+   */
+  public function saveCollateral($clientID, $name, $type, $description, $id = null) {
+    $result = new Result();
+    
+    $isNew = $id == null;
+    
+    $collateral = new Collateral();
+    $collateral->client_id = $this->db->getCompanyIDFromGUID($clientID);
+    $collateral->name = $this->escapeText($name);
+    $collateral->type = $type;
+    $collateral->description = $this->escapeText($description);
+    $collateral->guid = $isNew ? $this->db->generateGUID() : $id;
+    $collateral->last_upload = date("Y-m-d H:i:s");
+
+    $result->data = array('id' => $collateral->guid);
+
+    if ($isNew) {
+      $dbResult = $this->db->add('collateral', $collateral);
+      if ($dbResult) {
+        $result->success = true;
+        $result->message = "Collateral added.";
+        $result->code = 200;
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error adding collateral.";
+      }
+    } else {
+      $where = array(
+          'guid' => $id
+      );
+      $dbResult = $this->db->update('collateral', $collateral->getUpdateModel(), $where);
+      if ($dbResult) {
+        $result->success = true;
+        $result->message = "Collateral updated.";
+        $result->code = 200;
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error updating collateral.";
+      }
+    }    
+    
+    return $result;
+  }
+    
+  /*
+   * List Collateral
+   */
+  public function getCollateralList($clientID, $startRecord, $pageSize, $active) {
+      $result = new Result();
+      
+      $clientID = $this->db->getCompanyIDFromGUID($clientID);
+      
+      $sql = "select count(*) from collateral where active = '$active' and client_id = $clientID";
+      $dbResult = $this->db->db->prepare($sql);
+      $dbResult->execute();
+      $recordCount = $dbResult->fetchColumn();        
+
+      $select = array('guid', 'name', 'type', 'description', 'last_upload', 'thumb_path');
+
+      $orderBy = array('name' => 'ASC');
+      $where = array('active' => $active, 'client_id' => $clientID);
+      $dataset = $this->db->select('collateral', $select, $orderBy, $where, $startRecord, $pageSize);
+
+      $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+
+      foreach ($dataset as $index => $item) {
+        $dataset[$index]['thumb_path'] = $baseURL . $item['thumb_path'];
+        $dataset[$index]['name'] = str_replace('\\', '', $item['name']);
+        $dataset[$index]['description'] = str_replace('\\', '', $item['description']);
+      }
+      
+      $result->success = true;
+      $result->code = 200;
+      $result->data = array();
+      $result->data['list'] = $dataset;
+      $result->data['count'] = $recordCount;
+
+      $result->message = 'collateral list';
+
+      return $result;
+  }  
+ 
+ /*
+   * List Collateral
+   */
+  public function searchCollateral($clientID, $searchString, $startRecord, $pageSize, $active) {
+      $result = new Result();
+      
+      $clientID = $this->db->getCompanyIDFromGUID($clientID);
+      
+      $searchQuery = " (name LIKE :search OR description LIKE :search OR asset_path LIKE :search) AND active='$active' AND client_id='$clientID'";
+      $sql = 'SELECT COUNT(*) FROM collateral WHERE' . $searchQuery;
+      
+      $dbResult = $this->db->db->prepare($sql);
+      $dbResult->bindValue(':search', '%'.$searchString.'%');
+      $dbResult->execute();
+      $recordCount = $dbResult->fetchColumn();
+      
+      $select = array('guid', 'name', 'type', 'description', 'last_upload', 'thumb_path');
+      $where = array(
+          'name'=>$searchString,
+          'description'=>$searchString,
+          'asset_path'=>$searchString
+      );
+      $whereAnd = array('active'=>$active, 'client_id'=>$clientID);
+      $orderBy = array('name' => 'ASC');
+      $dataset = $this->db->search('collateral', $select, $orderBy, $where, $whereAnd, $startRecord, $pageSize);
+
+      $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+
+      foreach ($dataset as $index => $item) {
+        $dataset[$index]['thumb_path'] = $baseURL . $item['thumb_path'];
+        $dataset[$index]['name'] = str_replace('\\', '', $item['name']);
+        $dataset[$index]['description'] = str_replace('\\', '', $item['description']);
+      }
+      
+      $result->success = true;
+      $result->code = 200;
+      $result->data = array();
+      $result->data['list'] = $dataset;
+      $result->data['count'] = $recordCount;
+
+      $result->message = 'collateral list';
+
+      return $result;
+  } 
+
+  
+  public function loadCollateralDetails($guid) {
+    $result = new Result();
+    $result->data = array();
+
+    // get user detail
+    $select = array('guid', 'name', 'type', 'description', 'last_upload', 'client_id', 'active', 'thumb_path', 'asset_path');
+    $where = array(
+        'guid' => $guid
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('collateral', $select, $orderBy, $where);
+    if ($dataset) {
+      $result->success = true;
+      $result->code = 200;
+      $result->data = $dataset[0];
+      
+      $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+      $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+      
+      $result->data['thumb_path'] = $baseURL . $result->data['thumb_path'];
+      $result->data['asset_path'] = $baseURL . $result->data['asset_path'];
+      $result->data['name'] = str_replace('\\', '', $result->data['name']);
+      $result->data['description'] = str_replace('\\', '', $result->data['description']);
+      
+      
+      $result->data['client_id'] = $this->db->getCompanyGUIDFromID($result->data['client_id']);
+      
+      $result->message = 'client user detail';
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->message = 'client user detail failed';
+    }
+    return $result;      
+  }
+  
+  /*
+   * Deactivate
+   */
+  public function setCollateralActive($guid, $active) {
+    $result = new Result();
+    
+    $insert = array('active' => $active == '1');
+    $where = array('guid' => $guid);
+    
+    $dbResult = $this->db->update('collateral', $insert, $where);
+    if ($dbResult) {
+      $result->success = true;
+      $result->message = $active ? "Collateral reactivated." : "Collateral deactivated.";
+      $result->code = 200;
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->message = $active ? "Collateral reactivation failed." : "Collateral deactivation failed.";
+    }
+    
+    return $result;
+  }  
+  
+  
+  public function upload($type) {
+    $result = new Result();
+    $result->message = "upload";
+    
+    if (!isset($_POST['id'])) {
+      $result->message = 'no collateral ID set.';
+      return $result;
+    }
+    $id = $this->db->getCollateralIDFromGUID(htmlspecialchars($_POST['id']));
+    
+    $file = $_FILES['file'];
+    $dest = 'collateral/' . $id . '/';
+    if (!file_exists($dest)) {
+      mkdir($dest);
+    }
+    $dest .= $file['name'];
+    
+    move_uploaded_file($file['tmp_name'], $dest);
+    $result->success = true;
+    $result->code = 200;
+    //$result->data = $_FILES;
+
+    // update asset urls
+    $field = $type == 'thumb' ? 'thumb_path' : 'asset_path';
+    
+    $where = array(
+        'id' => $id
+    );
+    
+    $item = array($field => $dest);
+    
+    $dbResult = $this->db->update('collateral', $item, $where);
+    
+    return $result;
+  }
+  
+    
+  private function escapeText($text) {
+    //mysql_real_escape_string($unescaped_string)    
+    //$result = str_replace("'", "\'", $text);
+    $result = addslashes ($text);
+    return $result;
   }
   
 }

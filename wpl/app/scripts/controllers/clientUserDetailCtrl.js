@@ -63,12 +63,6 @@ angular.module('wplAdmin')
     
     
     construct();
-}])
-.controller('UserSearchCtrl', ['$scope', function($scope) {
-    var a = $scope;
-}])
-.controller('CollateralSearchCtrl', ['$scope', function($scope) {
-    var a = $scope;
 }]);
 
 

@@ -140,6 +140,7 @@ class Database {
         }
         $i=0;
         $queryString = '';
+        $conditions = '(';
         if($where){
             foreach($where as $col => $data){
                 if($i==0){
@@ -149,6 +150,8 @@ class Database {
                 }
                 $i++;
             }
+            
+            $conditions .= ')';
             
             /*
              * Won't work properly where there is no $where defined.
@@ -185,15 +188,19 @@ class Database {
           $queryString .= ' LIMIT ' . $start . ',' . $pageSize;
         }
         
+        //var_dump($queryString);
+        
         $query = $this->db->prepare($queryString);
         
         try {
             $query->execute();
             for($i=0; $row = $query->fetch(); $i++){
-                $return[$i] = array();
-                foreach($row as $key => $rowItem){
+              $return[$i] = array();
+              foreach($row as $key => $rowItem){
+                if (!is_int($key)) {
                   $return[$i][$key] = $rowItem;
                 }
+              }
             }
         }catch (\PDOException $e) {
             echo $e->getMessage();
@@ -348,6 +355,39 @@ class Database {
       return $return;
     }
 
+    public function getCompanyGUIDFromID($id) {
+      $return = -1;
+      $sql = "SELECT guid FROM clients WHERE id = '$id'";
+      $query = $this->db->prepare($sql);
+      try {
+          $query->execute();
+          $row = $query->fetch();
+          $return = $row[0];
+      }catch (\PDOException $e) {
+          echo $e->getMessage();
+      }
+      $query->closeCursor();
+
+      return $return;
+    }
+    
+    public function getCollateralIDFromGUID($guid) {
+      $return = -1;
+      if (strlen($guid) == 36) {
+        $sql = "SELECT id FROM collateral WHERE guid = '$guid'";
+        $query = $this->db->prepare($sql);
+        try {
+            $query->execute();
+            $row = $query->fetch();
+            $return = $row[0];
+        }catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
+        $query->closeCursor();
+      }
+      return $return;
+    }
+    
     /****************************************************************************************************
      * Get Member ID from Token
      ****************************************************************************************************/

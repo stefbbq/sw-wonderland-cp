@@ -25,7 +25,7 @@ angular.module('wplAdmin')
     });        
   }
   
-  function search(clientID, startPage, searchString, active, callback) {
+  function search(clientID, searchString, startPage, active, callback) {
     var args = {action:'collateralSearch', clientID:clientID, s:startPage, c:pageSize, q:searchString, a:active ? '1':'0'};
 
     $http.jsonp($rootScope.wsURL, 
@@ -35,6 +35,7 @@ angular.module('wplAdmin')
     })
     .success(function(result) {
       angular.copy(result.data.list, list);
+      console.log(list);
       var count = result.data.count;
       callback(count);
     })          

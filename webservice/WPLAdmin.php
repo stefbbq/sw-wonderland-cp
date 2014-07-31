@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+
 require_once 'autoload.inc.php';
 
 
@@ -52,6 +54,9 @@ switch ($action) {
       break;
     case 'clientList':
       $result = $manager->getClientList(getValue('s'), getValue('c'), getValue('a'));
+      break;
+    case 'clientListAll':
+      $result = $manager->getClientList(null, null, '1');
       break;
     case 'clientSearch':
       $result = $manager->searchClients(getValue('q'), getValue('s'), getValue('c'), getValue('a'));
@@ -149,7 +154,48 @@ switch ($action) {
     case 'adminLogin':
       $result = $manager->login(getValue('username'), getValue('password'));
       break;
+    /*
+     * Collateral
+     */
+    case 'addCollateral':
+      $result = $manager->saveCollateral(
+              getValue('client_id'),
+              getValue('name'),
+              getValue('type'),
+              getValue('description')
+              );
+      break;
+    case 'updateCollateral':
+      $result = $manager->saveCollateral(
+              getValue('client_id'),
+              getValue('name'),
+              getValue('type'),
+              getValue('description'),
+              getValue('id')
+              );
+      break;
+    case 'collateralList':
+      $result = $manager->getCollateralList(getValue('clientID'), getValue('s'), getValue('c'), getValue('a'));
+      break;
+    case 'collateralSearch':
+      $result = $manager->searchCollateral(getValue('clientID'), getValue('q'), getValue('s'), getValue('c'), getValue('a'));
+      break;
+    case 'collateralDetail':
+      $result = $manager->loadCollateralDetails(getValue('id'));
+      break;
+    case 'deactivateCollateral':
+      $result = $manager->setCollateralActive(getValue('guid'), '0');
+      break;
+    case 'reactivateCollateral':
+      $result = $manager->setCollateralActive(getValue('guid'), '1');
+      break;
     
+    case 'uploadThumb':
+      $result = $manager->upload('thumb');
+      break;
+    case 'uploadFile':
+      $result = $manager->upload('file');
+      break;
     default : 
         $result->success = false;
         $result->message = 'no action';
