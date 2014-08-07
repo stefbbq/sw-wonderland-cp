@@ -1,0 +1,26 @@
+<div class="dropbox_test">
+
+    <h1>Dropbox Test</h1>
+
+    <form id="form" name="form" novalidate>
+      <div class="field-group col-2">
+          <label for="name">Collateral Name</label>
+          <input id="name" type="text" ng-model="collateral.name" required ng-minlength="2" ng-maxlength="50" />
+      </div>
+      <div class="field-group col-2">
+        <label for="file">Attach file</label>
+        <input id="file" type="file" ng-model="collateral.file" ng-file-select="onFileSelect($files)">
+      </div>
+
+      <div class="buttons">
+          <button ng-click="cancel()">Cancel</button>
+          <button ng-click="save()" ng-disabled="form.$invalid">Save</button>
+          <!-- <button ng-click="autofill()">Auto Fill</button> -->
+      </div>
+    </form>
+    <!--
+    <pre>{{collateral}}</pre>
+    -->
+    
+    <div id="server_response"></div>
+</div>

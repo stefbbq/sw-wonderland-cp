@@ -87,6 +87,10 @@ angular
         templateUrl: basePath + 'views/listCollateral' + viewExt,
         controller: 'CollateralListCtrl'
       })
+      .when('/dropbox', {
+        templateUrl: basePath + 'views/dropboxTest' + viewExt,
+        controller: 'DropBoxTestCtrl'
+      })
       .otherwise({
         redirectTo: '/listClients'
       });
@@ -107,10 +111,12 @@ angular
       case 'wonderland-cp.stagebot.net':
         $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
         $rootScope.wsUploadURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
+        $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
         break;
       case 'localhost':
         $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
         $rootScope.wsUploadURL = 'http://localhost:81/wonderlandws/WPLAdmin.php';
+        $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
         if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
         break;
     }

@@ -1,0 +1,5 @@
+[Thu Jul 31 13:55:31.369827 2014] [authz_core:error] [pid 7220:tid 988] [client ::1:54250] AH01630: client denied by server configuration: D:/_projects/steamwalker/wonderland/development/portals/webservice/WPLAdmin.php
+[Thu Jul 31 13:55:33.544277 2014] [authz_core:error] [pid 7220:tid 988] [client ::1:54250] AH01630: client denied by server configuration: D:/_projects/steamwalker/wonderland/development/portals/webservice/WPLAdmin.php
+[Thu Jul 31 13:55:34.224739 2014] [authz_core:error] [pid 7220:tid 988] [client ::1:54250] AH01630: client denied by server configuration: D:/_projects/steamwalker/wonderland/development/portals/webservice/WPLAdmin.php
+[Thu Jul 31 13:55:34.449883 2014] [authz_core:error] [pid 7220:tid 988] [client ::1:54250] AH01630: client denied by server configuration: D:/_projects/steamwalker/wonderland/development/portals/webservice/WPLAdmin.php
+[Thu Jul 31 13:55:56.000268 2014] [authz_core:error] [pid 7220:tid 988] [client ::1:54254] AH01630: client denied by server configuration: D:/_projects/steamwalker/wonderland/development/portals/webservice/WPLAdmin.php

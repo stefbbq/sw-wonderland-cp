@@ -219,6 +219,25 @@ angular.module('wplAdmin')
     return value;
   }
   
+  /*
+   * Save to Dropbox
+   */
+  function saveToDropbox(collateral, file, onProgress, onComplete) {
+    var url = $rootScope.wsDropboxURL + '?action=saveToDropbox';
+    $upload.upload({
+      url:url,
+      method:'POST',
+      data:{name:collateral.name},
+      file:file
+    }).progress(function(e) {
+      if (onProgress) onProgress(e);
+    }).success(function(data, status, headers, config) {
+      $('#server_response').html(data);
+        onComplete();
+    });
+    
+  }
+  
   
   return {
     loadList:loadList,
@@ -233,7 +252,8 @@ angular.module('wplAdmin')
     loadDetails:loadDetails,
     deactivate:deactivate,
     reactivate:reactivate,
-    details:details
+    details:details,
+    saveToDropbox:saveToDropbox
   };
     
 }]);

@@ -9,6 +9,7 @@ ini_set('xdebug.var_display_max_children', 256);
 ini_set('xdebug.var_display_max_data', 1024);
 
 use wpl\wplPortal\AdminManager;
+use wpl\dropbox\DropboxUploader;
 use sdg\data\Result;
 
 $manager = new AdminManager();
@@ -201,6 +202,13 @@ switch ($action) {
       break;
     case 'uploadFile':
       $result = $manager->upload('file');
+      break;
+    case 'saveToDropbox':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->saveToDropbox();
+      break;
+    case 'typeList':
+      $result = $manager->getProductTypes();
       break;
     default : 
         $result->success = false;

@@ -805,8 +805,32 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     
     return $result;
   }
-  
+
+  /*
+   * Collateral Types
+   */
+  public function getProductTypes() {
+    $result=  new Result();
+    $select = array('code', 'name');
+    $orderBy = array('name' => 'ASC');
+    $dataset = $this->db->select('collateralTypes', $select, $orderBy);
     
+    if ($dataset) {
+      $result->success = true;
+      $result->code = 200;
+      $result->data = $dataset;
+      $result->message = 'product type list';
+    } else {
+      $result->code = 304;
+      $result->code = 304;
+      $result->message = 'error obtaining product type list';
+    }
+
+
+    return $result;    
+    
+  }
+ 
   private function escapeText($text) {
     //mysql_real_escape_string($unescaped_string)    
     //$result = str_replace("'", "\'", $text);
