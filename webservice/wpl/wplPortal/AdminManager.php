@@ -7,6 +7,8 @@ use wpl\model\ClientUser;
 use wpl\model\AdminUser;
 use wpl\model\Collateral;
 use sdg\data\Result;
+use wpl\dropbox\DropboxUploader;
+
 /**
  * Description of AdminManager
  *
@@ -807,11 +809,35 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   }
 
   /*
+   * Fake Dropdown Content
+   */
+  public function getDropdownContent() {
+    $result=  new Result();
+    $select = array('id', 'name');
+    $orderBy = array('name' => 'ASC');
+    $dataset = $this->db->select('fakeDropdownContent', $select, $orderBy);
+    
+    if ($dataset) {
+      $result->success = true;
+      $result->code = 200;
+      $result->data = $dataset;
+      $result->message = 'fake dropdown content';
+    } else {
+      $result->code = 304;
+      $result->message = 'error obtaining fake dropdown content';
+    }
+
+
+    return $result;    
+    
+  }
+ 
+  /*
    * Collateral Types
    */
   public function getProductTypes() {
     $result=  new Result();
-    $select = array('code', 'name');
+    $select = array('id', 'name');
     $orderBy = array('name' => 'ASC');
     $dataset = $this->db->select('collateralTypes', $select, $orderBy);
     
@@ -822,7 +848,6 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result->message = 'product type list';
     } else {
       $result->code = 304;
-      $result->code = 304;
       $result->message = 'error obtaining product type list';
     }
 
@@ -830,12 +855,25 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     return $result;    
     
   }
- 
+  
+  
+  
+  /*
+   * Util
+   */
   private function escapeText($text) {
     //mysql_real_escape_string($unescaped_string)    
     //$result = str_replace("'", "\'", $text);
     $result = addslashes ($text);
     return $result;
+  }
+  
+  private function getPostValue($name) {
+    if (isset($_POST[$name])) {
+      return htmlspecialchars($_POST[$name]);
+    } else {
+      return null;
+    }
   }
   
 }

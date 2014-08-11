@@ -207,8 +207,23 @@ switch ($action) {
       $dropbox = new DropboxUploader();
       $result = $dropbox->saveToDropbox();
       break;
+    case 'quoteRequest':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->submitQuoteRequest();
+      break;
+    case 'getDBURL':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->getAuthURL();
+      break;
     case 'typeList':
       $result = $manager->getProductTypes();
+      break;
+    case 'ddContent':
+      $result = $manager->getDropdownContent();
+      break;
+    case 'requestQuote':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->submitQuoteRequest();
       break;
     default : 
         $result->success = false;

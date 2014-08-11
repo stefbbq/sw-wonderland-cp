@@ -51,6 +51,10 @@ class Database {
         $this->db = null;
     }
 
+    public function getLastInsertID() {
+      return $this->db->lastInsertId('id');
+    }
+    
     public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL, $join=NULL){
         $cols = $conditions = '';
         $return = array();
