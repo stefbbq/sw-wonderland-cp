@@ -1,0 +1,98 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Wonderland Printing Limited : Admin</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="wplAdmin">
+    <!-- Begin SPA -- Copy between SPA comments and add to template -->
+    <div class="spa clearfix">
+        <div class="left menu" ng-controller="MenuController">
+            <ul class="nav">
+              <li ng-class="getClass('/listClients')"><a ng-href="#/listClients">Client List</a></li>
+              <li ng-class="getClass('/addClient')"><a ng-href="#/addClient">Add New Client</a></li>
+              <li ng-class="getClass('/listAdminUsers')"><a ng-href="#/listAdminUsers">User Admin</a></li>
+              <li ng-class="getClass('/addCollateral')"><a ng-href="#/addCollateral">Add New Collateral</a></li>
+              <li ng-class="getClass('/listCollateral')"><a ng-href="#/listCollateral">View All Collateral</a></li>
+              <li ng-class="getClass('/dropbox')"><a ng-href="#/dropbox">Dropbox Test</a></li>
+            </ul>
+        </div>
+        <div ng-view="" class="right content"></div>
+
+    </div>
+    <!-- End SPA -->
+    
+      
+ 
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/ng-file-upload-shim/angular-file-upload-shim.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+    <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/factories/clientFactory.js"></script>
+  <script src="scripts/factories/clientUserFactory.js"></script>
+  <script src="scripts/factories/adminUserFactory.js"></script>
+  <script src="scripts/factories/collateralFactory.js"></script>
+  <script src="scripts/directives/capitalize.js"></script>
+  <script src="scripts/directives/match.js"></script>
+  <script src="scripts/directives/pagerComplete.js"></script>
+  <script src="scripts/filters/phoneNumbers.js"></script>
+  <script src="scripts/filters/cleanup.js"></script>
+  <script src="scripts/controllers/clientListCtrl.js"></script>
+  <script src="scripts/controllers/editClientCtrl.js"></script>
+  <script src="scripts/controllers/clientDetailCtrl.js"></script>
+  <script src="scripts/controllers/editClientUserCtrl.js"></script>
+  <script src="scripts/controllers/clientUserDetailCtrl.js"></script>
+  <script src="scripts/controllers/editAdminUserCtrl.js"></script>
+  <script src="scripts/controllers/editCollateralCtrl.js"></script>
+  <script src="scripts/controllers/adminListCtrl.js"></script>
+  <script src="scripts/controllers/changeAdminPasswordCtrl.js"></script>
+  <script src="scripts/controllers/collateralDetailCtrl.js"></script>
+  <script src="scripts/controllers/collateralListCtrl.js"></script>
+  <script src="scripts/controllers/dropboxTestCtrl.js"></script>
+  <script src="scripts/lib/md5.js"></script>
+  <!-- endbuild -->
+</body>
+</html>

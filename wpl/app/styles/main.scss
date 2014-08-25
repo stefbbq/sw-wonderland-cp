@@ -1,0 +1,217 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
+// bower:scss
+@import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
+// endbower
+
+$clr_button_bk:hsl(0, 0, 90);
+$clr_button_label:hsl(0, 0, 0);
+
+$clr_button_hover_bk:hsl(0, 0, 75);
+
+$clr_button_active_bk:hsl(0, 0, 50);
+$clr_button_active_label:hsl(0, 0, 100);
+
+$tableWidth:800px;
+
+button:disabled {
+  color:hsl(0, 0, 80);
+}
+
+.spa {
+  //border:1px solid green;
+  max-width:1024px;
+  margin:0 auto;
+    
+    >div {
+        
+        &.left {
+            width:20%;
+            float:left;
+        }
+        &.right {
+            width:80%;
+            float:right;
+        }
+    }
+    
+    .nav {
+        padding:20px 20px 0px 20px;
+        
+        li {
+            margin-bottom:5px;
+            
+            a {
+                background-color:$clr_button_bk;
+                color:$clr_button_label;
+                &:hover {
+                    background-color:$clr_button_hover_bk;
+                }
+            }
+            
+            &.active {
+                a {
+                    background-color:$clr_button_active_bk;
+                    color:$clr_button_active_label;
+                }
+                
+                
+            }
+            
+            
+        }
+    }
+    
+    .tab-menu {
+      li {
+        width:auto;
+        display:inline-block;
+        
+        a {
+          display:initial;
+          padding:5px;
+        }
+      }
+      
+      padding:0px;
+      margin:20px 0px 3px 0px;
+      text-align:right;
+      width:$tableWidth;
+      
+    }
+    
+    input.ng-invalid.ng-dirty {
+        background-color: #FA787E;
+        color:#FFFFFF;
+    }
+
+    input.ng-valid.ng-dirty {
+        background-color: #78FA89;
+    }
+    
+    .add_client {
+        
+    }
+    
+    /* Form Fields */
+    /* columns */
+    $columnSpace:10px;
+    $columnWidth:180px;
+    $columnMysteryPadding:4px;
+    
+    .buttons {
+      margin-top:20px;
+    }
+    
+    .field-group {
+        label {
+            margin-top:10px;
+            display:block;
+        }
+        
+        input, textarea, select {
+            display:block;
+            margin:0px;
+            
+        }
+        
+        select {
+            height:26px;
+        }
+        
+
+
+        &.col-1 {
+            input, textarea, select {
+                width:$columnWidth;
+            }
+        }
+        
+        &.col-2 {
+            input, textarea, select {
+                width:$columnWidth * 2 + $columnSpace * 1;
+            }
+        }
+        
+        &.col-3 {
+            input, textarea, select {
+                width:$columnWidth * 3 + $columnSpace * 2;
+            }
+        }
+    }
+    
+    .fields-row {
+        input {
+            display:inline-block;
+        }
+        
+        .field-group {
+            display:inline-block;
+            margin-right:($columnSpace - $columnMysteryPadding);
+        }
+    } 
+    
+    /*
+    Common
+    */
+    section {
+      max-width:$tableWidth;
+      
+      .util {
+        margin-bottom:10px;
+        height:30px;
+        //border:2px solid blue;
+        
+        .add-btn {
+          float:left;
+        }
+
+        .search {
+          float:right;
+        }
+      }
+      
+      table {
+        border:2px solid black;
+        width:$tableWidth;
+        th {
+          background-color:hsl(0, 0, 70);
+        }
+        
+        tr:nth-child(odd) {
+          background-color:hsl(0, 0, 90);
+        }
+        
+        td, th {
+          padding:5px;
+        }
+        
+        &.selectable {
+          tr.record {
+            cursor:pointer;
+             &:hover {
+              background-color:hsl(60, 100, 80);
+            }
+          }
+        }
+      }
+      
+      .pages {
+        float:right;
+        
+        .page-numbers a {
+          margin-right:5px;
+          &.selected {
+            color:red;
+            font-size:20px;
+          }
+        }
+      }
+    }
+    
+}
+
+.clearfix:after { content: "\00A0"; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;}
+.clearfix{ display: inline-block;}
+html[xmlns] .clearfix { display: block;}
+* html .clearfix{ height: 1%;}
+.clearfix {display: block}

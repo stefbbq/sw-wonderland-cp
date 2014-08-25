@@ -1,0 +1,39 @@
+<div class="list_admins">
+  <section id="admin_list">
+    <h1>Admin List</h1>
+    <div class="util">
+      <button  class="add-btn" ng-click="onAddUser();">Create New Admin</button>
+      <!--
+      <form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()">
+        <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+        <input type="submit" value="Search">
+      </form>
+      -->
+    </div>
+    <ul class="nav tab-menu">
+      <li ng-class="getActiveClass(true);"><a href="javascript:void(0);" ng-click="listActive(true);">Active</a></li>
+      <li ng-class="getActiveClass(false);"><a href="javascript:void(0);" ng-click="listActive(false);">Inactive</a></li>
+    </ul>
+    <table class="list selectable">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+      <tr class="record" ng-repeat="user in adminUserService.list" ng-click="showUser(user.guid)">
+        <td>{{user.username}}</td>
+        <td>{{user.email}}</td>
+      </tr>
+        
+    </table>
+    
+    <!--
+    <div ng-controller="Pager" class="pages">
+      <a href="javascript:void(0);" ng-click="prevPage();">Prev</a>
+      <span class="page-numbers">
+        <a href="javascript:void(0);" ng-repeat="page in pages" ng-click="loadPage($index)" pager-complete>{{page.num}}</a>
+      </span>
+      <a href="javascript:void(0);" ng-click="nextPage();">Next</a>
+    </div>
+    -->
+  </section>
+</div>

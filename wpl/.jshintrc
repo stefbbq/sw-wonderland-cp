@@ -1,0 +1,25 @@
+{
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": false, // true
+  "curly": false,
+  "eqeqeq": false,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  //"quotmark": true, // single
+  "regexp": true,
+  "undef": false, // true
+  "unused": false, // true
+  "strict": true,
+  "trailing": true,
+  "smarttabs": true,
+  "globals": {
+    "angular": false
+  },
+  "predef": ["alert", "confirm", "md5", "FileAPI"]
+}
