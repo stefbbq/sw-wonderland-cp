@@ -143,7 +143,7 @@ class DropboxUploader {
       $dbxResult = $this->dbxClient->uploadFile("/$email/{$file['name']}", dbx\WriteMode::add(), $f);
       fclose($f);
       
-      $this->dump($dbxResult);
+      //$this->dump($dbxResult);
     }
     
     
