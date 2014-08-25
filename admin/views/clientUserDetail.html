@@ -1,0 +1,29 @@
+<div class="client_detail">
+	<section id="client_detail">
+		<h1>Client User Detail</h1>
+		<h2><a href="javascript:void(0);" ng-click="showClient(clientUserService.client.guid);">{{clientUserService.client.name}}</a></h2>
+		<p>{{clientUserService.client.address}}<br> {{clientUserService.client.city}}, {{clientUserService.client.province}}<br> {{clientUserService.client.postal_code}}<br> {{clientUserService.client.phone | tel}}<br> {{clientUserService.client.phone2 | tel}} </p>
+		<button ng-click="showClient(clientUserService.client.guid);">Back to Client</button> 
+	</section>
+	<section id="user">
+		<h3>User Details</h3>
+		<table class="">
+			<tr>
+				<th>Name 
+				<td>{{clientUserService.user.first_name}} {{clientUserService.user.last_name}}  
+			<tr>
+				<th>Email 
+				<td>{{clientUserService.user.email}}  
+			<tr>
+				<th>Confirm Email 
+				<td>{{clientUserService.user.confirmation_email}}  
+			<tr>
+				<th>Phone 
+				<td>{{clientUserService.user.phone | tel}}  
+			<tr>
+				<th>Phone2 
+				<td>{{clientUserService.user.phone2 | tel}}  
+		</table>
+		<div class="util"> <button id="edit_user_btn" ng-click="edit();">Edit Details</button> <button id="reset_password_btn" ng-click="resetPassword();">Reset Password</button> <button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> </div>
+	</section>
+</div>

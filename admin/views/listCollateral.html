@@ -1,0 +1,32 @@
+<div class="collateral_list">
+	<section id="collateral_list">
+		<h1>All Collateral</h1>
+	</section>
+	<section id="collateral">
+		<h3>Collateral</h3>
+		<div class="util">
+			<form ng-controller="CollateralSearchAllCtrl" class="search" ng-submit="doSearch()"> <input type="text" name="search" id="search" placeholder="" ng-model="searchString"> <input type="submit" value="Search"> </form>
+		</div>
+		<ul class="nav tab-menu">
+			<li ng-class="getActiveCollateralClass(true);"><a href="javascript:void(0);" ng-click="listActiveCollateral(true);">Active</a></li>
+			<li ng-class="getActiveCollateralClass(false);"><a href="javascript:void(0);" ng-click="listActiveCollateral(false);">Inactive</a></li>
+		</ul>
+		<table class="list selectable">
+			<tr>
+				<th>Client 
+				<th>Thumb 
+				<th>Name 
+				<th>Type 
+				<th>Description 
+				<th>Date Uploaded  
+			<tr class="record" ng-repeat="item in collateralService.list" ng-click="showCollateral(item.guid, item.client_id);">
+				<td>{{item.client_name}} 
+				<td><img ng-src="{{item.thumb_path}}" width="50"> 
+				<td>{{item.name}} 
+				<td>{{collateralService.getCollateralTypeLabel(item.type)}} 
+				<td>{{item.description}} 
+				<td>{{item.last_upload}}  
+		</table>
+		<div ng-controller="CollateralAllPager" class="pages"> <a href="javascript:void(0);" ng-click="prevCollateralPage();">Prev</a> <span class="page-numbers"> <a href="javascript:void(0);" ng-repeat="page in collateralPages" ng-click="loadCollateralPage($index)" pager-complete>{{page.num}}</a> </span> <a href="javascript:void(0);" ng-click="nextCollateralPage();">Next</a> </div>
+	</section>
+</div>

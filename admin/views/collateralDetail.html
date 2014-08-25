@@ -1,0 +1,32 @@
+<div class="collateral_detail">
+	<section id="collateral_detail">
+		<h1>Collateral Detail</h1>
+		<h2><a href="javascript:void(0);" ng-click="showClient(clientService.details.guid);">{{clientService.details.name}}</a></h2>
+		<p>{{clientService.details.address}}<br> {{clientService.details.city}}, {{clientService.details.province}}<br> {{clientService.details.postal_code}}<br> {{clientService.details.phone | tel}}<br> {{clientService.details.phone2 | tel}} </p>
+		<button ng-click="showClient(clientService.details.guid);">Back to Client</button> 
+	</section>
+	<section id="user">
+		<h3>Collateral Details</h3>
+		<table class="">
+			<tr>
+				<th>Name 
+				<td>{{collateralService.details.name}}  
+			<tr>
+				<th>Last Upload 
+				<td>{{collateralService.details.last_upload}}  
+			<tr>
+				<th>Type 
+				<td>{{collateralService.details.type}}  
+			<tr>
+				<th>Description 
+				<td>{{collateralService.details.description}}  
+			<tr>
+				<th>Thumbnail 
+				<td><img ng-src="{{collateralService.details.thumb_path}}" height="100">  
+			<tr>
+				<th>Asset 
+				<td><a href="{{collateralService.details.asset_path}}" target="_blank">{{collateralService.details.asset_path}}</a>  
+		</table>
+		<div class="util"> <button id="edit_user_btn" ng-click="edit();">Edit</button> <button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> </div>
+	</section>
+</div>
