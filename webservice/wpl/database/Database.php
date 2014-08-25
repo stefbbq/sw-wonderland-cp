@@ -21,17 +21,12 @@ class Database {
       $database = '';
       $username = '';
       $password = '';
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 0f1e9eaed1b1d9b5dc81a5b68ecf714a31e8717a
       switch ($_SERVER['HTTP_HOST']) {
         case 'wonderland-cp.stagebot.net':
           $dbServer = 'external-db.s192129.gridserver.com';
           $database = 'db192129_wonderland_cp';
           $username = 'db192129';
-<<<<<<< HEAD
           $password = 'St3@myr0b0t5';
           break;
         case 'bach':
@@ -45,15 +40,6 @@ class Database {
         //   $database = 'wonderlandee';
         //   $username = 'wonder_db';
         //   $password = 'W)ND#R_db';
-=======
-          $password = 'St3@myr0b0t5';         
-          break;
-        case 'localhost:81':
-          $dbServer = '192.186.249.99';
-          $database = 'wonderlandee';
-          $username = 'wonder_db';
-          $password = 'W)ND#R_db';
->>>>>>> 0f1e9eaed1b1d9b5dc81a5b68ecf714a31e8717a
       }
       
       /*
