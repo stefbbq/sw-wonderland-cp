@@ -1,0 +1,66 @@
+<div class="client_detail">
+	<section id="client_detail">
+		<h1>Client Detail</h1>
+		<h2>{{clientService.details.name}}</h2>
+		<p>{{clientService.details.address}}<br> {{clientService.details.city}}, {{clientService.details.province}}<br> {{clientService.details.postal_code}}<br> {{clientService.details.phone | tel}}<br> {{clientService.details.phone2 | tel}} </p>
+		<button id="edit_client_btn" ng-click="editClient();">Edit</button> <button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> 
+	</section>
+	<section id="users">
+		<h3>Client Users</h3>
+		<div class="util">
+			<button id="add_user_btn" ng-click="addUser();">Create New User</button> <!--
+				~§~ Shouldn't need a search; there should only be a few client users.
+				
+				<form ng-controller="UserSearchCtrl" class="search" ng-submit="doSearch()">
+				  <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+				  <input type="submit" value="Search">
+				</form>
+				--> 
+		</div>
+		<ul class="nav tab-menu">
+			<li ng-class="getActiveClass(true);"><a href="javascript:void(0);" ng-click="listActive(true);">Active</a></li>
+			<li ng-class="getActiveClass(false);"><a href="javascript:void(0);" ng-click="listActive(false);">Inactive</a></li>
+		</ul>
+		<table class="list selectable">
+			<tr>
+				<th>First Name 
+				<th>Last Name 
+				<th>Email 
+				<th>Confirmation Email 
+				<th>Phone 
+				<th>Phone2  
+			<tr class="record" ng-repeat="user in clientUserService.list" ng-click="showClientUser(user.guid);">
+				<td>{{user.first_name}} 
+				<td>{{user.last_name}} 
+				<td>{{user.email}} 
+				<td>{{user.confirmation_email}} 
+				<td>{{user.phone | tel}} 
+				<td>{{user.phone2 | tel}}  
+		</table>
+	</section>
+	<section id="collateral">
+		<h3>Collateral</h3>
+		<div class="util">
+			<form ng-controller="CollateralSearchCtrl" class="search" ng-submit="doSearch()"> <input type="text" name="search" id="search" placeholder="" ng-model="searchString"> <input type="submit" value="Search"> </form>
+		</div>
+		<ul class="nav tab-menu">
+			<li ng-class="getActiveCollateralClass(true);"><a href="javascript:void(0);" ng-click="listActiveCollateral(true);">Active</a></li>
+			<li ng-class="getActiveCollateralClass(false);"><a href="javascript:void(0);" ng-click="listActiveCollateral(false);">Inactive</a></li>
+		</ul>
+		<table class="list selectable">
+			<tr>
+				<th>Thumb 
+				<th>Name 
+				<th>Type 
+				<th>Description 
+				<th>Date Uploaded  
+			<tr class="record" ng-repeat="item in collateralService.list" ng-click="showCollateral(item.guid);">
+				<td><img ng-src="{{item.thumb_path}}" width="50"> 
+				<td>{{item.name | cleanup}} 
+				<td>{{item.type}} 
+				<td>{{item.description | cleanup}} 
+				<td>{{item.last_upload}}  
+		</table>
+		<div ng-controller="CollateralPager" class="pages"> <a href="javascript:void(0);" ng-click="prevCollateralPage();">Prev</a> <span class="page-numbers"> <a href="javascript:void(0);" ng-repeat="page in collateralPages" ng-click="loadCollateralPage($index)" pager-complete>{{page.num}}</a> </span> <a href="javascript:void(0);" ng-click="nextCollateralPage();">Next</a> </div>
+	</section>
+</div>
