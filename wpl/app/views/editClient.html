@@ -48,11 +48,16 @@
             <input id="company_email" type="email" ng-model="company.email" name="email" required>
         </div>        
 
-        <div class="field-group col-3">
-            <label for="company_phone1">Primary Phone</label>
-            <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone" name="phone"  required>
-        </div>        
-        
+        <div class="fields-row">
+          <div class="field-group col-1">
+              <label for="company_phone1">Primary Phone</label>
+              <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone" name="phone"  required>
+          </div>        
+          <div class="field-group col-1">
+              <label for="company_ext1">Extension</label>
+              <input id="company_ext1" type="text" ng-model="company.ext">
+          </div>        
+        </div>
         <div class="field-group col-3">
             <label for="company_phone2">Secondary Phone</label>
             <input id="company_phone2" ui-mask="(999) 999-9999" ng-model="company.phone2" name="phone2">
