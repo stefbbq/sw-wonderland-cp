@@ -73,7 +73,7 @@ angular.module('wplAdmin')
     function loadCollateralSearchPage(_startPage, _searchString) {
       startPage = _startPage;
       searchString = _searchString;
-      console.log(id, startPage, searchString, listCollateralActive)
+      //console.log(id, startPage, searchString, listCollateralActive);
       $scope.collateralService.search(id, searchString, startPage, listCollateralActive, function(count) {
         $scope.$broadcast('collateralResultsLoaded', count);
       });
