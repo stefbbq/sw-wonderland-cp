@@ -1,25 +1,52 @@
-<div class="edit_client_user">
-	<h1>{{title}}</h1>
-	<form id="edit_form" novalidate>
+<div class="edit_client_user details-section">
+	<div class="section-header">{{title}}</div>
+	<form id="edit_form" class="add-edit-form" novalidate>
 		<div class="fields-row">
-			<div class="field-group col-2"> <label for="first_name">First Name</label> <input id="first_name" type="text" ng-model="user.first_name" required ng-minlength="2" ng-maxlength="45"> </div>
-			<div class="field-group col-2"> <label for="last_name">Last Name</label> <input id="last_name" type="text" ng-model="user.last_name" required ng-minlength="2" ng-maxlength="45"> </div>
-		</div>
+			<div class="field-group col-2">
+				<div class="input-label" for="first_name">First Name</div class="input-label">
+				<input id="first_name" type="text" ng-model="user.first_name" required ng-minlength="2" ng-maxlength="45"> 
+			</div><!-- end .field-group -->
+
+			<div class="field-group col-2">
+				<div class="input-label" for="last_name">Last Name</div class="input-label">
+				<input id="last_name" type="text" ng-model="user.last_name" required ng-minlength="2" ng-maxlength="45">
+			</div><!-- end .field-group -->
+		</div><!-- end .fields-row -->
+
 		<div class="fields-row">
-			<div class="field-group col-2"> <label for="email">Email</label> <input id="email" type="email" ng-model="user.email" required> </div>
-			<div class="field-group col-2"> <label for="confirm_email">Order Confirmation Email</label> <input id="confirm_email" type="email" ng-model="user.confirmation_email" required> </div>
-		</div>
+			<div class="field-group col-2">
+				<div class="input-label" for="email">Email</div class="input-label"> 
+				<input id="email" type="email" ng-model="user.email" required> 
+			</div><!-- end .field-group -->
+			<div class="field-group col-2">
+				<div class="input-label" for="confirm_email">Order Confirmation Email</div class="input-label">
+				<input id="confirm_email" type="email" ng-model="user.confirmation_email" required>
+			</div><!-- end .field-group -->
+		</div><!-- end .fields-row -->
+
 		<div class="fields-row">
-			<div class="field-group col-2"> <label for="phone1">Primary Phone</label> <input id="phone1" ui-mask="(999) 999-9999" type="phone" ng-model="user.phone" name="phone" required> </div>
-			<div class="field-group col-2"> <label for="phone2">Secondary Phone</label> <input id="phone2" ui-mask="(999) 999-9999" ng-model="user.phone2"> </div>
-		</div>
-		<div class="buttons">
-			<button ng-click="cancel()">Cancel</button> <button ng-click="save(user)">Save</button> <!-- button ng-click="autofill()">Auto Fill</button --> 
-		</div>
-	</form>
-	<!--
-		<pre>form = {{company | json}}</pre>
-		--> 
+			<div class="field-group col-2">
+				<div class="input-label" for="phone1">Primary Phone</div class="input-label">
+				<input id="phone1" ui-mask="(999) 999-9999" type="phone" ng-model="user.phone" name="phone" required>
+			</div><!-- end .field-group -->
+			<div class="field-group col-2">
+				<div class="input-label" for="phone2">Secondary Phone</div class="input-label">
+				<input id="phone2" ui-mask="(999) 999-9999" ng-model="user.phone2" type="phone">
+			</div><!-- end .field-group -->
+		</div><!-- end .fields-row -->
+		
+		<div class="util">
+			<div class="right">
+				<div class="buttons">
+					<button ng-click="cancel()">Cancel</button> <button ng-click="save(user)">Save</button> <!-- button ng-click="autofill()">Auto Fill</button --> 
+				</div><!-- end .buttons -->
+			</div><!--end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
+
+	</form><!-- end .add-edit-form -->
+	
+		<!-- <pre>form = {{company | json}}</pre> -->
+		 
 </div>
-<pre>form = {{company | json}}</pre>
---> </div>

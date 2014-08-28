@@ -20,6 +20,7 @@ class AdminManager {
 
   public function __construct() {
       $this->db = new Database();
+      date_default_timezone_set('America/Toronto');
   }  
 
   /*
@@ -508,6 +509,8 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     $collateral->type = $type;
     $collateral->description = $this->escapeText($description);
     $collateral->guid = $isNew ? $this->db->generateGUID() : $id;
+
+
     $collateral->last_upload = date("Y-m-d H:i:s");
 
     $result->data = array('id' => $collateral->guid);
@@ -804,6 +807,9 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     $items = array($field => $dest, 'last_upload' => date("Y-m-d H:i:s"));
     
     $dbResult = $this->db->update('collateral', $items, $where);
+    $result->data = array(
+        'dest' => $dest
+    );
     
     return $result;
   }

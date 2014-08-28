@@ -1,0 +1,23 @@
+/*
+ Variables
+*/
+$maxSize: 1165px;
+$minWidth: 90%;
+$headerHeight: 50px;
+
+@import "compass";
+@import "fonts";
+@import "core";
+@import "base";
+
+@include global-reset();
+
+.page-wrapper {
+	margin-top: $headerHeight;
+}
+
+@import "main_nav";
+@import "admin_nav";
+@import "main_content";
+@import "tables";
+@import "add_edit_forms";

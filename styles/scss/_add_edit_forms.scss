@@ -1,0 +1,62 @@
+.add-edit-form {
+  .field-group {
+    .input-label {
+      width: 40%;
+      display: inline-block;
+      text-transform: uppercase;
+
+    }
+    input, select, textarea {
+      display: inline-block;
+      margin-left: 10px;
+      width: calc(60% - 14px);
+    }
+    input[type="file"] {
+      padding-top: 20px;
+    }
+
+    .preview-img {
+      margin-left: calc(40% + 14px);
+      margin-top: 10px;
+      &.preview-img[ng-src=""] {
+        background: rgba(black, 0.2);
+        width: 100px;
+      }
+
+    }
+
+
+    &.text-field {
+      .input-label {
+        vertical-align: top;
+        padding-top: 18px;
+      }
+    }
+  }
+
+  .util {
+    margin-top: 10px;
+  }
+
+  @media #{media-width-res(900)} {
+    .field-group {
+      margin-bottom: 10px;
+      .input-label {
+        width: 100%;
+      }
+      input, select, textarea {
+        margin-left: 0;
+        width: 100%;
+      }
+      .preview-img {
+        margin-left: 0;
+      }
+
+      &.text-field {
+        .input-label {
+          padding-top: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+.slider-menu {
+    $menu-border: 1px dotted rgb(92,92,92);
+    font-family: 'Open Sans';
+    width: calc(100% - 15px);
+    text-transform: uppercase;
+    border-right: none;
+    border-top: none;
+    .menu-item {
+        position: relative;
+        padding: 11px 22px;
+        border-top: 1px solid rgb(92,92,92);
+        border-left: $menu-border;
+        background-color: white;
+        @include transition-property(background-color);
+        @include transition-duration(300);
+        a {
+            font-size: 12px;
+            color: #2e2e2e;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        &:last-child {border-bottom: 1px solid rgb(76,76,76);}
+
+        &:hover {
+            background-color: rgb(240,240,240);
+        }
+
+        &.current {
+            background-color: rgb(76,76,76);
+            border: none;
+            border-left: 1px solid rgb(76,76,76);
+            a {
+                color: white;
+                letter-spacing: 2px;
+                position: relative;
+            }
+        }
+
+    }
+}

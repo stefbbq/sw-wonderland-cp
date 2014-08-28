@@ -1,12 +1,12 @@
-<div class="add_client">
-	<h1>{{title}}</h1>
-	<form id="company_form" name="newCompany" novalidate>
-		<div class="field-group col-3"> <label for="company_name">Company Name</label> <input id="company_name" type="text" ng-model="company.name" name="name" required ng-minlength="2" ng-maxlength="50"> </div>
-		<div class="field-group col-3"> <label for="company_address">Company Address</label> <textarea id="company_address" ng-model="company.address" name="address" required></textarea> </div>
+<div class="add_client details-section">
+	<div class="section-header">{{title}}</div>
+	<form id="company_form" name="newCompany" class="add-edit-form" novalidate>
+		<div class="field-group col-3"> <div class="input-label" for="company_name">Company Name</div class="input-label"> <input id="company_name" type="text" ng-model="company.name" name="name" required ng-minlength="2" ng-maxlength="50"> </div>
+		<div class="field-group col-3 text-field"> <div class="input-label" for="company_address">Company Address</div class="input-label"> <textarea id="company_address" ng-model="company.address" name="address" required></textarea> </div>
 		<div class="fields-row">
-			<div class="field-group col-1"> <label for="company_city">City</label> <input id="company_city" ng-model="company.city" name="city" ng-pattern="/^[A-z]+$/" capitalize-first required> </div>
+			<div class="field-group col-1"> <div class="input-label" for="company_city">City</div class="input-label"> <input id="company_city" ng-model="company.city" name="city" ng-pattern="/^[A-z]+$/" capitalize-first required type="text"> </div>
 			<div class="field-group col-1">
-				<label for="company_province">Prov.</label> 
+				<div class="input-label" for="company_province">Prov.</div class="input-label"> 
 				<select id="company_province" ng-model="company.province" name="province" required>
 					<option value="AB">Alberta 
 					<option value="BC">British Columbia 
@@ -23,15 +23,22 @@
 					<option value="YT">Yukon 
 				</select>
 			</div>
-			<div class="field-group col-1"> <label for="company_postal">Postal</label> <input id="company_postal" ng-model="company.postal_code" capitalize ui-mask="A9A 9A9" ng-pattern2="/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/" name="postal_code" required> </div>
+			<div class="field-group col-1"> <div class="input-label" for="company_postal">Postal</div class="input-label"> <input id="company_postal" ng-model="company.postal_code" capitalize ui-mask="A9A 9A9" ng-pattern2="/^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/" name="postal_code" type="text" required> </div>
 		</div>
-		<div class="field-group col-3"> <label for="company_email">Order Confirmation Email</label> <input id="company_email" type="email" ng-model="company.email" name="email" required> </div>
-		<div class="field-group col-3"> <label for="company_phone1">Primary Phone</label> <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone" name="phone" required> </div>
-		<div class="field-group col-3"> <label for="company_phone2">Secondary Phone</label> <input id="company_phone2" ui-mask="(999) 999-9999" ng-model="company.phone2" name="phone2"> </div>
-		<div class="field-group col-3"> <label for="company_accEmail">WPL Account Rep. Email</label> <input id="company_accEmail" type="email" ng-model="company.wplEmail" name="wplEmail" required> </div>
-		<div class="buttons">
-			<button ng-click="cancel()">Cancel</button> <button ng-click="save(company)">Save</button> <!-- <button ng-click="autofill()">Auto Fill</button> --> 
-		</div>
+		<div class="field-group col-3"> <div class="input-label" for="company_email">Order Confirmation Email</div class="input-label"> <input id="company_email" type="email" ng-model="company.email" name="email" required> </div>
+		<div class="field-group col-3"> <div class="input-label" for="company_phone1">Primary Phone</div class="input-label"> <input id="company_phone1" ui-mask="(999) 999-9999" type="phone" ng-model="company.phone" name="phone" required> </div>
+		<div class="field-group col-3"> <div class="input-label" for="company_phone2">Secondary Phone</div class="input-label"> <input id="company_phone2" ui-mask="(999) 999-9999" ng-model="company.phone2" name="phone2" type="phone"> </div>
+		<div class="field-group col-3"> <div class="input-label" for="company_accEmail">WPL Account Rep. Email</div class="input-label"> <input id="company_accEmail" type="email" ng-model="company.wplEmail" name="wplEmail" required> </div>
+
+		<div class="util">
+			<div class="right">
+				<div class="buttons">
+					<button ng-click="cancel()">Cancel</button> <button ng-click="save(company)">Save</button> <!-- <button ng-click="autofill()">Auto Fill</button> --> 
+				</div><!-- end .buttons -->
+			</div><!--end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
 	</form>
 	<!--
 		<pre>form = {{company | json}}</pre>

@@ -1,0 +1,56 @@
+.content.ng-scope {
+	padding-left: 15px;
+	border-left: 1px dotted black;
+}
+
+.util {
+	margin-bottom: 10px;
+  .nav.tab-menu, .search.ng-scope, .button, .label {
+    display: inline-block;
+  }
+
+  .nav.tab-menu {
+  	margin-right: 10px;
+  }
+
+  .search.ng-scope {
+    input[type="submit"] {
+      display: none;
+    }
+  }
+}
+
+.details-section {
+  margin-bottom: 50px;
+
+  .section-header, .title {
+    font-size: 35px;
+    text-transform: uppercase;
+    font-family: "Open Sans";
+    margin: 0 0 20px;
+    span {
+      position: relative;
+      top: 5px;
+    }
+  }
+  .title, .title a {
+    font-size: 27px;
+    margin-bottom: 15px;
+    color: rgba(black, 0.8);
+    text-decoration: none;
+
+  }
+
+  .details {
+    font-family: "Myriad Pro", "Vegur", "PT Sans";
+    line-height: 20px;
+    color: rgba(black, 0.7);
+    .item {
+
+    }
+  }
+}
+
+#admin_list {
+  .util .nav.tab-menu {margin-right: 0;}
+}
