@@ -35,11 +35,12 @@ class Database {
           $username = 'adel';
           $password = 'secret';
           break;
-        // case 'localhost:81':
-        //   $dbServer = '192.186.249.99';
-        //   $database = 'wonderlandee';
-        //   $username = 'wonder_db';
-        //   $password = 'W)ND#R_db';
+         case 'localhost:81':
+           $dbServer = '192.186.249.99';
+           $database = 'wonderlandee';
+           $username = 'wonder_db';
+           $password = 'W)ND#R_db';
+		   break;
       }
       
       /*

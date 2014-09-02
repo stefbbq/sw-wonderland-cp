@@ -26,7 +26,7 @@ class AdminManager {
   /*
    * Create and Update Client
    */
-  public function saveClient($name, $address, $city, $province, $postal_code, $email, $phone, $phone2, $wplEmail, $id = null) {
+  public function saveClient($name, $address, $city, $province, $postal_code, $email, $phone, $ext, $phone2, $wplEmail, $id = null) {
       $result = new Result();
 
       $newClient = $id == null;
@@ -39,6 +39,7 @@ class AdminManager {
       $client->postal_code = $postal_code;
       $client->email = $email;
       $client->phone = $phone;
+      $client->ext = $ext;
       $client->phone2 = $phone2;
       $client->wplEmail = $wplEmail;
       $client->guid = $newClient ? $this->db->generateGUID() : $id;
@@ -146,7 +147,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   public function getClientDetail($guid) {
     $result = new Result();
 
-    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'ext', 'phone2', 'email', 'wplEmail', 'active');
 
     $where = array(
         'guid' => $guid
@@ -321,7 +322,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   /*
    * Admin Users
    */
-  public function saveAdminUser($username, $email, $password, $id = null) {
+  public function saveAdminUser($username, $email, $id = null, $testMode) {
     $result = new Result();
 
     $isNew = $id == null;
@@ -335,39 +336,198 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
 
     $result->data = $user;
 
-    if ($isNew) {
-      $dbResult = $this->db->add('adminUsers', $user);
-      if ($dbResult) {
-        $result->success = true;
-        $result->message = "Admin user added.";
-        $result->code = 200;
-      } else {
-        $result->success = false;
-        $result->code = 304;
-        $result->message = "Error adding admin user.";
-      }
-    } else {
-      $where = array(
-          'guid' => $id
-      );
-      $dbResult = $this->db->update('adminUsers', $user->getUpdateModel(), $where);
-      if ($dbResult) {
+	if (!$testMode) {
+	
+		if ($isNew) {
+		  $dbResult = $this->db->add('adminUsers', $user);
+		  if ($dbResult) {
+			$result->success = true;
+			$result->message = "Admin user added.";
+			$result->code = 200;
+		  } else {
+			$result->success = false;
+			$result->code = 304;
+			$result->message = "Error adding admin user.";
+		  }
+		} else {
+		  $where = array(
+			  'guid' => $id
+		  );
+		  $dbResult = $this->db->update('adminUsers', $user->getUpdateModel(), $where);
+		  if ($dbResult) {
         $result->success = true;
         $result->message = "Admin user updated.";
         $result->code = 200;
-      } else {
+		  } else {
         $result->success = false;
         $result->code = 304;
         $result->message = "Error updating admin user.";
-      }
-    }
-    
-    // TODO: Email user temporary password and link to change password
+		  }
+		}
+	} else {
+		$result = new Result();
+		$result->success = true;
+		$result->code = 200;
+		$result->message = 'sending test email (didn\'t add to database)';
+	}
+	
+	// TODO: Email new user temporary password and link to change password
+	if ($isNew) {
+		switch ($_SERVER['HTTP_HOST']) {
+			case 'localhost:81':
+				$url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+				break;
+			default:
+				$url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
+				$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+		}
+		
+		$url .= "?id=$user->guid"; 
+		if ($url2) $url2 .= "?id=$user->guid";
 
+		
+		//$email = 'sdgarson@gmail';
+		$to = $email;
+		$subject = 'Reset your password for Wonderland Admin';
+		$body = '<h2>Password Reset</h2>';
+		$body .= "<p>Your password has been reset.  Your temporary password is <b>$user->temp_password</b> Please click on the link below to change your password.</p>";  
+		$body .= "<p><a href=\"$url\">$url</a></p>";
+		if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+		
+		
+		$mailResult = $this->sendEmail($to, $subject, $body);
+		$result->data = $mailResult;
+    }
+	
     return $result;
   }  
   
-  public function changeAdminPassword($id, $oldPassword, $password) {
+  private function sendEmail($to, $subject, $email) {
+	
+    $sendEmail = true;
+    //$to = 'sdgarson@gmail.com'; // TODO: hard-code for testing
+    
+    switch ($_SERVER['HTTP_HOST']) {
+      case 'localhost:81':
+        $sendEmail = false;
+        $url = 'localhost:81/wonderland_cp/';
+        break;
+      default:
+        
+        
+    }
+
+    if ($sendEmail) {
+	
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
+		$result->message = mail($to, $subject, $email, $headers);
+    } else {
+        $emailData = array(
+            'to' => $to,
+            'subject' => $subject,
+            'email' => $email
+        );
+        
+        $result->data = $emailData;
+    }
+    
+    return $result;
+	
+  }
+  
+  public function resetAdminPassword($guid) {
+    
+  }
+  
+  public function changeAdminPassword($guid, $oldPassword, $newPassword) {
+    $result = new Result();
+
+    $select = array('username');
+
+    $where = array(
+        'guid' => $guid,
+        'password' => $oldPassword
+    );
+    
+    $orderBy = null;
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+    if (count($dataset) == 0) {
+      $result->success = false;
+      $result->code = 403;
+      $result->message = 'Permission Denied';
+    } else {
+      $userName = $dataset[0]['username'];
+            
+		  $where = array(
+			  'guid' => $guid
+		  );
+      
+      $update = array(
+        'password' => $newPassword,
+        'temp_password' => '',
+        'password_set' => '1'
+      );
+      
+		  $dbResult = $this->db->update('adminUsers', $update, $where);
+		  if ($dbResult) {
+      
+        $result->success = true;
+        $result->message = "Password changed.";
+        $result->code = 200;
+		  } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error updating password.";
+		  }
+      
+    }
+    
+    //$result->data = $dataset[0];
+
+
+    return $result;      
+  }
+  
+  public function emailTest($id) {
+    $result = new Result();
+    
+    $url;
+    //$server = $_SERVER;
+    $sendEmail = true;
+    
+    $to = 'sdgarson@gmail.com';
+    $subject = 'Test Email:' . $id;
+    $email = 'This is a test email.';   
+    
+    $url;
+    
+    switch ($_SERVER['HTTP_HOST']) {
+      case 'localhost:81':
+        $sendEmail = false;
+        $url = 'localhost:81/wonderland_cp/';
+        break;
+      default:
+        
+        
+    }
+
+    if ($sendEmail) {
+      $result->message = mail($to, $subject, $email);
+    } else {
+        $emailData = array(
+            'to' => $to,
+            'subject' => $subject,
+            'email' => $email
+        );
+        
+        $result->data = $emailData;
+    }
+    
+    return $result;
+  }
+  
+  private function changeAdminPassword_old($id, $oldPassword, $password) {
     $result = new Result();
     
     $user = array(

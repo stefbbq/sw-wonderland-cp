@@ -29,6 +29,7 @@ switch ($action) {
                 getValue('postal_code'), 
                 getValue('email'), 
                 getValue('phone'), 
+                getValue('ext'), 
                 getValue('phone2'), 
                 getValue('wplEmail')
                 );
@@ -42,6 +43,7 @@ switch ($action) {
                 getValue('postal_code'), 
                 getValue('email'), 
                 getValue('phone'), 
+                getValue('ext'), 
                 getValue('phone2'), 
                 getValue('wplEmail'),
                 getValue('guid')
@@ -115,10 +117,14 @@ switch ($action) {
      * Admin Users
      */
     case 'addAdminUser':
+	  $testValue = getValue('test');
+	  $testMode = ($testValue == '1' || $testValue == 'true');
+	
       $result = $manager->saveAdminUser(
               getValue('username'), 
-              getValue('email'), 
-              getValue('password')
+              getValue('email'),
+			  null,
+			  $testMode
               );
       break;
      case 'updateAdminUser':
@@ -225,6 +231,12 @@ switch ($action) {
       $dropbox = new DropboxUploader();
       $result = $dropbox->submitQuoteRequest();
       break;
+    case 'emailTest':
+      $result = $manager->emailTest(getValue('id'));
+      break;	  
+	case 'resetAdminPassword':
+      $result = $manager->changeAdminPassword(getValue('guid'), getValue('p0'), getValue('p1'));
+      break;	  
     default : 
         $result->success = false;
         $result->message = 'no action';
