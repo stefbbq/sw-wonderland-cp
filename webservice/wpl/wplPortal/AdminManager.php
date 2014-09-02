@@ -108,7 +108,7 @@ class AdminManager {
   /*
    * Search Clients
    */
-public function searchClients($searchString, $startRecord, $pageSize, $active) {
+  public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result = new Result();
 
       $searchQuery = " name LIKE :search OR address LIKE :search OR city LIKE :search AND active='$active'";
@@ -371,7 +371,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
 		$result->message = 'sending test email (didn\'t add to database)';
 	}
 	
-	// TODO: Email new user temporary password and link to change password
+	// Email new user temporary password and link to change password
 	if ($isNew) {
 		switch ($_SERVER['HTTP_HOST']) {
 			case 'localhost:81':
@@ -379,7 +379,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
 				break;
 			default:
 				$url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
-				$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+				//$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
 		}
 		
 		$url .= "?id=$user->guid"; 
@@ -436,8 +436,18 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
 	
   }
   
-  public function resetAdminPassword($guid) {
+  public function resetAdminPassword($email) {
+    $result = new Result();
     
+    $result->success = true;
+    $result->message = "resetting password for '$email'";
+    $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+    
+    $result->data = array(
+      'message' => $message
+    );
+    
+    return $result;
   }
   
   public function changeAdminPassword($guid, $oldPassword, $newPassword) {

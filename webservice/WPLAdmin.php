@@ -161,6 +161,10 @@ switch ($action) {
     case 'adminLogin':
       $result = $manager->login(getValue('username'), getValue('password'));
       break;
+    case 'adminPasswordReset':
+      $result = $manager->resetAdminPassword(getValue('email'));
+      break;
+      
     /*
      * Collateral
      */
