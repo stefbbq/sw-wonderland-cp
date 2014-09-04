@@ -336,69 +336,67 @@ class AdminManager {
 
     $result->data = $user;
 
-	if (!$testMode) {
-	
-		if ($isNew) {
-		  $dbResult = $this->db->add('adminUsers', $user);
-		  if ($dbResult) {
-			$result->success = true;
-			$result->message = "Admin user added.";
-			$result->code = 200;
-		  } else {
-			$result->success = false;
-			$result->code = 304;
-			$result->message = "Error adding admin user.";
-		  }
-		} else {
-		  $where = array(
-			  'guid' => $id
-		  );
-		  $dbResult = $this->db->update('adminUsers', $user->getUpdateModel(), $where);
-		  if ($dbResult) {
+    if (!$testMode) {
+    
+      if ($isNew) {
+        $dbResult = $this->db->add('adminUsers', $user);
+        if ($dbResult) {
         $result->success = true;
-        $result->message = "Admin user updated.";
+        $result->message = "Admin user added.";
         $result->code = 200;
-		  } else {
+        } else {
         $result->success = false;
         $result->code = 304;
-        $result->message = "Error updating admin user.";
-		  }
-		}
-	} else {
-		$result = new Result();
-		$result->success = true;
-		$result->code = 200;
-		$result->message = 'sending test email (didn\'t add to database)';
-	}
-	
-	// Email new user temporary password and link to change password
-	if ($isNew) {
-		switch ($_SERVER['HTTP_HOST']) {
-			case 'localhost:81':
-				$url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
-				break;
-			default:
-				$url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
-				//$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
-		}
-		
-		$url .= "?id=$user->guid"; 
-		if ($url2) $url2 .= "?id=$user->guid";
-
-		
-		//$email = 'sdgarson@gmail';
-		$to = $email;
-		$subject = 'Reset your password for Wonderland Admin';
-		$body = '<h2>Password Reset</h2>';
-		$body .= "<p>Your password has been reset.  Your temporary password is <b>$user->temp_password</b> Please click on the link below to change your password.</p>";  
-		$body .= "<p><a href=\"$url\">$url</a></p>";
-		if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
-		
-		
-		$mailResult = $this->sendEmail($to, $subject, $body);
-		$result->data = $mailResult;
+        $result->message = "Error adding admin user.";
+        }
+      } else {
+        $where = array(
+          'guid' => $id
+        );
+        $dbResult = $this->db->update('adminUsers', $user->getUpdateModel(), $where);
+        if ($dbResult) {
+          $result->success = true;
+          $result->message = "Admin user updated.";
+          $result->code = 200;
+        } else {
+          $result->success = false;
+          $result->code = 304;
+          $result->message = "Error updating admin user.";
+        }
+      }
+    } else {
+      $result = new Result();
+      $result->success = true;
+      $result->code = 200;
+      $result->message = 'sending test email (didn\'t add to database)';
     }
-	
+    
+    // Email new user temporary password and link to change password
+    if ($isNew) {
+      switch ($_SERVER['HTTP_HOST']) {
+        case 'localhost:81':
+          $url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+          break;
+        default:
+          $url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
+          //$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+      }
+      
+      $url .= "?id=$user->guid"; 
+      if ($url2) $url2 .= "?id=$user->guid";
+
+      
+      //$email = 'sdgarson@gmail';
+      $to = $email;
+      $subject = 'Reset your password for Wonderland Admin';
+      $body = '<h2>Password Reset</h2>';
+      $body .= "<p>Your password has been reset.  Your temporary password is <b>$user->temp_password</b> Please click on the link below to change your password.</p>";  
+      $body .= "<p><a href=\"$url\">$url</a></p>";
+      if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+      $mailResult = $this->sendEmail($to, $subject, $body);
+      $result->data = $mailResult;
+    }
+    
     return $result;
   }  
   
@@ -419,10 +417,10 @@ class AdminManager {
 
     if ($sendEmail) {
 	
-		$headers  = 'MIME-Version: 1.0' . "\r\n";
-		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
-		$result->message = mail($to, $subject, $email, $headers);
-    } else {
+      $headers  = 'MIME-Version: 1.0' . "\r\n";
+      $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
+      $result->message = mail($to, $subject, $email, $headers);
+      } else {
         $emailData = array(
             'to' => $to,
             'subject' => $subject,
@@ -430,7 +428,7 @@ class AdminManager {
         );
         
         $result->data = $emailData;
-    }
+      }
     
     return $result;
 	
@@ -439,12 +437,82 @@ class AdminManager {
   public function resetAdminPassword($email) {
     $result = new Result();
     
-    $result->success = true;
-    $result->message = "resetting password for '$email'";
-    $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+    $select = array('guid');
+
+    $where = array(
+        'email' => $email
+    );
+    
+    $orderBy = null;
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+    $message = '';
+    if (count($dataset) == 0) {
+      $result->success = false;
+      $result->code = 403;
+      $result->message = "No user found with the email address \"$email\"";
+      // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+      $message = "No user found with the email address \"$email\".";
+    } else {
+      $guid = $dataset[0]['guid'];
+            
+      $temp_password = $this->db->generateTempPassword();
+      $password = md5($temp_password);
+            
+            
+		  $where = array(
+			  'guid' => $guid
+		  );
+      
+      $update = array(
+        'password' => $password,
+        'temp_password' => $temp_password,
+        'password_set' => '0'
+      );
+      
+		  $dbResult = $this->db->update('adminUsers', $update, $where);
+		  if ($dbResult) {
+      
+        $result->success = true;
+        $result->message = "Resetting password for \"$email\".";
+        $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+        $result->code = 200;
+        
+        $url = '';
+        $url2 = '';
+        switch ($_SERVER['HTTP_HOST']) {
+          case 'localhost:81':
+            $url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+            break;
+          default:
+            $url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
+            $url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+        }        
+        
+        $url .= "?id=$guid"; 
+        if ($url2) $url2 .= "?id=$guid";        
+        
+        $to = $email;
+        $subject = 'Reset your password for Wonderland Admin';
+        $body = '<h2>Password Reset</h2>';
+        $body .= "<p>Your password has been reset.  Your temporary password is <b>$temp_password</b> Please click on the link below to change your password.</p>";  
+        $body .= "<p><a href=\"$url\">$url</a></p>";
+        if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+        $mailResult = $this->sendEmail($to, $subject, $body);
+
+    
+		  } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "There was an error updating password for \"$email\".";
+        $message = "There was an error updating password for \"$email\".";
+        // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+		  }
+      
+    }    
     
     $result->data = array(
-      'message' => $message
+      'message' => $message,
+      'mailResult' => $mailResult
     );
     
     return $result;

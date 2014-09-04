@@ -11,15 +11,15 @@ angular.module('wplForgotPassword', [
 
   switch ($location.host()) {
     case 'wonderland-cp.stagebot.net':
-      $rootScope.wsURL = 'http://wonderland-cp.stagebot.net///WPLAdmin.php?callback=JSON_CALLBACK';
+      $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
     case 'bach':
-      $rootScope.wsURL = 'http://bach/wonderland-cp///WPLAdmin.php?callback=JSON_CALLBACK';
-      if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net///WPLAdmin.php?callback=JSON_CALLBACK';      
+      $rootScope.wsURL = 'http://bach/wonderland-cp/webserviceWPLAdmin.php?callback=JSON_CALLBACK';
+      if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';      
       break;
     case 'localhost':
       $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
-      if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net///WPLAdmin.php?callback=JSON_CALLBACK';
+      if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
   }
 
@@ -34,6 +34,7 @@ angular.module('wplForgotPassword', [
   $scope.requestReset = function() {
     ws.requestReset(user.email, function(result) {
       resultMessage.message = result.data.message;
+      console.log(result);
     });
   };
 
