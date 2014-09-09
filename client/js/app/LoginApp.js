@@ -1,5 +1,5 @@
 'use strict';
-angular.module('wplForgotPassword', [
+angular.module('LoginApp', [
     'ngCookies'
   ]
 )
@@ -14,7 +14,7 @@ angular.module('wplForgotPassword', [
       $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
     case 'bach':
-      $rootScope.wsURL = 'http://bach/wonderland-cp/webserviceWPLAdmin.php?callback=JSON_CALLBACK';
+      $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';      
       break;
     case 'localhost':
@@ -26,31 +26,31 @@ angular.module('wplForgotPassword', [
   $rootScope.jsonHeader = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
 })
-.controller('forgotPasswordController', ['$scope', '$rootScope', '$cookieStore', 'wplService', function($scope, $rootScope, $cookieStore, wplService) {
-  var user = $scope.user = {};
-  var ws = $scope.wplService = wplService;
-  var resultMessage = $scope.resultMessage = {message:''};
-  
-  $scope.requestReset = function() {
-    ws.requestReset(user.email, function(result) {
-      resultMessage.message = result.data.message;
-      console.log(result);
-    });
-  };
+.controller('LoginFormCtrl', ['$scope', '$rootScope', '$cookieStore', 'loginService', function($scope, $rootScope, $cookieStore, loginService) {
+    $scope.login = function() {
+      loginService.login($scope.user.email, $scope.user.password, function(result) {
+        if (result.success) {
+          var data = {isAdmin:false, id:result.data.guid};
+          $cookieStore.put('clientData', data);
+          alert('login success');
+          //location.href = './';
+        } else {
+          alert('Login Failed');
+        }
+        
+      });
+    };
 
 }])
-.factory('wplService', ['$http', '$rootScope', function($http, $rootScope) {
-  
-  var result = {message:'nothing to report yet'};
+.factory('loginService', ['$http', '$rootScope', function($http, $rootScope) {
 
-  function requestReset(email, callback) {
-    var args = {action:'resetClientPassword', email:email};
+  function login(email, password, callback) {
+    var args = {action:'clientLogin', email:email, password:md5(password)};
     $http.jsonp($rootScope.wsURL,
     {
       params:args,
       headers: $rootScope.jsonHeader
-    }).success(function(wsResult) {
-      angular.copy(wsResult, result);
+    }).success(function(result) {
       if (callback) callback(result);
     }).error(function(err) {
       console.log('error', err);
@@ -58,7 +58,6 @@ angular.module('wplForgotPassword', [
   }
 
   return {
-    requestReset:requestReset,
-    result:result
+    login:login
   };
 }]);

@@ -1,8 +1,5 @@
 'use strict';
-angular.module('wplForgotPassword', [
-    'ngCookies'
-  ]
-)
+angular.module('wplForgotPassword', [])
 .run(function ($rootScope, $location) {
   //console.log($location.host());
 
@@ -26,7 +23,7 @@ angular.module('wplForgotPassword', [
   $rootScope.jsonHeader = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
 })
-.controller('forgotPasswordController', ['$scope', '$rootScope', '$cookieStore', 'wplService', function($scope, $rootScope, $cookieStore, wplService) {
+.controller('forgotPasswordController', ['$scope', '$rootScope', 'wplService', function($scope, $rootScope, wplService) {
   var user = $scope.user = {};
   var ws = $scope.wplService = wplService;
   var resultMessage = $scope.resultMessage = {message:''};

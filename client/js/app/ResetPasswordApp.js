@@ -38,7 +38,7 @@ angular.module('ChangePasswordApp', [])
   
   function resetPassword(id, originalPassword, newPassword) {
 		var args = {};
-		args.action = 'changeAdminPassword';
+		args.action = 'changeClientPassword';
 		args.guid = id;
 		args.p0 = md5(originalPassword);
 		args.p1 = md5(newPassword);

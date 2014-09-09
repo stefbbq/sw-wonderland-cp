@@ -49,6 +49,8 @@ class AdminManager {
       if ($newClient) {
         $client->active = '1';
         $dbResult = $this->db->add('clients', $client);
+		
+		
         if ($dbResult) {
           $result->success = true;
           $result->message = "Client added.";
@@ -73,6 +75,7 @@ class AdminManager {
           $result->message = "Error updating client.";
         }
       }
+	  
 
       return $result;
   }
@@ -202,22 +205,44 @@ class AdminManager {
     $user->phone = $phone;
     $user->phone2 = $phone2;
     $user->guid = $isNew ? $this->db->generateGUID() : $id;
-
-    $result->data = $user;
-
+    
     if ($isNew) {
-      $clientKey = $this->db->getCompanyIDFromGUID($companyID);
-      $user->client_id = $clientKey;
+      // check if the email address is already registered
+      $select = array('email', 'temp_password', 'password_set');
+      $where = array('email' => $email);
+      $dataset = $this->db->select('clientUsers', $select, null, $where);
       
-      $dbResult = $this->db->add('clientUsers', $user);
-      if ($dbResult) {
-        $result->success = true;
-        $result->message = "Client added.";
-        $result->code = 200;
-      } else {
+      if ($dataset) {
         $result->success = false;
         $result->code = 304;
-        $result->message = "Error adding client.";
+        
+        if ($dataset[0]['password_set'] == 0) {
+          $user->temp_password = $dataset[0]['temp_password'];
+          $user->password_set = 0;
+          $result->message = "Email address $email is already used.  Resending email.";
+        } else {
+          $user->password_set = 1;
+          $result->message = "Email address $email is already used.  Not resending email.";
+        }
+      
+      } else {
+        $clientKey = $this->db->getCompanyIDFromGUID($companyID);
+        $user->client_id = $clientKey;
+      
+        $user->temp_password = $this->db->generateTempPassword();
+        $user->password = md5($user->temp_password);
+        
+        
+        $dbResult = $this->db->add('clientUsers', $user);
+        if ($dbResult) {
+          $result->success = true;
+          $result->message = "Client added.";
+          $result->code = 200;
+        } else {
+          $result->success = false;
+          $result->code = 304;
+          $result->message = "Error adding client.";
+        }
       }
     } else {
       $where = array(
@@ -234,7 +259,33 @@ class AdminManager {
         $result->message = "Error updating client.";
       }
     }
+    
+    // Email new user temporary password and link to change password
+    if ($isNew && !$user->password_set) {
+      switch ($_SERVER['HTTP_HOST']) {
+        case 'localhost:81':
+          $url = 'http://localhost:81/wonderland_cp/client/resetPassword.php';
+          break;
+        default:
+          $url = $_SERVER['HTTP_HOST'] . '/client/resetPassword.php';
+          //$url2 = 'http://localhost:81/wonderland_cp/client/resetPassword.php';
+      }
+      
+      $url .= "?id=$user->guid"; 
+      if ($url2) $url2 .= "?id=$user->guid";
 
+      
+      //$email = 'sdgarson@gmail';
+      $to = $email;
+      $subject = 'Reset your password for Wonderland Client Portal';
+      $body = '<h2>Password Reset</h2>';
+      $body .= "<p>Your password has been reset.  Your temporary password is <b>$user->temp_password</b> Please click on the link below to change your password.</p>";  
+      $body .= "<p><a href=\"$url\">$url</a></p>";
+      if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+      $mailResult = $this->sendEmail($to, $subject, $body);
+      //$result->data = $mailResult;
+    }    
+    
     return $result;
   }
   
@@ -339,6 +390,44 @@ class AdminManager {
     if (!$testMode) {
     
       if ($isNew) {
+        
+     // check if the email address is already registered
+      $select = array('temp_password', 'password_set');
+      $where = array('email' => $email);
+      $dataset = $this->db->select('adminUsers', $select, null, $where);
+      
+      if ($dataset) {
+        $result->success = false;
+        $result->code = 304;
+        if ($dataset[0]['password_set'] == 0) {
+          $user->temp_password = $dataset[0]['temp_password'];
+          $user->password_set = 0;
+          $result->message = "Email address $email is already used.  Resending email.";
+        } else {
+          $user->password_set = 1;
+          $result->message = "Email address $email is already used.  Not resending email.";
+        }
+      } else {
+        $clientKey = $this->db->getCompanyIDFromGUID($companyID);
+        $user->client_id = $clientKey;
+      
+        $user->temp_password = $this->db->generateTempPassword();
+        $user->password = md5($user->temp_password);
+        
+        
+        $dbResult = $this->db->add('clientUsers', $user);
+        if ($dbResult) {
+          $result->success = true;
+          $result->message = "Client added.";
+          $result->code = 200;
+        } else {
+          $result->success = false;
+          $result->code = 304;
+          $result->message = "Error adding client.";
+        }
+      }
+
+      
         $dbResult = $this->db->add('adminUsers', $user);
         if ($dbResult) {
         $result->success = true;
@@ -372,7 +461,7 @@ class AdminManager {
     }
     
     // Email new user temporary password and link to change password
-    if ($isNew) {
+    if ($isNew && !$user->password_set) {
       switch ($_SERVER['HTTP_HOST']) {
         case 'localhost:81':
           $url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
@@ -401,7 +490,7 @@ class AdminManager {
   }  
   
   private function sendEmail($to, $subject, $email) {
-	
+    $result = new Result();
     $sendEmail = true;
     //$to = 'sdgarson@gmail.com'; // TODO: hard-code for testing
     
@@ -416,17 +505,16 @@ class AdminManager {
     }
 
     if ($sendEmail) {
-	
-      $headers  = 'MIME-Version: 1.0' . "\r\n";
-      $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
-      $result->message = mail($to, $subject, $email, $headers);
-      } else {
-        $emailData = array(
-            'to' => $to,
-            'subject' => $subject,
-            'email' => $email
-        );
-        
+      $emailHeaders  = 'MIME-Version: 1.0' . "\r\n";
+      $emailHeaders .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
+      $result->success = mail($to, $subject, $email, $emailHeaders);
+    } else {
+      $emailData = array(
+          'to' => $to,
+          'subject' => $subject,
+          'email' => $email
+      );
+      
         $result->data = $emailData;
       }
     
@@ -435,6 +523,106 @@ class AdminManager {
   }
   
   public function resetAdminPassword($email) {
+    $result = new Result();
+    
+    $select = array('guid', 'password_set', 'temp_password');
+
+    $where = array(
+        'email' => $email
+    );
+    
+    $orderBy = null;
+    $dataset = $this->db->select('adminUsers', $select, $orderBy, $where);
+    $message = '';
+    $emailMessage = '';
+    
+    $sendEmail = false;
+
+          
+    if (count($dataset) == 0) {
+      $result->success = false;
+      $result->code = 403;
+      $result->message = "No user found with the email address \"$email\"";
+      // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+      $message = "No user found with the email address \"$email\".";
+    } else {
+      $guid = $dataset[0]['guid'];
+      
+      //var_dump($dataset[0]['password_set'] == 1);
+      
+      if ($dataset[0]['password_set'] == 1) {
+        $temp_password = $this->db->generateTempPassword();
+        $password = md5($temp_password);
+        
+        // set new password
+        $where = array(
+          'guid' => $guid
+        );
+        
+        $update = array(
+          'password' => $password,
+          'temp_password' => $temp_password,
+          'password_set' => '0'
+        );
+        
+        $dbResult = $this->db->update('adminUsers', $update, $where);
+          
+        if ($dbResult) {
+          $result->success = true;
+          $result->message = "Resetting password for \"$email\".";
+          $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+          $result->code = 200;
+          $sendEmail = true;
+        } else {
+          $result->success = false;
+          $result->code = 304;
+          $result->message = "There was an error updating password for \"$email\".";
+          $message = "There was an error updating password for \"$email\".";
+          // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+        }        
+      
+      } else {
+        $result->success = true;
+        $result->code = 200;
+        $result->message = "Resending temp password for \"$email\".";
+        $temp_password = $dataset[0]['temp_password'];
+        $sendEmail = true;
+      }
+            
+      if ($sendEmail) {   
+        $url = '';
+        // $url2 = '';
+        switch ($_SERVER['HTTP_HOST']) {
+          case 'localhost:81':
+            $url = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+            break;
+          default:
+            $url = $_SERVER['HTTP_HOST'] . '/admin/resetPassword.php';
+            //$url2 = 'http://localhost:81/wonderland_cp/admin/resetPassword.php';
+        }        
+        
+        $url .= "?id=$guid"; 
+        // if ($url2) $url2 .= "?id=$guid";        
+        
+        $to = $email;
+        $subject = 'Reset your password for Wonderland Admin Portal';
+        $body = '<h2>Password Reset</h2>';
+        $body .= "<p>Your password has been reset.  Your temporary password is <b>$temp_password</b> Please click on the link below to change your password.</p>";  
+        $body .= "<p><a href=\"$url\">$url</a></p>";
+        // if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+        $mailResult = $this->sendEmail($to, $subject, $body);
+      }
+    }    
+    
+    $result->data = array(
+      'message' => $message,
+      'mailResult' => $mailResult
+    );
+    
+    return $result;
+  } 
+  
+  public function resetAdminPassword_old($email) {
     $result = new Result();
     
     $select = array('guid');
@@ -566,6 +754,167 @@ class AdminManager {
 
     return $result;      
   }
+  
+  public function resetClientPassword($email) {
+    $result = new Result();
+    
+    $select = array('guid', 'password_set', 'temp_password');
+
+    $where = array(
+        'email' => $email
+    );
+    
+    $orderBy = null;
+    $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
+    $message = '';
+    $emailMessage = '';
+    
+    $sendEmail = false;
+
+          
+    if (count($dataset) == 0) {
+      $result->success = false;
+      $result->code = 403;
+      $result->message = "No user found with the email address \"$email\"";
+      // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+      $message = "No user found with the email address \"$email\".";
+    } else {
+      $guid = $dataset[0]['guid'];
+      
+      //var_dump($dataset[0]['password_set'] == 1);
+      
+      if ($dataset[0]['password_set'] == 1) {
+        $temp_password = $this->db->generateTempPassword();
+        $password = md5($temp_password);
+        
+        // set new password
+        $where = array(
+          'guid' => $guid
+        );
+        
+        $update = array(
+          'password' => $password,
+          'temp_password' => $temp_password,
+          'password_set' => '0'
+        );
+        
+        $dbResult = $this->db->update('clientUsers', $update, $where);
+          
+        if ($dbResult) {
+          $result->success = true;
+          $result->message = "Resetting password for \"$email\".";
+          $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+          $result->code = 200;
+          $sendEmail = true;
+        } else {
+          $result->success = false;
+          $result->code = 304;
+          $result->message = "There was an error updating password for \"$email\".";
+          $message = "There was an error updating password for \"$email\".";
+          // $message = "Your password has been reset.  An email has been sent to \"$email\" with  your new password and instructions on how to change it.";
+        }        
+      
+      } else {
+        $result->success = true;
+        $result->code = 200;
+        $result->message = "Resending temp password for \"$email\".";
+        $temp_password = $dataset[0]['temp_password'];
+        $sendEmail = true;
+      }
+            
+      if ($sendEmail) {   
+        $url = '';
+        // $url2 = '';
+        switch ($_SERVER['HTTP_HOST']) {
+          case 'localhost:81':
+            $url = 'http://localhost:81/wonderland_cp/client/resetPassword.php';
+            break;
+          default:
+            $url = $_SERVER['HTTP_HOST'] . '/client/resetPassword.php';
+            // $url2 = 'http://localhost:81/wonderland_cp/client/resetPassword.php';
+        }        
+        
+        $url .= "?id=$guid"; 
+        // if ($url2) $url2 .= "?id=$guid";        
+        
+        $to = $email;
+        $subject = 'Reset your password for Wonderland Client Portal';
+        $body = '<h2>Password Reset</h2>';
+        $body .= "<p>Your password has been reset.  Your temporary password is <b>$temp_password</b> Please click on the link below to change your password.</p>";  
+        $body .= "<p><a href=\"$url\">$url</a></p>";
+        // if ($url2) $body .= "<p>Local URL: <a href=\"$url2\">$url2</a></p>";
+        $mailResult = $this->sendEmail($to, $subject, $body);
+
+      }
+            
+            
+      
+
+      
+    }    
+    
+    $result->data = array(
+      'message' => $message,
+      'mailResult' => $mailResult
+    );
+    
+    return $result;
+  }  
+  
+  public function changeClientPassword($guid, $oldPassword, $newPassword) {
+    $result = new Result();
+
+    $select = array('email');
+
+    $where = array(
+        'guid' => $guid,
+        'password' => $oldPassword
+    );
+    
+    $orderBy = null;
+    $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
+    /*
+    var_dump($guid);
+    var_dump($oldPassword);
+    var_dump($dataset);
+    */
+    
+    
+    if (count($dataset) == 0) {
+      $result->success = false;
+      $result->code = 403;
+      $result->message = 'Permission Denied';
+    } else {
+            
+		  $where = array(
+			  'guid' => $guid
+		  );
+      
+      $update = array(
+        'password' => $newPassword,
+        'temp_password' => '',
+        'password_set' => '1'
+      );
+      
+		  $dbResult = $this->db->update('clientUsers', $update, $where);
+		  if ($dbResult) {
+      
+        $result->success = true;
+        $result->message = "Password changed.";
+        $result->code = 200;
+		  } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->message = "Error updating password.";
+		  }
+      
+    }
+    
+    //$result->data = $dataset[0];
+
+
+    return $result;      
+  }  
   
   public function emailTest($id) {
     $result = new Result();
@@ -703,7 +1052,7 @@ class AdminManager {
     return $result;
   }  
   
-  public function login($username, $password) {
+  public function adminLogin($username, $password) {
     $result = new Result();
     $result->data = array();
 
@@ -731,6 +1080,38 @@ class AdminManager {
 
     return $result;    
   }
+  
+  /*
+   * Client Login
+   */
+  public function clientLogin($email, $password) {
+    $result = new Result();
+    $result->data = array();
+
+    // get user detail
+    $select = array('guid', 'client_id');
+    $where = array(
+        'email' => $this->escapeText($email),
+        'password' => $this->escapeText($password)
+    );
+    $orderBy = null;
+    $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
+
+    if ($dataset) {
+      $result->success = true;
+      $result->code = 200;
+      $result->data = $dataset[0];
+      $result->message = 'login success';
+    } else {
+      $result->success = false;
+      $result->code = 304;
+      $result->data = null;
+      $result->message = 'login failed';
+    }
+    
+
+    return $result;    
+  }  
   
   
   /*

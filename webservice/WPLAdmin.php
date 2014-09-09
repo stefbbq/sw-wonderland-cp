@@ -159,10 +159,7 @@ switch ($action) {
       $result = $manager->setAdminUserActive(getValue('guid'), '1');
       break;
     case 'adminLogin':
-      $result = $manager->login(getValue('username'), getValue('password'));
-      break;
-    case 'adminPasswordReset':
-      $result = $manager->resetAdminPassword(getValue('email'));
+      $result = $manager->adminLogin(getValue('username'), getValue('password'));
       break;
       
     /*
@@ -238,9 +235,22 @@ switch ($action) {
     case 'emailTest':
       $result = $manager->emailTest(getValue('id'));
       break;	  
-	case 'resetAdminPassword':
+    case 'resetAdminPassword':
+      $result = $manager->resetAdminPassword(getValue('email'));
+      break;
+    case 'changeAdminPassword':
       $result = $manager->changeAdminPassword(getValue('guid'), getValue('p0'), getValue('p1'));
       break;	  
+    case 'resetClientPassword':
+      $result = $manager->resetClientPassword(getValue('email'));
+      break;	  
+    case 'changeClientPassword':
+      $result = $manager->changeClientPassword(getValue('guid'), getValue('p0'), getValue('p1'));
+      break;	 
+    case 'clientLogin':
+      $result = $manager->clientLogin(getValue('email'), getValue('password'));
+      break;
+      
     default : 
         $result->success = false;
         $result->message = 'no action';

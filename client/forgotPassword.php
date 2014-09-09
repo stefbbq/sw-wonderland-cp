@@ -28,10 +28,9 @@
         </div>
 			</div>
       
-			<!--[if lt IE 9]>
-			<script src="bower_components/es5-shim/es5-shim.js"></script>
-			<script src="bower_components/json3/lib/json3.min.js"></script>
-			<![endif]--> <script src="scripts/vendor.js"></script>
-			<script src="scripts/ForgotPasswordApp.js"></script>  
-			<script src="scripts/lib/md5.js"></script>
-		</div><!-- end .page-wrapper -->
+  </div><!-- end .page-wrapper -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+  <script src="js/lib/md5.js"></script>
+  <script src="js/app/ForgotPasswordApp.js"></script>
+
