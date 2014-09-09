@@ -1098,10 +1098,27 @@ class AdminManager {
     $dataset = $this->db->select('clientUsers', $select, $orderBy, $where);
 
     if ($dataset) {
-      $result->success = true;
-      $result->code = 200;
-      $result->data = $dataset[0];
-      $result->message = 'login success';
+      $userID = $dataset[0]['guid'];
+      $select = array('guid');
+      $where = array('id' => $dataset[0]['client_id']);
+      
+      $dataset = $this->db->select('clients', $select, null, $where);
+      if ($dataset) {
+        $result->success = true;
+        $result->code = 200;
+        
+        $userData = array('user_id' => $userID, 'client_id' => $dataset[0]['guid']);
+        
+        $result->data = $userData;
+        $result->message = 'login success';
+      
+      } else {
+        $result->success = false;
+        $result->code = 304;
+        $result->data = null;
+        $result->message = 'login failed (client error)';
+      }
+      
     } else {
       $result->success = false;
       $result->code = 304;

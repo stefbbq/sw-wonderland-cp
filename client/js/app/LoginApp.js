@@ -30,6 +30,7 @@ angular.module('LoginApp', [
     $scope.login = function() {
       loginService.login($scope.user.email, $scope.user.password, function(result) {
         if (result.success) {
+          console.log(result.data);
           var data = {isAdmin:false, id:result.data.guid};
           $cookieStore.put('clientData', data);
           alert('login success');

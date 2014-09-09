@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACE,0DAA4C;EAC1C,OAAO,EAAC,YAAY",
+"sources": ["../scss/client_portal_override.scss"],
+"names": [],
+"file": "client_portal_override.css"
+}
