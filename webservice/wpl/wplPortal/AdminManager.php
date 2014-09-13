@@ -147,10 +147,11 @@ class AdminManager {
   /*
    * Client Detail
    */
-  public function getClientDetail($guid) {
+  public function getClientDetail($guid, $includeID = false) {
     $result = new Result();
 
     $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'ext', 'phone2', 'email', 'wplEmail', 'active');
+    if ($includeID) $select[] = 'id';
 
     $where = array(
         'guid' => $guid
@@ -320,12 +321,14 @@ class AdminManager {
       return $result;
   }
   
-  public function loadClientUserDetails($guid) {
+  public function loadClientUserDetails($guid, $includeID = false) {
     $result = new Result();
     $result->data = array();
 
     // get user detail
     $select = array('guid', 'first_name', 'last_name', 'email', 'confirmation_email', 'phone', 'phone2', 'active', 'password_set', 'client_id');
+    if ($includeID) $select[] = 'id';
+    
     $where = array(
         'guid' => $guid
     );
@@ -489,7 +492,7 @@ class AdminManager {
     return $result;
   }  
   
-  private function sendEmail($to, $subject, $email) {
+  private function sendEmail($to, $subject, $email, $cc = null) {
     $result = new Result();
     $sendEmail = true;
     //$to = 'sdgarson@gmail.com'; // TODO: hard-code for testing
@@ -507,6 +510,8 @@ class AdminManager {
     if ($sendEmail) {
       $emailHeaders  = 'MIME-Version: 1.0' . "\r\n";
       $emailHeaders .= 'Content-type: text/html; charset=utf-8' . "\r\n";	
+      if ($cc) $emailHeaders .= 'CC: ' . $cc . "\r\n";	
+      
       $result->success = mail($to, $subject, $email, $emailHeaders);
     } else {
       $emailData = array(
@@ -514,6 +519,10 @@ class AdminManager {
           'subject' => $subject,
           'email' => $email
       );
+      
+      if ($cc) {
+        $emailData['cc'] = $cc;
+      }
       
         $result->data = $emailData;
       }
@@ -1194,11 +1203,14 @@ class AdminManager {
       $dbResult->execute();
       $recordCount = $dbResult->fetchColumn();        
 
-      $select = array('guid', 'name', 'type', 'description', 'last_upload', 'thumb_path');
+      $select = array('collateral.guid', 'collateral.name', 'collateral.type', 'collateral.description', 'collateral.last_upload', 'collateral.thumb_path', 'collateralTypes.name as type_name');
 
       $orderBy = array('name' => 'ASC');
       $where = array('active' => $active, 'client_id' => $clientID);
-      $dataset = $this->db->select('collateral', $select, $orderBy, $where, $startRecord, $pageSize);
+      
+      $join = "inner join collateralTypes on (collateral.type = collateralTypes.code)";
+      $dump = false;
+      $dataset = $this->db->select('collateral', $select, $orderBy, $where, $startRecord, $pageSize, $join, $dump);
 
       $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
       $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
@@ -1351,12 +1363,15 @@ class AdminManager {
       return $result;
   }   
   
-  public function loadCollateralDetails($guid) {
+  public function loadCollateralDetails($guid, $includeID = false) {
     $result = new Result();
     $result->data = array();
 
     // get user detail
     $select = array('guid', 'name', 'type', 'description', 'last_upload', 'client_id', 'active', 'thumb_path', 'asset_path');
+    if ($includeID) $select[] = 'id';
+    
+    
     $where = array(
         'guid' => $guid
     );
@@ -1375,14 +1390,28 @@ class AdminManager {
       $result->data['name'] = str_replace('\\', '', $result->data['name']);
       $result->data['description'] = str_replace('\\', '', $result->data['description']);
       
-      
       $result->data['client_id'] = $this->db->getCompanyGUIDFromID($result->data['client_id']);
       
-      $result->message = 'client user detail';
+      // get type text name
+      $select = array('name');
+      $where = array('code' => $dataset[0]['type']);
+      $dataset = $this->db->select('collateralTypes', $select, null, $where);
+      
+      if ($dataset) {
+        $result->data['type_name'] = $dataset[0]['name'];
+      }
+      
+      
+      
+      
+      $result->message = 'collateral detail';
+      
+      
+      
     } else {
       $result->success = false;
       $result->code = 304;
-      $result->message = 'client user detail failed';
+      $result->message = 'collateral detail failed';
     }
     return $result;      
   }
@@ -1419,6 +1448,9 @@ class AdminManager {
       $result->message = 'no collateral ID set.';
       return $result;
     }
+    
+    $guid = htmlspecialchars($_POST['id']);
+    
     $id = $this->db->getCollateralIDFromGUID(htmlspecialchars($_POST['id']));
     
     $file = $_FILES['file'];
@@ -1444,7 +1476,9 @@ class AdminManager {
     
     $dbResult = $this->db->update('collateral', $items, $where);
     $result->data = array(
-        'dest' => $dest
+        'dest' => $dest,
+        'guid' => $guid,
+        'id' => $id
     );
     
     return $result;
@@ -1499,6 +1533,237 @@ class AdminManager {
   }
   
   
+  public function submitReorder($clientID, $userID, $collateralID, $quantity, $comment) {
+    $result = new Result();
+    
+    $guid           = $this->db->generateGUID();
+    $orderDate      = date("Y-m-d H:i:s");
+    
+    $clientData     = $this->getClientDetail($clientID, true)->data;
+    $userData       = $this->loadClientUserDetails($userID, true)->data['user'];
+    $collateralData = $this->loadCollateralDetails($collateralID, true)->data;
+    
+    /*
+    $result->data = array();
+    $result->data['client'] = $clientData;
+    $result->data['user'] = $userData;
+    $result->data['collateral'] = $collateralData;
+    */
+    
+    // assign result of addOrder to the returned result;
+    $result = $this->addOrder($guid, $orderDate, $clientData['id'], $userData['id'], $collateralData['id'], $quantity, $comment);
+    if ($result->success) {
+    
+      $this->sendConfirmEmail($guid, $orderDate, $clientData, $userData, $collateralData, $quantity, $comment);
+      $this->sendRepEmail($guid, $orderDate, $clientData, $userData, $collateralData, $quantity, $comment);
+    }
+   
+    return $result;
+  }
+  
+  private function addOrder($guid, $orderDate, $clientID, $userID, $collateralID, $quantity, $comment) {
+    $result = new Result();
+
+    $order = array(
+        'guid' => $guid,
+        'client_id' => $clientID,
+        'user_id' => $userID,
+        'collateral_id' => $collateralID,
+        'order_date' => $orderDate,
+        'quantity' => $quantity,
+        'comment' => $comment
+      );
+      
+      // add order to database
+      $dbResult = $this->db->add('orders', $order);    
+      
+      if ($dbResult) {
+        $result->success = true;
+        $result->code = 200;
+        $result->message = 'order added';
+      }
+    
+    return $result;
+  }
+  
+  private function sendConfirmEmail($guid, $orderDate, $clientData, $userData, $collateralData, $quantity, $comment) {
+    //$to = $userData['confirmation_email'];
+    $to = 'sdgarson@gmail.com'; // TODO: testing
+    
+    $subject = "Order placed for {$collateralData['name']}";
+    $body = $this->getOrderStylesheet();
+    
+    $css_th = "text-align:left;";
+    $css_tr2 = "background-color:#CCCCCC";
+    
+    $body.= "<h2>Order Details</h2>";
+    $body.= "<table style=\"border:2px solid black; width:100%;\">";
+    $body.= "<tr style=\" \"><th style=\"width:33%; $css_th\">Thumbnail: </th><td><a href=\"{$collateralData['asset_path']}\"><img src=\"{$collateralData['thumb_path']}\" width=\"50\"><br/>View</a></td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Type: </th><td>{$collateralData['type_name']}</td></tr>";
+    $body.= "<tr style=\" \"><th style=\"$css_th\">Quantity: </th><td>$quantity</td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Submitter: </th><td><a href=\"mailto:{$userData['email']}\">{$userData['email']}</a></td></tr>";
+    $body.= "<tr style=\" \"><th style=\"$css_th\">Order Date: </th><td>$orderDate</td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Comments: </th><td>$comment</td></tr>";
+    
+    $body.= "</table>";
+    
+    /*
+    $url = $this->getURL('client/confirmOrder.php?id=' . $guid);
+    
+    $body.= '<p><a href="' . $url . '">Click here</a> to confirm this order.</p>';
+    */
+    
+    
+    
+    $this->sendEmail($to, $subject, $body);        
+    
+  }  
+  
+  private function sendRepEmail($guid, $orderDate, $clientData, $userData, $collateralData, $quantity, $comment) {
+    //$to = $userData['confirmation_email'];
+    $to = 'sdgarson@gmail.com'; // TODO: testing
+    
+    $subject = "Order placed by {$clientData['name']} for {$collateralData['name']}";
+    
+    $body.= $this->getOrderStylesheet();
+    
+    $css_th = "text-align:left;";
+    $css_tr2 = "background-color:#CCCCCC";
+    
+    $body.= "<h2>Order Details</h2>";
+    $body.= "<table style=\"border:2px solid black; width:100%\">";
+    $body.= "<tr style=\" \"><th style=\"width:150px; $css_th\">Thumbnail: </th><td><a href=\"{$collateralData['asset_path']}\"><img src=\"{$collateralData['thumb_path']}\" width=\"50\"><br/>View</a></td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Type: </th><td>{$collateralData['type_name']}</td></tr>";
+    $body.= "<tr style=\" \"><th style=\"$css_th\">Asset: </th><td><a href=\"{$collateralData['asset_path']}\">{$collateralData['asset_path']}</a></td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Quantity: </th><td>$quantity</td></tr>";
+    $body.= "<tr style=\" \"><th style=\"$css_th\">Submitter: </th><td><a href=\"mailto:{$userData['email']}\">{$userData['email']}</a></td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Order Date: </th><td>$orderDate</td></tr>";
+    $body.= "<tr style=\" \"><th style=\"$css_th\">Confirmation Email: </th><td><a href=\"mailto:{$userData['confirmation_email']}\">{$userData['confirmation_email']}</a></td></tr>";
+    $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Comments: </th><td>$comment</td></tr>";
+    
+    $body.= "</table>";
+    
+    /*
+    $url = $this->getURL('client/confirmOrder.php?id=' . $guid);
+    
+    $body.= '<p><a href="' . $url . '">Click here</a> to confirm this order.</p>';
+    */
+    
+    
+    
+    $this->sendEmail($to, $subject, $body);        
+    
+  }  
+  
+  
+  private function getOrderStylesheet() {
+    $css = "<style>";
+    $css .= "table { border:2px solid blue;}";
+    $css .= "</style>";
+    
+    return $css;
+    
+    
+  }
+  
+  private function getClientID($guid) {
+    return getID('clients', $guid);
+  }
+  
+  private function getUserData($guid) {
+    $result = null;
+    
+    $select = array('id', 'confirmation_email');
+    $where = array('guid' => $guid);
+    $dataset = $this->db->select($table, $select, null, $where);
+    
+    if($dataset) {
+      $result = array('id' => $dataset[0]['id'], 'confirmEmail' => $dataset[0]['confirmation_email']);
+    }
+    
+    
+    return $result;
+  }
+  
+  private function getCollateralData($guid) {
+    $result = null;
+    
+    $select = array('id', 'name', 'description', 'thumb_path', 'asset_path');
+    $where = array('guid' => $guid);
+    $dataset = $this->db->select('collateral', $select, null, $where);
+    
+    if($dataset) {
+      $result = array(
+      'id' => $dataset[0]['id'], 
+      'name' => $dataset[0]['name'],
+      'description' => $dataset[0]['description'],
+      'thumb_path' => $dataset[0]['thumb_path'],
+      'asset_path' => $dataset[0]['asset_path']
+      );
+      
+    }
+    
+    
+    return $result;
+  }
+  
+  
+  private function getURL($path) {
+    $baseURL = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $baseURL = substr($baseURL, 0, strrpos($baseURL, '/') + 1);
+    
+    return $baseURL . $path;
+  
+  }
+
+
+  /**
+   * TODO: this would be called if an link needs to be clicked to confirm the order.  
+   * may be out of scope at this point.
+   */
+  public function confirmOrder($guid) {
+    $result = new Result();
+    
+    return $result;
+    
+  }
+  
+  
+  public function getOrderHistory($clientID) {
+    $result = new Result();
+  
+    $table = 'orders';
+    $select = array('orders.guid', 'collateral.thumb_path', 'collateral.name', 'collateral.type', 'orders.quantity', 'orders.order_date', 'collateralTypes.name as type_name');
+    $orderBy = array('orders.order_date' => 'desc');
+    $where = null;
+    $start = null;
+    $pageSize = null;
+    $join = 'inner join collateral on (orders.collateral_id = collateral.id) inner join collateralTypes on (collateral.type = collateralTypes.code)';
+    $dump = false;
+  
+    $dbResult = $this->db->select($table, $select, $orderBy, $where, $start, $pageSize, $join, $dump);
+    
+    if ($dbResult) {
+      // update path
+      $fixedResult = array();
+      
+      foreach ($dbResult as $item) {
+        $item['thumb_path'] = $this->getURL($item['thumb_path']);
+        $fixedResult[] = $item;
+      }
+    
+    
+      $result->success = true;
+      $result->code = 200;
+      $result->message = 'order history list';
+      $result->data = $fixedResult;
+    } else {
+      $result->message = 'error obtaining order history list';
+    }
+    
+    
+    return $result;
+  }
   
   /*
    * Util

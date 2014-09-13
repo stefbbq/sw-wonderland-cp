@@ -152,7 +152,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     });
 } ]).run([ "$rootScope", "$location", "$cookieStore", function($rootScope, $location, $cookieStore) {
     if ($rootScope.adminData = $cookieStore.get("adminData"), void 0 === $rootScope.adminData || !$rootScope.adminData.isAdmin) return void (window.location.href = "./login.php");
-    var forceStaging = !1;
+    var forceStaging = true;
     switch ($location.host()) {
       case "wonderland-cp.stagebot.net":
         $rootScope.wsURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK", 
@@ -1195,10 +1195,14 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     }, $scope.filesSelected = function() {
         return null !== $scope.thumb.file;
     }, $scope.save = function() {
+		showModal();
         collateralService.save($scope.collateral, action, onProgress, function() {
             var msg;
+			hideModal();
+
             addMode ? (msg = "collateral added", alert(msg)) : (msg = "collateral updated", 
             alert(msg));
+			window.history.back();
         });
     }, $scope.cancel = function() {
         window.history.back();
@@ -1420,3 +1424,11 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
 var hex_chr = "0123456789abcdef".split("");
 
 "5d41402abc4b2a76b9719d911017c592" != md5("hello");
+
+function showModal() {
+	$('#modal').removeClass('hidden');
+}
+
+function hideModal() {
+	$('#modal').addClass('hidden');
+}

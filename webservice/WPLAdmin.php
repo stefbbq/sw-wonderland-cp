@@ -250,6 +250,18 @@ switch ($action) {
     case 'clientLogin':
       $result = $manager->clientLogin(getValue('email'), getValue('password'));
       break;
+    case 'clientCollateralList':
+      $result = $manager->getCollateralList(getValue('clientID'), null, null, 1);
+      break;
+    case 'submitReorder':
+      $result = $manager->submitReorder(getValue('client'), getValue('user'), getValue('collateral'), getValue('quantity'), getValue('comment'));
+      break;
+    case 'confirmOrder':
+      $result = $manager->confirmOrder(getValue('orderID'));
+      break;
+    case 'getOrderHistory':
+      $result = $manager->getOrderHistory(getValue('clientID'));
+      break;
       
     default : 
         $result->success = false;

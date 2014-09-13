@@ -23,9 +23,17 @@ angular.module('ClientPortalApp', [
       templateUrl: basePath + 'views/collateral.php',
       controller: 'CollateralCtrl'
     })
+    .when('/order', {
+      templateUrl: basePath + 'views/orderCollateral.php',
+      controller: 'OrderCollateralCtrl'
+    })
     .when('/requestQuote', {
       templateUrl: basePath + 'views/requestQuote.php',
       controller: 'RequestQuoteCtrl'
+    })
+    .when('/logout', {
+      templateUrl: basePath + 'views/logout.php',
+      controller: 'LogoutCtrl'
     })
     .otherwise({
       redirectTo: '/home'
@@ -41,10 +49,21 @@ angular.module('ClientPortalApp', [
     return; 
   }
   */
+
+  /*
+   * Store client id
+   */
+   
+  var clientData = $cookieStore.get('clientData');
+  if (!clientData) {
+    clientData = {client_id:'eb14a744-6711-47fa-b4fc-206f57c091b3', user_id:'593721c8-f7d1-4021-af8a-865b747897a2'};
+  }  
   
+  $rootScope.clientID = clientData.client_id;
+  $rootScope.userID = clientData.user_id;
   
   // web service
-  var forceStaging = false;
+  var forceStaging = true;
   
   switch ($location.host()) {
     case 'wonderland-cp.stagebot.net':
@@ -70,7 +89,26 @@ angular.module('ClientPortalApp', [
 
   
 }])
+.controller('LogoutCtrl', ['$scope', '$cookieStore', function($scope, $cookieStore) {
+  $cookieStore.remove('clientData');
+  alert("You are now logged out.");
+  location.href = './login.php';
+
+}])
+
+.controller('CompanyInfoController', ['$scope', '$cookieStore', 'ClientService', function($scope, $cookieStore, ClientService) {
+  $scope.ws = ClientService;
+  $scope.ws.loadDetail();  
+}])
 
 
 
 ;
+
+function showModal() {
+	$('#modal').removeClass('hidden');
+}
+
+function hideModal() {
+	$('#modal').addClass('hidden');
+}

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../styles/stylesheets/client_portal_override.css">
 		    
 
-	<body ng-app="ClientPortalApp">
+	<body ng-app="ClientPortalApp" class="client-portal">
 		
 		<!--  Main Menu -->
 		<?php include "../webservice/top_menu.php"; ?>
@@ -39,10 +39,27 @@
 								<span class="filled-link"></span>
 							</a>
 						</li>
+						<li ng-class="getClass('/logout')" class="menu-item ">
+							<a ng-href="#/logout">
+								Logout
+								<span class="filled-link"></span>
+							</a>
+						</li>
 					</ul>
 				</div><!-- end .left.menu -->
 
-				<div ng-view="" class="right content col col-2-3"></div>
+        <div class="company_detail right col col-2-3">
+          <section ng-controller="CompanyInfoController" >
+            <h1>{{ws.company.name}}</h1>
+            <p>{{ws.company.address}}<br/>
+            {{ws.company.city}}, {{ws.company.province}}  {{ws.company.postal_code}}<br/>
+            {{ws.company.country}}<br/>
+            {{ws.company.phone | tel}}<br/>
+            {{ws.company.phone2 | tel}}<br/>
+            </p>
+          </section>
+        </div>
+        <div ng-view="" class="right content col col-2-3"></div>
 				<div class="clear"></div>
 			</div>
 			<!-- End SPA --> 
@@ -50,6 +67,8 @@
 
 		</div><!-- end .page-wrapper -->
 
+    <div id="modal" class="hidden"></div>    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-cookies.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
@@ -59,12 +78,14 @@
 
     <script src="js/app/controllers/HomeCtrl.js"></script>
     <script src="js/app/controllers/CollateralCtrl.js"></script>
+    <script src="js/app/controllers/OrderCollateralCtrl.js"></script>
     <script src="js/app/controllers/RequestQuoteCtrl.js"></script>
-    <script src="js/app/controllers/OrderHistorySearchCtrl.js"></script>
+    <script src="js/app/controllers/LogoutCtrl.js"></script>
     
     <script src="js/app/factories/ClientService.js"></script>
     
     <script src="js/app/filters/phoneNumbers.js"></script>
+    <script src="js/app/filters/casting.js"></script>
 
 
     

@@ -62,7 +62,7 @@ class Database {
       return $this->db->lastInsertId('id');
     }
     
-    public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL, $join=NULL){
+    public function select($table, $select, $orderBy=NULL, $where=NULL, $start=NULL, $pageSize=NULL, $join=NULL, $dump = false){
         $cols = $conditions = '';
         $return = array();
         $i=0;
@@ -121,7 +121,7 @@ class Database {
           $queryString .= ' LIMIT ' . $start . ',' . $pageSize;
         }
         
-        //var_dump($queryString);
+        if ($dump) var_dump($queryString);
         
         $query = $this->db->prepare($queryString);
         
@@ -141,7 +141,7 @@ class Database {
         }
         $query->closeCursor();
 
-        //var_dump($query);
+        if ($dump) var_dump($query);
 
         return $return;
     }
@@ -397,7 +397,21 @@ class Database {
     }
     
     public function getCollateralIDFromGUID($guid) {
+      $select = array('id');
+      $where = array('guid' => $guid);
+
       $return = -1;
+      
+      // var_dump($guid);
+      // var_dump(strlen($guid));
+      $dbResult = $this->select('collateral', $select, null, $where);
+      // var_dump($dbResult);
+      
+      if ($dbResult) {
+        $return = $dbResult[0]['id'];
+      }
+    
+      /*
       if (strlen($guid) == 36) {
         $sql = "SELECT id FROM collateral WHERE guid = '$guid'";
         $query = $this->db->prepare($sql);
@@ -410,6 +424,8 @@ class Database {
         }
         $query->closeCursor();
       }
+      */
+      
       return $return;
     }
     

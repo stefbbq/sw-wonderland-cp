@@ -806,3 +806,24 @@ table.list.selectable .record td {
     padding-top: 0;
   }
 }
+
+/*
+Modal Blocker
+*/
+#modal {
+	background-color: hsla(0, 0%, 0%, 0.8);
+	display: block;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+}
+
+.hidden {
+	display:none!important;
+}
+
+button:disabled {
+	color:hsl(0, 0%, 80%)
+}

@@ -1,6 +1,122 @@
-.order_history {
-  .util .search.ng-scope input[type="submit"] {
-    display:inline-block;
+.client-portal {
+
+  h1 {
+    font-size:1.5em;
+    font-weight:bold;
+  }
+  
+  h2 {
+    font-size:1.25em;
+    font-weight:bold;
+  }
+
+  .company_detail {
+    padding-left: 15px;
+    border-left: 1px dotted black;
+    margin-bottom:50px;
+  }  
+  
+  .util {
+    .search.ng-scope input[type="submit"] {
+      display:inline-block;
+    }
+    
+    input#search  {
+      display:inline-block;
+    }
+    
+    form {
+      float:right;
+    }
+  }
+  
+
+  
+  table {
+    clear:both;
+    border:2px solid hsl(0, 0, 50);
+    width:100%;
+    margin-top:60px;
+    
+    th, td {
+      padding:3px;
+      border:1px solid hsl(0, 0, 50);
+    }
+    
+    th {
+      background-color:hsl(0,0,80);
+      font-weight:bold;
+      
+      a {
+        color:black;
+        text-decoration:none;
+      }
+    }
+    
+  }
+  
+  .client_orderCollateral {
+  
+    h1 {
+      margin-bottom:10px;
+    }
+    
+    h2 {
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+  
+    .collateral-details {
+      margin-top:5px;
+      .info {
+        display: inline-block;
+        vertical-align: top;
+        margin-left:10px;
+      }
+    }
+    
+    .field-group {
+      margin-top:10px;
+    
+      label {
+        display:inline-block;
+        width:125px;
+        vertical-align:top;
+      }
+      
+      input, textarea {
+        display:inline-block;
+      }
+      
+      textarea {
+        width:400px;
+      }
+    
+    }
+    
+    
+    .button-row {
+      width:100%;
+      text-align:right;
+    }
+    
+    button:disabled {
+      color:hsl(0,0,80);
+      /*background-color: hsl(0,0,0);*/
+    }
+    
   }
 }
+
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+	}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
+
  
