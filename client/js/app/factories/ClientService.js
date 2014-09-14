@@ -1,5 +1,5 @@
 angular.module('ClientPortalApp')
-.factory('ClientService', ['$http', '$rootScope', function($http, $rootScope) {
+.factory('ClientService', ['$http', '$rootScope', '$upload', function($http, $rootScope, $upload) {
   var me = {};
 
   /**
@@ -172,6 +172,51 @@ angular.module('ClientPortalApp')
   }
   
 
+  /**
+   * RFQ Dropdown Content
+   */
+  me.dd = {};
+  me.getDropdownContent = function(callback) {
+    var args = {action:'getRFQDropdownContent'};
+    $http.jsonp($rootScope.wsURL, {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+      console.log(result.data);
+      angular.copy(result.data, me.dd);
+      if (callback) callback(result);
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  
+  }
+  
+  /**
+   * Submit RFQ
+   */
+    /*
+   * Save to Dropbox
+   */
+  me.submitQuoteRequest = function (quoteData, file, onProgress, onComplete) {
+  
+    var url = $rootScope.wsDropboxURL + '?action=requestQuote';
+    $('#server_response').html('');
+
+    $upload.upload({
+      url:url,
+      method:'POST',
+      data:quoteData,
+      file:file
+    }).progress(function(e) {
+      if (onProgress) onProgress(e);
+    }).success(function(data, status, headers, config) {
+      //$('#server_response').html(data);
+      onComplete();
+    });
+    
+  }
+
+  
   
   return me;
 }])

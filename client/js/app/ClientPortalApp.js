@@ -5,7 +5,8 @@ var basePath = basePath || '';
 
 angular.module('ClientPortalApp', [
   'ngCookies',
-  'ngRoute'
+  'ngRoute',
+  'angularFileUpload'
 ])
 .controller('MenuController', ['$scope', function($scope) {
   $scope.getClass = function(path) {
@@ -106,9 +107,9 @@ angular.module('ClientPortalApp', [
 ;
 
 function showModal() {
-	$('#modal').removeClass('hidden');
+	$('#modal').show();
 }
 
 function hideModal() {
-	$('#modal').addClass('hidden');
+	$('#modal').hide();
 }

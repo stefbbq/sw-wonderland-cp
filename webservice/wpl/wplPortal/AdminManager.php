@@ -492,7 +492,7 @@ class AdminManager {
     return $result;
   }  
   
-  private function sendEmail($to, $subject, $email, $cc = null) {
+  public function sendEmail($to, $subject, $email, $cc = null) {
     $result = new Result();
     $sendEmail = true;
     //$to = 'sdgarson@gmail.com'; // TODO: hard-code for testing
@@ -500,7 +500,6 @@ class AdminManager {
     switch ($_SERVER['HTTP_HOST']) {
       case 'localhost:81':
         $sendEmail = false;
-        $url = 'localhost:81/wonderland_cp/';
         break;
       default:
         
@@ -1509,6 +1508,39 @@ class AdminManager {
     return $result;    
     
   }
+
+  /*
+   * RFQ Dropdown Content
+   */
+  public function getRFQDropdownContent() {
+    $result=  new Result();
+    $result->success = true;
+    $result->code = 200;
+    
+    $result->data['type'] = $this->getDDList('collateralTypes');
+    $result->data['finish'] = $this->getDDList('dd_paperFinish');
+    $result->data['weight'] = $this->getDDList('dd_paperWeight');
+    $result->data['recycle'] = $this->getDDList('dd_recycledOpts');
+    $result->data['colours'] = $this->getDDList('dd_inkColours');
+    $result->data['sfx'] = $this->getDDList('dd_specialEffects');
+    $result->data['binding'] = $this->getDDList('dd_binding');
+    
+    return $result;    
+    
+  }
+  
+  private function getDDList($table) {
+    $list = array();
+  
+    $select = array('id', 'name');
+    $orderBy = array('name' => 'ASC');
+    $dataset = $this->db->select($table, $select, $orderBy);
+    
+    $list = $dataset;
+    
+    return $list;
+  }
+  
  
   /*
    * Collateral Types

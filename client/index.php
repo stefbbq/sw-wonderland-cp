@@ -67,12 +67,18 @@
 
 		</div><!-- end .page-wrapper -->
 
-    <div id="modal" class="hidden"></div>    
+    <div id="modal">
+      <div class="bk"></div>
+      <div class="spinner"></div>
+    </div>  
     
+    
+    <script src="js/lib/angular/ng-file-upload/angular-file-upload-shim.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-cookies.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>    
+    <script src="js/lib/angular/ng-file-upload/angular-file-upload.js"></script>
     
     <script src="js/app/ClientPortalApp.js"></script>
 
@@ -80,7 +86,6 @@
     <script src="js/app/controllers/CollateralCtrl.js"></script>
     <script src="js/app/controllers/OrderCollateralCtrl.js"></script>
     <script src="js/app/controllers/RequestQuoteCtrl.js"></script>
-    <script src="js/app/controllers/LogoutCtrl.js"></script>
     
     <script src="js/app/factories/ClientService.js"></script>
     

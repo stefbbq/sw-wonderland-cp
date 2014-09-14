@@ -228,6 +228,9 @@ switch ($action) {
     case 'ddContent':
       $result = $manager->getDropdownContent();
       break;
+    case 'getRFQDropdownContent':
+      $result = $manager->getRFQDropdownContent();
+      break;
     case 'requestQuote':
       $dropbox = new DropboxUploader();
       $result = $dropbox->submitQuoteRequest();
