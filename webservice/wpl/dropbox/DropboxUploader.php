@@ -200,6 +200,9 @@ class DropboxUploader {
     
     // Get friendly names for quote
     $textData = array();
+    
+    if (!is_null($confirmEmail)) $textData['confirm email'] = $confirmEmail;
+    
     for ($i=0; $i<count($fields); $i++) {
       $field = $fields[$i];
       $table = $tables[$i];
