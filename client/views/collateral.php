@@ -30,7 +30,7 @@
           </th>
           <th>
             <a href="javascript:void(0);" ng-click="orderByField='last_upload'; reverseSort = !reverseSort">
-            Order Date
+            Date Uploaded
             </a>
           </th>
           <th>

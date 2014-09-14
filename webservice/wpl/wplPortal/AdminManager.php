@@ -1235,7 +1235,7 @@ class AdminManager {
  /*
    * List Collateral
    */
-  public function searchCollateral($clientID, $searchString, $startRecord, $pageSize, $active) {
+  public function searchCollateral($clientID, $searchString, $startRecord = null, $pageSize = null, $active = '1') {
       $result = new Result();
       
       $clientID = $this->db->getCompanyIDFromGUID($clientID);
@@ -1254,6 +1254,8 @@ class AdminManager {
           'description'=>$searchString,
           'asset_path'=>$searchString
       );
+      
+      
       $whereAnd = array('active'=>$active, 'client_id'=>$clientID);
       $orderBy = array('name' => 'ASC');
       $dataset = $this->db->search('collateral', $select, $orderBy, $where, $whereAnd, $startRecord, $pageSize);
@@ -1764,6 +1766,50 @@ class AdminManager {
     
     return $result;
   }
+  
+  public function searchOrderHistory($clientID, $searchTerm) {
+    $result = new Result();
+  
+    $table = 'orders';
+    $select = array('orders.guid', 'collateral.thumb_path', 'collateral.name', 'collateral.type', 'orders.quantity', 'orders.order_date', 'collateralTypes.name as type_name');
+    $orderBy = array('orders.order_date' => 'desc');
+    $where = array(
+                    'collateral.name' => $searchTerm,
+                    'collateral.type' => $searchTerm,
+                    'orders.quantity' => $searchTerm,
+                    'orders.order_date' => $searchTerm
+                    );
+    $whereAnd = array('active'=> '1');
+    $start = null;
+    $pageSize = null;
+    $join = 'inner join collateral on (orders.collateral_id = collateral.id) inner join collateralTypes on (collateral.type = collateralTypes.code)';
+    $dump = false;
+  
+  
+    //$dbResult = $this->db->select($table, $select, $orderBy, $where, $start, $pageSize, $join, $dump);
+    $dbResult = $this->db->search($table, $select, $orderBy, $where, $whereAnd, $start, $pageSize, $join);
+    
+    if ($dbResult) {
+      // update path
+      $fixedResult = array();
+      
+      foreach ($dbResult as $item) {
+        $item['thumb_path'] = $this->getURL($item['thumb_path']);
+        $fixedResult[] = $item;
+      }
+    
+    
+      $result->success = true;
+      $result->code = 200;
+      $result->message = 'order history list';
+      $result->data = $fixedResult;
+    } else {
+      $result->message = 'error obtaining order history list';
+    }
+    
+    
+    return $result;
+  }  
   
   /*
    * Util

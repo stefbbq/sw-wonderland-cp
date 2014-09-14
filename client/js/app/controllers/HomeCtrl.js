@@ -7,33 +7,25 @@ angular.module('ClientPortalApp')
   $scope.orderByField = 'order_date';
   $scope.reverseSort = false;
   
-  ws.loadOrderHistory(function (result) {
-    console.log(result);
-  });
+  ws.loadOrderHistory();
   
   
   
   
 }])
 
-.controller('OrderHistorySearchCtrl', ['$scope', '$cookieStore', 'ClientService', function($scope, $cookieStore, ClientService) {
-  /*
-  $scope.ws = ClientService;
+.controller('OrderHistorySearchCtrl', ['$scope', 'ClientService', function($scope, ClientService) {
+  var ws = $scope.ws = ClientService;
   
-  var clientData = $cookieStore.get('clientData');
-  
-  
-  if (!clientData) {
-    clientData = {client_id:'c41181be-c14f-4ef7-a54e-9255e8c9783d'};
+  $scope.doSearch = function() {
+    var searchTerm = $scope.searchString;
+    if (searchTerm || searchTerm.length > 0) {
+      ws.searchOrderHistory(searchTerm);
+    } else {
+      ws.loadOrderHistory();
+    }
+    
   }
-  
-  var companyID = clientData.client_id;
-  
-  $scope.ws.loadDetail(companyID);
-  
-  */
-  
-  
   
 }])
 ;

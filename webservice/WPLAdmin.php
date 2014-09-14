@@ -253,6 +253,10 @@ switch ($action) {
     case 'clientCollateralList':
       $result = $manager->getCollateralList(getValue('clientID'), null, null, 1);
       break;
+    case 'clientCollateralSearch':
+      $result = $manager->searchCollateral(getValue('clientID'), getValue('q'));
+      break;
+      
     case 'submitReorder':
       $result = $manager->submitReorder(getValue('client'), getValue('user'), getValue('collateral'), getValue('quantity'), getValue('comment'));
       break;
@@ -261,6 +265,9 @@ switch ($action) {
       break;
     case 'getOrderHistory':
       $result = $manager->getOrderHistory(getValue('clientID'));
+      break;
+    case 'searchOrderHistory':
+      $result = $manager->searchOrderHistory(getValue('clientID'), getValue('q'));
       break;
       
     default : 

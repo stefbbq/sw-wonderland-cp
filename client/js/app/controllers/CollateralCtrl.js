@@ -18,8 +18,19 @@ angular.module('ClientPortalApp')
 
 
 }])
-.controller('CollateralSearchCtrl', ['$scope', '$http', function($scope, $http) {
-
+.controller('CollateralSearchCtrl', ['$scope', 'ClientService', function($scope, ClientService) {
+  var ws = $scope.ws = ClientService;
+  
+  $scope.doSearch = function() {
+    var searchTerm = $scope.searchString;
+    if (searchTerm || searchTerm.length > 0) {
+      ws.searchCollateral(searchTerm);
+    } else {
+      ws.loadCollateralList();
+    }
+    
+  }
+  
 
 }])
 

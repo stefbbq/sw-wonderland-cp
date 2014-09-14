@@ -7,7 +7,7 @@ angular.module('ClientPortalApp')
    */
   me.company = {};
   me.loadDetail = function(callback) {
-  console.log('$rootScope.clientID', $rootScope.clientID);
+  // console.log('$rootScope.clientID', $rootScope.clientID);
     var args = {action:'clientDetail', q:$rootScope.clientID};
     
     $http.jsonp($rootScope.wsURL, {
@@ -50,6 +50,30 @@ angular.module('ClientPortalApp')
   }  
 
   /**
+   * Search Order History
+   */
+  me.searchOrderHistory = function(searchTerm, callback) {
+    var args = {action:'searchOrderHistory', clientID:$rootScope.clientID, q:searchTerm};
+    
+    $http.jsonp($rootScope.wsURL, {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+      for (var i=0; i<result.data.length; i++) {
+        var item = result.data[i];
+        item.quantity = Number(item.quantity);
+        item.name = item.name.replace('\\', '');
+      }
+    
+    
+      angular.copy(result.data, me.orderHistory);
+      if (callback) callback(result.data);
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
+  /**
    * Collateral List
    */
   me.collateralList = [];
@@ -67,6 +91,26 @@ angular.module('ClientPortalApp')
       console.log('error', err);
     });
   }
+  
+
+  /**
+   * Collateral Search
+   */
+  me.searchCollateral = function(searchTerm, callback) {
+    var args = {action:'clientCollateralSearch', clientID:$rootScope.clientID, q:searchTerm};
+    
+    $http.jsonp($rootScope.wsURL, {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+    
+      angular.copy(result.data.list, me.collateralList);
+      if (callback) callback(result.data);
+    }).error(function(err) {
+      console.log('error', err);
+    });
+  }
+  
   
   /**
    * Collateral Types
