@@ -13,7 +13,7 @@
 
   <section class="latest_news">
     <h1>Latest News</h1>
-    <p>Latest news would go here.  Will need to determine where this resides in the database.  Likely pulling it from the Expression Engine DB.</p>
+    <p>{{ws.latestNews.news}}</p>
   </section>
 
   <br/>

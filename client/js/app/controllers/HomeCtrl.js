@@ -9,6 +9,7 @@ angular.module('ClientPortalApp')
   
   ws.loadOrderHistory();
   
+  ws.getLatestNews();
   
   
   

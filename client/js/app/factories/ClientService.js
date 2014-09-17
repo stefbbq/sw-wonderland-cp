@@ -37,6 +37,7 @@ angular.module('ClientPortalApp')
         var item = result.data[i];
         item.quantity = Number(item.quantity);
         item.name = item.name.replace('\\', '');
+        // console.log(result);
         // item.order_date = (new Date(item.order_date)).getTime();
         // console.log(item.order_date);
       }
@@ -193,8 +194,6 @@ angular.module('ClientPortalApp')
   
   /**
    * Submit RFQ
-   */
-    /*
    * Save to Dropbox
    */
   me.submitQuoteRequest = function (quoteData, file, onProgress, onComplete) {
@@ -216,6 +215,28 @@ angular.module('ClientPortalApp')
     
   }
 
+
+  /**
+   * Get Latest News
+   */
+  me.latestNews = {};
+  me.getLatestNews = function() {
+    var url = "http://localhost:81/wonderland/index.php/api/news?callback=JSON_CALLBACK";
+    
+    var args = {};
+    $http.jsonp(url, {
+      params:args,
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).success(function(result) {
+      console.log(result);
+      angular.copy(result, me.latestNews);
+    }).error(function(err) {
+      console.log('error', err);
+    });
+    
+    
+  };
+  
   
   
   return me;
