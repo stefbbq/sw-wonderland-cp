@@ -63,7 +63,9 @@ angular.module('ClientPortalApp', [
   $rootScope.clientID = clientData.client_id;
   $rootScope.userID = clientData.user_id;
   
-  // web service
+  /***
+   * Web Service
+   ***/
   var forceStaging = true;
   
   switch ($location.host()) {
@@ -71,17 +73,20 @@ angular.module('ClientPortalApp', [
       $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       $rootScope.wsUploadURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
       $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
+      $rootScope.eeAPI = 'http://localhost:81/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
       break;
     case 'bach':
       $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       $rootScope.wsUploadURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php';
       $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
+      $rootScope.eeAPI = 'http://localhost:81/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
       if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
     case 'localhost':
       $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
       $rootScope.wsUploadURL = 'http://localhost:81/wonderlandws/WPLAdmin.php';
       $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
+      $rootScope.eeAPI = 'http://localhost:81/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
       if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
   }

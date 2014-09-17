@@ -221,7 +221,8 @@ angular.module('ClientPortalApp')
    */
   me.latestNews = {};
   me.getLatestNews = function() {
-    var url = "http://localhost:81/wonderland/index.php/api/news?callback=JSON_CALLBACK";
+    var url = $rootScope.eeAPI;
+    url = url.replace('{call}', 'news');
     
     var args = {};
     $http.jsonp(url, {
