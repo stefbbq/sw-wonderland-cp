@@ -14,14 +14,17 @@
 	<body ng-app="wplLogin">
 		<?php include "../webservice/top_menu.php"; ?>
 		<div class="page-wrapper">
-			<div class="spa clearfix" ng-controller="loginController">
-				<h1>Login</h1>
-				<form id="login_form" novalidate name="form">
-					<div class="field-group col-1"> <label for="username">User Name</label> <input id="username" type="text" ng-model="user.username" required ng-minlength="2" ng-maxlength="45"> </div>
-					<div class="field-group col-1"> <label for="password">Password</label> <input id="password" type="password" ng-model="user.password" required ng-minlength="2" ng-maxlength="45"> </div>
-					<div class="buttons"> <button ng-click="login()" ng-disabled="form.$invalid">Login</button> </div>
-				</form><!-- end form -->
-			</div>
+			<div class="section-wrapper login-section">
+				<div class="spa clearfix" ng-controller="loginController">
+					<div class="section-title">Login</div>
+					<form id="login_form" novalidate name="form">
+						<div class="field-group col-1"> <div class="input-label label" for="username">User Name</div> <input id="username" type="text" ng-model="user.username" required ng-minlength="2" ng-maxlength="45"> </div>
+						<div class="field-group col-1"> <div class="input-label label" for="password">Password</div> <input id="password" type="password" ng-model="user.password" required ng-minlength="2" ng-maxlength="45"> </div>
+						<div class="buttons"> <button ng-click="login()" ng-disabled="form.$invalid">Login</button> </div>
+					</form><!-- end form -->
+				</div>
+			</div><!-- end .seciton-wrapper -->
+
 			<!--[if lt IE 9]>
 			<script src="bower_components/es5-shim/es5-shim.js"></script>
 			<script src="bower_components/json3/lib/json3.min.js"></script>
