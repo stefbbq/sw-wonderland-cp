@@ -29,6 +29,7 @@ switch ($action) {
                 getValue('postal_code'), 
                 getValue('email'), 
                 getValue('phone'), 
+                getValue('ext'), 
                 getValue('phone2'), 
                 getValue('wplEmail')
                 );
@@ -42,6 +43,7 @@ switch ($action) {
                 getValue('postal_code'), 
                 getValue('email'), 
                 getValue('phone'), 
+                getValue('ext'), 
                 getValue('phone2'), 
                 getValue('wplEmail'),
                 getValue('guid')

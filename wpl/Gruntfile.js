@@ -267,8 +267,8 @@ module.exports = function (grunt) {
     //    }
     //  }
 		options: {
-			beautify : false,
-			mangle   : true
+			beautify : true,
+			mangle   : false
 		}
     },
     concat: {

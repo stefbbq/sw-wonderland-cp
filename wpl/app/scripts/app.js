@@ -113,6 +113,12 @@ angular
         $rootScope.wsUploadURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
         $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
         break;
+      case 'bach':
+        $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+        $rootScope.wsUploadURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php';
+        $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
+        if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+        break;
       case 'localhost':
         $rootScope.wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
         $rootScope.wsUploadURL = 'http://localhost:81/wonderlandws/WPLAdmin.php';

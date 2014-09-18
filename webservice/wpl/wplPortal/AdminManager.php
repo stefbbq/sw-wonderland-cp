@@ -26,7 +26,7 @@ class AdminManager {
   /*
    * Create and Update Client
    */
-  public function saveClient($name, $address, $city, $province, $postal_code, $email, $phone, $phone2, $wplEmail, $id = null) {
+  public function saveClient($name, $address, $city, $province, $postal_code, $email, $phone, $ext, $phone2, $wplEmail, $id = null) {
       $result = new Result();
 
       $newClient = $id == null;
@@ -39,6 +39,7 @@ class AdminManager {
       $client->postal_code = $postal_code;
       $client->email = $email;
       $client->phone = $phone;
+      $client->ext = $ext;
       $client->phone2 = $phone2;
       $client->wplEmail = $wplEmail;
       $client->guid = $newClient ? $this->db->generateGUID() : $id;
@@ -146,7 +147,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   public function getClientDetail($guid) {
     $result = new Result();
 
-    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'ext', 'phone2', 'email', 'wplEmail', 'active');
 
     $where = array(
         'guid' => $guid
