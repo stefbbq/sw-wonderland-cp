@@ -65,7 +65,7 @@
 			<script src="scripts/vendor.js"></script>
 			<script src="scripts/scripts.js"></script>
 
-
+			<div id="modal" class="hidden"></div>
 
 		</div><!-- end .page-wrapper -->
 

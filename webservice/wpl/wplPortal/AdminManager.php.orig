@@ -49,6 +49,8 @@ class AdminManager {
       if ($newClient) {
         $client->active = '1';
         $dbResult = $this->db->add('clients', $client);
+		
+		
         if ($dbResult) {
           $result->success = true;
           $result->message = "Client added.";
@@ -73,6 +75,7 @@ class AdminManager {
           $result->message = "Error updating client.";
         }
       }
+	  
 
       return $result;
   }
@@ -108,7 +111,7 @@ class AdminManager {
   /*
    * Search Clients
    */
-public function searchClients($searchString, $startRecord, $pageSize, $active) {
+  public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result = new Result();
 
       $searchQuery = " name LIKE :search OR address LIKE :search OR city LIKE :search AND active='$active'";
@@ -147,7 +150,11 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   public function getClientDetail($guid, $includeID = false) {
     $result = new Result();
 
-    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'ext', 'phone2', 'email', 'wplEmail', 'active');
+<<<<<<< HEAD
+=======
+    if ($includeID) $select[] = 'id';
+>>>>>>> b7a2858184f2441e2b0b1ab8dd697db91a6cfb17
 
     $where = array(
         'guid' => $guid
