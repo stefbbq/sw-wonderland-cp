@@ -1,15 +1,19 @@
 <div class="client_collateral">
-  <section class="collateral">
+  <section class="collateral details-section">
     <div class="util">
-      <h1>Uploaded Collateral</h1>
-      <form ng-controller="CollateralSearchCtrl" class="search" ng-submit="doSearch()">
-        <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
-        <input type="submit" value="Search">
-      </form>
-    </div>
-    <table class="table table-bordered">
+      <div class="title">Uploaded Collateral</div>
+      <div class="right">
+        <div class="label">Search</div>
+        <form ng-controller="CollateralSearchCtrl" class="search" ng-submit="doSearch()">
+          <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
+          <input type="submit" value="Search">
+        </form>
+      </div><!-- end .right -->
+      <div class="clear"></div>
+    </div><!-- end .util -->
+    <table class="table table-bordered list selectable">
       <thead>
-        <tr>
+        <tr class="header">
           <th>
             Thumb
           </th>
@@ -39,7 +43,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="item in ws.collateralList|orderBy:orderByField:reverseSort">
+        <tr ng-repeat="item in ws.collateralList|orderBy:orderByField:reverseSort" class="record">
           <td><img src="{{item.thumb_path}}" height="50"></td>
           <td>{{item.name}}</td>
           <td>{{item.type_name}}</td>

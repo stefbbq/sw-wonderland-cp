@@ -1,34 +1,30 @@
 <div class="client_home">
-<!--
-  <section class="company_detail" ng-controller="CompanyInfoController">
-    <h1>{{ws.company.name}}</h1>
-    <p>{{ws.company.address}}<br/>
-    {{ws.company.city}}, {{ws.company.province}}  {{ws.company.postal_code}}<br/>
-    {{ws.company.country}}<br/>
-    {{ws.company.phone | tel}}<br/>
-    {{ws.company.phone2 | tel}}<br/>
-    </p>
-  </section>
-  -->
 
-  <section class="latest_news">
-    <h1>Latest News</h1>
-    <p>{{ws.latestNews.news}}</p>
+  <section class="latest_news details-section">
+    <div class="title">Latest News</div>
+    <!-- <div class="news-container">{{ws.latestNews.news}}</div> -->
+    <div class="news-container" ng-bind-html="ws.latestNews.news"></div>
+
   </section>
 
   <br/>
   <br/>
-  <section class="order_history">
+  <section class="order_history details-section">
     <div class="util">
-      <h1>Order History</h1>
-      <form ng-controller="OrderHistorySearchCtrl" class="search" ng-submit="doSearch()">
-        <input type="text" name="search" id="search" placeholder="" ng-model="searchString">
-        <input type="submit" value="Search">
-      </form>
-    </div>
-    <table class="table table-bordered">
+      <div class="title">Order History</div>
+      <div class="right">
+        <div class="label">Search</div>
+        <form ng-controller="OrderHistorySearchCtrl" class="search" ng-submit="doSearch()">
+          <input type="text" name="search" id="search" class="search" placeholder="" ng-model="searchString">
+          <input type="submit" value="Search">
+        </form>
+      </div><!-- end .right -->
+      <div class="clear"></div>
+    </div><!-- end .util -->
+
+    <table class="table table-bordered list selectable">
       <thead>
-        <tr>
+        <tr class="header">
           <th>
             Collateral Thumb
           </th>
@@ -55,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="item in ws.orderHistory|orderBy:orderByField:reverseSort">
+        <tr ng-repeat="item in ws.orderHistory|orderBy:orderByField:reverseSort" class="record">
           <td><img src="{{item.thumb_path}}" height="50"></td>
           <td>{{item.name}}</td>
           <td>{{item.type_name}}</td>
@@ -69,4 +65,3 @@
   
   
 </div>
-

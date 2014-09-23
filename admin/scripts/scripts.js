@@ -162,7 +162,8 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
 
       case "bach":
         $rootScope.wsURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK", 
-        $rootScope.wsUploadURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php", $rootScope.wsDropboxURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php", 
+        $rootScope.wsUploadURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php", 
+        $rootScope.wsDropboxURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php", 
         forceStaging && ($rootScope.wsURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK");
         break;
 
@@ -174,15 +175,9 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     $rootScope.jsonHeader = {
         "Content-Type": "application/x-www-form-urlencoded"
     }, $rootScope.clientList = {
-<<<<<<< HEAD
         pageSize: 10
     }, $rootScope.collateralList = {
         pageSize: 10
-=======
-        pageSize: 3
-    }, $rootScope.collateralList = {
-        pageSize: 3
->>>>>>> 0df88392d508f761c01bc378581082f67f0be935
     }, $rootScope.collateralList_full = {
         pageSize: 10
     }, $rootScope.getFormVars = function(model) {
@@ -629,14 +624,14 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             file: file
         }).progress(function(e) {
             onProgress && onProgress(e);
-<<<<<<< HEAD
         }).success(function(e) {
             console.log('uploadComplete', e);
-=======
-        }).success(function() {
->>>>>>> 0df88392d508f761c01bc378581082f67f0be935
             onComplete();
         });
+            // .success(function() {
+// >>>>>>> 0df88392d508f761c01bc378581082f67f0be935
+//             onComplete();
+//         });
     }
     function loadDetails(id, callback) {
         var args = {

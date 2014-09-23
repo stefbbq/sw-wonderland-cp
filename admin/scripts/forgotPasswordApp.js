@@ -14,7 +14,7 @@ angular.module('wplForgotPassword', [
       $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
     case 'bach':
-      $rootScope.wsURL = 'http://bach/wonderland-cp/webserviceWPLAdmin.php?callback=JSON_CALLBACK';
+      $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';      
       break;
     case 'localhost':

@@ -223,15 +223,19 @@ angular.module('ClientPortalApp')
   me.getLatestNews = function() {
     var url = $rootScope.eeAPI;
     url = url.replace('{call}', 'news');
+    console.log(url);
     
     var args = {};
-    $http.jsonp(url, {
+    $http({
+      method: "JSONP",
+      url: url,
       params:args,
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).success(function(result) {
-      console.log(result);
       angular.copy(result, me.latestNews);
-    }).error(function(err) {
+      console.log(result);
+    })
+    .error(function(err) {
       console.log('error', err);
     });
     

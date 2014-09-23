@@ -28,6 +28,9 @@ angular.module('ChangePasswordTest', [])
 		case  'localhost':
 			wsURL = 'http://localhost:81/wonderlandws/WPLAdmin.php?callback=JSON_CALLBACK';
 			break;
+		case 'bach':
+			wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
+			break;
 		case 'wonderland-cp.stagebot.net':
 			wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
 			break;

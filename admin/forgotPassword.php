@@ -14,19 +14,22 @@
 	<body ng-app="wplForgotPassword">
 		<?php include "../webservice/top_menu.php"; ?>
 		<div class="page-wrapper">
-			<div class="spa clearfix" ng-controller="forgotPasswordController">
-				<h1>Request Password Reset</h1>
-				<form id="reset_form" novalidate name="form">
-					<div class="field-group col-1"> <label for="email">Email Address</label> <input id="email" type="text" ng-model="user.email" required ng-minlength="2" ng-maxlength="45"> </div>
-					<div class="buttons"> <button ng-click="requestReset()" ng-disabled="form.$invalid">Reset Password</button> </div>
-				</form><!-- end form -->
-        
-        <p><a href="login.php">Remembered Password?</a></p>
-        
-        <div class='result-message'>
-          <p>{{resultMessage.message}}</p>
-        </div>
-			</div>
+			<div class="section-wrapper login-section">
+				<div class="spa clearfix" ng-controller="forgotPasswordController">
+					<div class="section-title">Request Password Reset</div>
+					<form id="reset_form" novalidate name="form">
+						<div class="field-group col-1"> <div class="input-label label" for="email">Email Address</div> <input id="email" type="text" ng-model="user.email" required ng-minlength="2" ng-maxlength="45"> </div>
+						<div class="buttons"> <button ng-click="requestReset()" ng-disabled="form.$invalid">Reset Password</button> </div>
+					</form><!-- end form -->
+	        
+	        <div class="label forgot-link"><a href="login.php">Remembered Password?</a></div>
+	        
+	        <div class='result-message'>
+	          <p>{{resultMessage.message}}</p>
+	        </div>
+				</div>
+			</div><!-- end .login-section -->
+
       
 			<!--[if lt IE 9]>
 			<script src="bower_components/es5-shim/es5-shim.js"></script>

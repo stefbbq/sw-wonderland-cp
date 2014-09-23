@@ -79,6 +79,11 @@ input[type="text"], input[type="email"], input[type="phone"], input[type="passwo
   text-transform: uppercase;
   font-family: "Myriad Pro", "Vegur", "PT Sans";
   padding: 0 10px;
+
+  &.intro-copy {
+    margin: 0 auto 30px;
+    padding: 0;
+  }
 }
 
 

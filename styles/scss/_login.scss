@@ -4,11 +4,26 @@
 	text-align: center;
 
 	.input-label, input {display: inline-block;}
-	.input-label {text-align: right; min-width: 100px;}
+	.input-label {
+		text-align: right; 
+		width: 150px;
+	}
 
 	button {
 		width: 189px;
 		// margin-left: 103px;
-		margin: 2px 0 0 103px;
+		margin: 2px 0 0 153px;
+	}
+
+	.forgot-link {
+		margin: 25px 0 0 153px;
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
+	}
+
+	.fieldGroup {
+		display: block;
 	}
 }

@@ -79,7 +79,7 @@ angular.module('ClientPortalApp', [
       $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       $rootScope.wsUploadURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php';
       $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
-      $rootScope.eeAPI = 'http://localhost:81/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
+      $rootScope.eeAPI = 'http://bach/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
       if (forceStaging) $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       break;
     case 'localhost':
@@ -117,4 +117,9 @@ function showModal() {
 
 function hideModal() {
 	$('#modal').hide();
+}
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
 }
