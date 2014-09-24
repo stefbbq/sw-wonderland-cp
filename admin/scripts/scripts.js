@@ -147,6 +147,9 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }).when("/dropbox", {
         templateUrl: basePath + "views/dropboxTest" + viewExt,
         controller: "DropBoxTestCtrl"
+    }).when('/logout', {
+      templateUrl: basePath + "views/logout" + viewExt,
+      controller: 'LogoutCtrl'
     }).otherwise({
         redirectTo: "/listClients"
     });
@@ -1419,7 +1422,14 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
     };
     var testDataList = [];
     construct();
-} ]);
+} ])
+.controller('LogoutCtrl', ['$scope', '$cookieStore', function($scope, $cookieStore) {
+  $cookieStore.remove('clientData');
+  alert("You are now logged out.");
+  location.href = './login.php';
+
+}])
+;
 
 var hex_chr = "0123456789abcdef".split("");
 
