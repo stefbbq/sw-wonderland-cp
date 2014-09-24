@@ -13,7 +13,7 @@
 
   <section class="latest_news">
     <h1>Latest News</h1>
-    <p ng-bind-html="ws.latestNews.news"></p>
+    <div ng-bind-html="ws.latestNews.news"></div>
   </section>
 
   <br/>
