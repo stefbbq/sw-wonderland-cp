@@ -6,7 +6,8 @@ var basePath = basePath || '';
 angular.module('ClientPortalApp', [
   'ngCookies',
   'ngRoute',
-  'angularFileUpload'
+  'angularFileUpload',
+  'ngSanitize'
 ])
 .controller('MenuController', ['$scope', function($scope) {
   $scope.getClass = function(path) {

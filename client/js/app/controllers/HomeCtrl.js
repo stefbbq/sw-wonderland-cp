@@ -1,16 +1,14 @@
 angular.module('ClientPortalApp')
-.controller('HomeCtrl', ['$scope', 'ClientService', function($scope, ClientService) {
+.controller('HomeCtrl', ['$scope', '$sce', 'ClientService', function($scope, $sce, ClientService) {
   var ws = $scope.ws = ClientService;
   
   // sort table
-  
   $scope.orderByField = 'order_date';
   $scope.reverseSort = false;
   
   ws.loadOrderHistory();
   
   ws.getLatestNews();
-  
   
   
 }])
