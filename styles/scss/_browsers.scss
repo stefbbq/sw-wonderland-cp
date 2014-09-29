@@ -1,0 +1,6 @@
+.ie, .gecko {
+	.drop-down {
+		display: none;
+	}	
+	select {@include appearance(normal);}
+}

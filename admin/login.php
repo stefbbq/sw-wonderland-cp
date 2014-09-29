@@ -16,7 +16,7 @@
 		<div class="page-wrapper">
 			<div class="section-wrapper login-section">
 				<div class="spa clearfix" ng-controller="loginController">
-					<div class="section-title">Client Center</div>
+					<div class="section-title">Admin</div>
 					<div class="label intro-copy">The Client Center helps you manage your projects and request new print jobs. Send us an email if you would like to use this service.</div>
 					<form id="login_form" novalidate name="form">
 						<div class="field-group col-1"> <div class="input-label label" for="username">User Name</div> <input id="username" type="text" ng-model="user.username" required ng-minlength="2" ng-maxlength="45"> </div>
@@ -24,6 +24,7 @@
 						<div class="buttons"> <button ng-click="login()" ng-disabled="form.$invalid">Login</button> </div>
 					</form><!-- end form -->
 					<div class="label forgot-link"><a href="forgotPassword.php">Forgot Password?</a></div>
+					<div class="label forgot-link"><a href="../client/login.php">I am a client</a></div>
 				</div>
 			</div><!-- end.login-section -->
 

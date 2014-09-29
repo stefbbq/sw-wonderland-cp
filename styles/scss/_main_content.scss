@@ -80,3 +80,19 @@
 #admin_list {
   .util .nav.tab-menu {margin-right: 0;}
 }
+
+.latest_news {margin-bottom: 0;}
+.news-container {
+  p {margin-bottom: 15px;}
+}
+
+.client_requestQuote {
+  form li {
+    position: relative;
+    .drop-down {
+      position: absolute;
+      top: 28px;
+      right: 10px;
+    }
+  }
+}

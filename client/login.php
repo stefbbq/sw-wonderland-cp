@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php include '../webservice/assets.php'; ?>
+
 <!-- 	<link rel="stylesheet" href="../styles/main.30ac1ef3.css">
 	<link rel="stylesheet" href="../styles/stylesheets/resetPassword.css"> -->
   </head>
   <body ng-app="LoginApp" class="spa">
-    <h1>Client Portal Login</h1>
+    <!-- <h1>Client Portal Login</h1> -->
 	<div ng-controller="LoginFormCtrl">
 		<?php include "../webservice/top_menu.php"; ?>
 		<div class="page-wrapper">
@@ -34,17 +35,18 @@
 						<!--button ng-click="autofill()">Auto Fill</button-->
 					</div>
 					<div class="label forgot-link"><a href="forgotPassword.php">Forgot Password?</a></div>
+					<div class="label forgot-link"><a href="../admin/login.php">I am an admin (WPL employee only)</a></div>
 				</form>
 
 			</div><!-- end .login-section -->
 		</div><!-- end .page-wrapper -->
 
 		
-    <h3>Result</h3>
+<!--     <h3>Result</h3>
 		<pre>
 			{{webService.result}}
 		</pre>
-	</div>
+ -->	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-cookies.min.js"></script>

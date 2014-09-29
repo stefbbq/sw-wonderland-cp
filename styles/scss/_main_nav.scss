@@ -20,6 +20,8 @@
 			// max-width:$maxSize;
 			.left {
 				float:left;
+				position: relative;
+				top: 8px;
 			}
 
 			ul {
@@ -38,15 +40,44 @@
 						color: rgb(35,34,32);
 						text-decoration: none;
 						text-transform: uppercase;
-						&:not(.filled-link) {
-							position: relative;
-							top: -2px;
-						}
+						font-weight: bolder;
+						// &:not(.filled-link) {
+						// 	position: relative;
+						// 	top: -2px;
+						// }
 					}
 
 					&.current, &:hover {
 						background-color: rgb(252,49,132);
 						a {color: rgb(237,231,224);}
+					}
+				}
+
+				&.subnav {
+					width: 100%;
+					text-align: right;
+					position: relative;
+					.underlay {
+						background-color: black;
+						position: absolute;
+						left: 0;
+						height: 100%;
+						width: calc(100% + (100vw - 1165px)/2);
+						@media #{media-width-res(1310)} {
+							width: calc(100% + 5vw);
+						}
+					}
+					li {
+						padding: 10px;
+						a {color: white;}
+					}
+
+					@media #{media-width-res(767)} {
+						text-align: center;
+						.underlay {
+							width: 100%;
+							.nav-flag {display: none;}
+						}
 					}
 				}
 			}
@@ -60,25 +91,51 @@
 
 		.logo, .wordmark {
 			position: relative;
-			display: inline-block;
+			margin: 5px auto;
+			// display: inline-block;
 		}
 		.logo {
 			top: 2px;
 		}
 		.wordmark {
-			top: -9px;
-			left: 9px;
+			// top: -9px;
+			// left: 9px;
 		}
 		.hamburger {display: none;}
 
 	}
 }
 
-@media #{media-width-res(1100)} {
+// @media #{media-width-res(1100)} {
+// 	.site-header {
+// 		.nav-top.desktop {
+
+// 			.left {
+// 				.logo, .wordmark {
+// 					display: block;
+// 					margin: 0 auto;
+// 				}
+// 				.logo {
+// 					height: 25px;
+// 					width: 80px;
+// 				}
+// 				.wordmark {
+// 					left: 0;
+// 					top: 9px;
+// 					height: 12px;
+// 					width: 150px;
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+@media #{media-width-res(950)} {
 	.site-header {
 		.nav-top.desktop {
 
 			.left {
+				top: 20px;
 				.logo, .wordmark {
 					display: block;
 					margin: 0 auto;
@@ -109,6 +166,7 @@
 }
 
 @media #{$tablet-mobile} {
+
 	.site-header .nav-top.desktop {
 		.bucket-wrapper {
 			width: 100%;
@@ -118,6 +176,7 @@
 			width: $minWidth;
 			margin: 0 auto;
 			padding: 10px 0;
+			top: 0;
 
 			.logo {
 				margin: 0;
@@ -135,6 +194,8 @@
 				}
 			}
 		}
+
+		.right {float: none; width: 100%;}
 
 		ul {
 			display: none;

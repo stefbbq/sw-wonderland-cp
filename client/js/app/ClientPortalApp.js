@@ -6,7 +6,8 @@ var basePath = basePath || '';
 angular.module('ClientPortalApp', [
   'ngCookies',
   'ngRoute',
-  'angularFileUpload'
+  'angularFileUpload',
+  'ngSanitize'
 ])
 .controller('MenuController', ['$scope', function($scope) {
   $scope.getClass = function(path) {
@@ -73,7 +74,7 @@ angular.module('ClientPortalApp', [
       $rootScope.wsURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK';
       $rootScope.wsUploadURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
       $rootScope.wsDropboxURL = 'http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php';
-      $rootScope.eeAPI = 'http://localhost:81/wonderland/index.php/api/{call}?callback=JSON_CALLBACK';
+      $rootScope.eeAPI = 'http://wonderland.stagebot.net/index.php/api/{call}?callback=JSON_CALLBACK';
       break;
     case 'bach':
       $rootScope.wsURL = 'http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK';

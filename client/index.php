@@ -8,7 +8,6 @@
 		<!-- <link rel="stylesheet" href="styles/main.30ac1ef3.css"> -->
 		<?php include '../webservice/assets.php'; ?>
     <!-- <link rel="stylesheet" href="../styles/stylesheets/client_portal_override.css"> -->
-		    
 
 	<body ng-app="ClientPortalApp" class="client-portal">
 		
@@ -77,11 +76,11 @@
     
     <script src="js/lib/angular/ng-file-upload/angular-file-upload-shim.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-sanitize.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-cookies.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>    
     <script src="js/lib/angular/ng-file-upload/angular-file-upload.js"></script>
-    
+    <script src="js/lib/css_browser_selector.js"></script>
     <script src="js/app/ClientPortalApp.js"></script>
 
     <script src="js/app/controllers/HomeCtrl.js"></script>

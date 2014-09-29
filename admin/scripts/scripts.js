@@ -152,7 +152,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     });
 } ]).run([ "$rootScope", "$location", "$cookieStore", function($rootScope, $location, $cookieStore) {
     if ($rootScope.adminData = $cookieStore.get("adminData"), void 0 === $rootScope.adminData || !$rootScope.adminData.isAdmin) return void (window.location.href = "./login.php");
-    var forceStaging = true;
+    var forceStaging = false;
     switch ($location.host()) {
       case "wonderland-cp.stagebot.net":
         $rootScope.wsURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK", 

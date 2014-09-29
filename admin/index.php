@@ -71,9 +71,6 @@
 
 		<script>
 			$(document).ready(function() {
-	      $(".nav-top .hamburger").click(function() {
-	          $('.nav-top ul').toggleClass('expand');
-	      });
 
 	      $("#admin-menu .menu-item").click(function() {
 	      	if(!$(this).hasClass('current')) {
