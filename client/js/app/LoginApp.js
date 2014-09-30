@@ -7,7 +7,7 @@ angular.module('LoginApp', [
   //console.log($location.host());
 
   // web service
-  var forceStaging = false;
+  var forceStaging = true;
 
   switch ($location.host()) {
     case 'wonderland-cp.stagebot.net':
@@ -33,8 +33,8 @@ angular.module('LoginApp', [
           console.log(result.data);
           var data = {client_id:result.data.client_id, user_id:result.data.user_id};
           $cookieStore.put('clientData', data);
-          alert('login success');
-          //location.href = './';
+          //alert('login success');
+          location.href = './';
         } else {
           alert('Login Failed');
         }
