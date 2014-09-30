@@ -44,22 +44,22 @@ angular.module('ClientPortalApp', [
 .run(['$rootScope', '$location', '$cookieStore', function ($rootScope, $location, $cookieStore) {
   //console.log($location.host());
   
-  /*
   $rootScope.adminData = $cookieStore.get('clientData');
   if ($rootScope.adminData === undefined) {
     window.location.href = './login.php';
     return; 
   }
-  */
 
   /*
    * Store client id
    */
-   
+
   var clientData = $cookieStore.get('clientData');
+  /*
   if (!clientData) {
     clientData = {client_id:'eb14a744-6711-47fa-b4fc-206f57c091b3', user_id:'593721c8-f7d1-4021-af8a-865b747897a2'};
-  }  
+  } 
+  */  
   
   $rootScope.clientID = clientData.client_id;
   $rootScope.userID = clientData.user_id;

@@ -1,5 +1,5 @@
 angular.module('ClientPortalApp')
-.factory('ClientService', ['$http', '$rootScope', '$upload', function($http, $rootScope, $upload) {
+.factory('ClientService', ['$http', '$rootScope', '$upload', '$sce', function($http, $rootScope, $upload, $sce) {
   var me = {};
 
   /**

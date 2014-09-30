@@ -50,6 +50,12 @@
 								<span class="filled-link"></span>
 							</a>
 						</li>
+						<li ng-class="getClass('/logout')" class="menu-item ">
+							<a ng-href="#/logout">
+								Logout
+								<span class="filled-link"></span>
+							</a>
+						</li>
 					</ul>
 				</div><!-- end .left.menu -->
 
