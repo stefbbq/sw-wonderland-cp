@@ -7,7 +7,7 @@ angular.module('LoginApp', [
   //console.log($location.host());
 
   // web service
-  var forceStaging = true;
+  var forceStaging = false;
 
   switch ($location.host()) {
     case 'wonderland-cp.stagebot.net':

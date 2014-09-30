@@ -105,7 +105,7 @@ angular
     }
     
     // web service
-    var forceStaging = false;
+    var forceStaging = true;
     
     switch ($location.host()) {
       case 'wonderland-cp.stagebot.net':

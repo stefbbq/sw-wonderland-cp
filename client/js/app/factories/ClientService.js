@@ -28,11 +28,12 @@ angular.module('ClientPortalApp')
   me.orderHistory = [];
   me.loadOrderHistory = function(callback) {
     var args = {action:'getOrderHistory', clientID:$rootScope.clientID};
-    
+    console.log(args);
     $http.jsonp($rootScope.wsURL, {
       params:args,
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).success(function(result) {
+      // console.log(result);
       for (var i=0; i<result.data.length; i++) {
         var item = result.data[i];
         item.quantity = Number(item.quantity);

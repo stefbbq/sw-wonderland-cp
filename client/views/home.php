@@ -52,6 +52,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="item in ws.orderHistory|orderBy:orderByField:reverseSort" class="record">
+          
           <td><img src="{{item.thumb_path}}" height="50"></td>
           <td>{{item.name}}</td>
           <td>{{item.type_name}}</td>

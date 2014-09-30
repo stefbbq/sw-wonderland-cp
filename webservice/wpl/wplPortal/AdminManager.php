@@ -1765,7 +1765,8 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     $table = 'orders';
     $select = array('orders.guid', 'collateral.thumb_path', 'collateral.name', 'collateral.type', 'orders.quantity', 'orders.order_date', 'collateralTypes.name as type_name');
     $orderBy = array('orders.order_date' => 'desc');
-    $where = null;
+    // $where = null;
+    $where = array('orders.client_id'=> $this->db->getCompanyIDFromGUID($clientID));
     $start = null;
     $pageSize = null;
     $join = 'inner join collateral on (orders.collateral_id = collateral.id) inner join collateralTypes on (collateral.type = collateralTypes.code)';
@@ -1807,7 +1808,8 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
                     'orders.quantity' => $searchTerm,
                     'orders.order_date' => $searchTerm
                     );
-    $whereAnd = array('active'=> '1');
+    // $whereAnd = array('active'=> '1');
+    $whereAnd = array('active'=> '1', 'orders.client_id'=> $this->db->getCompanyIDFromGUID($clientID));
     $start = null;
     $pageSize = null;
     $join = 'inner join collateral on (orders.collateral_id = collateral.id) inner join collateralTypes on (collateral.type = collateralTypes.code)';
