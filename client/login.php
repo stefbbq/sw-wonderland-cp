@@ -25,11 +25,6 @@
 				<!--button ng-click="autofill()">Auto Fill</button-->
 			</div>			
 		</form>
-		
-    <h3>Result</h3>
-		<pre>
-			{{webService.result}}
-		</pre>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>

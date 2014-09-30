@@ -32,7 +32,6 @@ angular.module('LoginApp', [
         if (result.success) {
           var data = {client_id:result.data.client_id, user_id:result.data.user_id};
           $cookieStore.put('clientData', data);
-          //alert('login success');
           location.href = './';
         } else {
           alert('Login Failed');
