@@ -461,7 +461,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }
     function deactivateUser(id, callback) {
         var args = {
-            action: "deactivateClientUser",
+            action: "deactivateAdminUser",
             guid: id
         };
         $http.jsonp($rootScope.wsURL, {
@@ -475,7 +475,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }
     function reactivateUser(id, callback) {
         var args = {
-            action: "reactivateClientUser",
+            action: "reactivateAdminUser",
             guid: id
         };
         $http.jsonp($rootScope.wsURL, {
@@ -496,8 +496,8 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
         changePassword: changePassword,
         client: clientDetails,
         save: saveUser,
-        deactivate: deactivateUser,
-        reactivate: reactivateUser
+        deactivateUser: deactivateUser,
+        reactivateUser: reactivateUser
     };
 } ]);
 
@@ -1104,7 +1104,7 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     }, construct();
 } ]), angular.module("wplAdmin").controller("EditAdminUserCtrl", [ "$scope", "$http", "$location", "$rootScope", "adminUserService", function($scope, $http, $location, $rootScope, adminUserService) {
     function construct() {
-        switch (initializeTestData(), $location.path()) {
+        switch ($location.path()) {
           case "/addAdminUser":
             addMode = !0, $scope.title = "Add New Admin User", action = "addAdminUser";
             break;
@@ -1113,7 +1113,43 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
             addMode = !1, $scope.title = "Edit Admin User", action = "updateAdminUser", $scope.adminUserService = adminUserService, 
             loadAdminUserDetails();
         }
+        
+        $scope.isEditMode = !addMode;
     }
+    
+    $scope.activateLabel = function() {
+      return $scope.user.active == '1' ? 'Deactivate' : 'Reactivate';
+    };
+    
+    var activateMessage;
+    $scope.toggleActive = function() {
+    
+      function onActiveStatusChanged() {
+        alert(activateMessage);
+        $location.path("listAdminUsers");
+      }
+
+      var performAction = false;
+      if ($scope.user.active == '1') {
+        performAction = confirm('Are you sure you want to deactivate \n"' + $scope.user.username + ' (' + $scope.user.email + ')"?\nThe user will be displayed in the "inactive" list.');
+      } else {
+        performAction = true;
+      }
+      
+      if (performAction) {
+        if ($scope.user.active == '1') {
+          activateMessage = "User Deactivated";
+          adminUserService.deactivateUser($scope.user.guid, onActiveStatusChanged);
+        } else {
+          activateMessage = "User Reactivated";
+          adminUserService.reactivateUser($scope.user.guid, onActiveStatusChanged);
+        }
+        
+      
+      
+      }
+    };
+    
     function loadAdminUserDetails() {
         var id = $location.search().id;
         $scope.adminUserService.loadDetails(id, function(details) {
@@ -1123,9 +1159,10 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     function initializeTestData() {
         testDataList.push(new AdminUser("admin", "admin@wpl.com"));
     }
-    function AdminUser(username, email) {
+    
+    function AdminUser(username, email, guid) {
         var me = {};
-        return me.username = username, me.email = email, me;
+        return me.username = username, me.email = email, me.guid = guid, me;
     }
     var addMode, action;
     $scope.form = {}, $scope.user = {}, $scope.save = function(user) {

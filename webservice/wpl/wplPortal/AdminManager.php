@@ -1021,7 +1021,7 @@ class AdminManager {
     $result->data = array();
 
     // get user detail
-    $select = array('guid', 'username', 'email');
+    $select = array('guid', 'username', 'email', 'active');
     $where = array(
         'guid' => $id
     );
