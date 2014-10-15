@@ -144,9 +144,9 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }).when("/listCollateral", {
         templateUrl: basePath + "views/listCollateral" + viewExt,
         controller: "CollateralListCtrl"
-    }).when("/dropbox", {
-        templateUrl: basePath + "views/dropboxTest" + viewExt,
-        controller: "DropBoxTestCtrl"
+    }).when("/dropboxSetup", {
+        templateUrl: basePath + "views/dropboxSetup" + viewExt,
+        controller: "DropBoxSetupCtrl"
     }).when('/logout', {
       templateUrl: basePath + "views/logout" + viewExt,
       controller: 'LogoutCtrl'
@@ -744,6 +744,40 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             $("#server_response").html(data), onComplete();
         });
     }
+    function getDropboxAuthURL(callback) {
+      var args = {
+            action: "getDBURL"
+        };
+      $http.jsonp($rootScope.wsURL, {
+          params: args,
+          header: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          }
+      }).success(function(result) {
+          callback && callback(result);
+      }).error(function(err) {
+          console.log("error", err);
+      });
+    }
+
+    function authorizeDropbox(authCode, callback) {
+      var args = {
+            action: "authorizeDropbox",
+            c:authCode
+        };
+      $http.jsonp($rootScope.wsURL, {
+          params: args,
+          header: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          }
+      }).success(function(result) {
+          callback && callback(result);
+      }).error(function(err) {
+          console.log("error", err);
+      });
+    }
+
+
     var pageSize = $rootScope.clientList.pageSize, list = [], details = {}, types = [];
     return {
         loadList: loadList,
@@ -759,7 +793,9 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
         deactivate: deactivate,
         reactivate: reactivate,
         details: details,
-        saveToDropbox: saveToDropbox
+        saveToDropbox: saveToDropbox,
+        getDropboxAuthURL: getDropboxAuthURL,
+        authorizeDropbox: authorizeDropbox
     };
 } ]), angular.module("wplAdmin").directive("capitalizeFirst", function() {
     return {
@@ -1431,13 +1467,29 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
     }, $scope.$on("pagerComplete", function() {
         hilightCurrentPage();
     });
-} ]), angular.module("wplAdmin").controller("DropBoxTestCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
+} ]), angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
     function construct() {
         $scope.collateralService = collateralService;
     }
-    function onProgress(e) {
-        console.log("onProgress", e);
-    }
+    
+    $scope.getAuthCode = function() {
+      collateralService.getDropboxAuthURL(function(result) {
+        $('#auth_step_1').hide();
+        $('#auth_step_2').show();
+        window.open(result.data, 'db_auth');
+        
+      });
+    };
+
+    $scope.authorizeDropbox = function() {
+      collateralService.authorizeDropbox($scope.auth_code, function(result) {
+      $scope.auth_token = result.data;
+        $('#auth_step_2').hide();
+        $('#auth_step_3').show();
+      });
+    };
+
+      /*
     $scope.collateral = {
         name: "Test File"
     }, $scope.file = {
@@ -1458,6 +1510,7 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
         angular.copy(testDataIndex, $scope.company), testDataIndex >= testDataList.length && (testDataIndex = 0);
     };
     var testDataList = [];
+    */
     construct();
 } ])
 .controller('LogoutCtrl', ['$scope', '$cookieStore', function($scope, $cookieStore) {

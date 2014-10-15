@@ -222,6 +222,10 @@ switch ($action) {
       $dropbox = new DropboxUploader();
       $result = $dropbox->getAuthURL();
       break;
+    case 'authorizeDropbox':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->authorizeDropbox(getValue('c'));
+      break;
     case 'typeList':
       $result = $manager->getProductTypes();
       break;

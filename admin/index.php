@@ -50,6 +50,12 @@
 								<span class="filled-link"></span>
 							</a>
 						</li>
+						<li ng-class="getClass('/dropboxSetup')" class="menu-item ">
+							<a ng-href="#/dropboxSetup">
+								Dropbox Setup
+								<span class="filled-link"></span>
+							</a>
+						</li>
 						<li ng-class="getClass('/logout')" class="menu-item ">
 							<a ng-href="#/logout">
 								Logout

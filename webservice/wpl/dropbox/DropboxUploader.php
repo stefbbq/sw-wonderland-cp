@@ -1,5 +1,6 @@
 <?php
 namespace wpl\dropbox;
+require_once "Dropbox/autoload.php";
 
 use sdg\data\Result;
 use wpl\database\Database;
@@ -26,7 +27,9 @@ class DropboxUploader {
     
   //  $authCode = 'Rtf-mLdIcxsAAAAAAAAEgLyo4Ea1XGUbD2_vK06eYE8';
 //    $authToken = $webAuth->finish($authCode);
-    $accessToken = 'Rtf-mLdIcxsAAAAAAAAEgad9u-POsKpy3A8eUAxzzNzXLb3U5JpSOyTLIWDmw3V8';
+
+    // TODO: Update this value with the token sent from the client.
+    $accessToken = 'Rtf-mLdIcxsAAAAAAAAE7cKMa3CK5K3LV04HFw5s-fLJc8d62scOyCzD21mFUD7E';
 
     $this->dbxClient = new dbx\Client($accessToken, "PHP-Example/1.0");
     /*
@@ -48,6 +51,21 @@ class DropboxUploader {
     
     return $result;
     //$this->dump($authorizeUrl);
+  }
+  
+  public function authorizeDropbox($authCode) {
+    $result = new Result();
+    $appInfo = dbx\AppInfo::loadFromJsonFile("pp-info.json");
+    $webAuth = new dbx\WebAuthNoRedirect($appInfo, "PHP-Example/1.0");
+    //$authorizeUrl = $webAuth->start();
+    
+    list($accessToken, $dropboxUserId) = $webAuth->finish($authCode);
+    $result->success = true;
+    $result->code = 200;
+    $result->message = "Dropbox Auth Token";
+    $result->data = $accessToken;
+    
+    return $result;
   }
   
   public function saveToDropbox() {
