@@ -745,7 +745,6 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             $("#server_response").html(data), onComplete();
         });
     }
-<<<<<<< HEAD
     function getDropboxAuthURL(callback) {
       var args = {
             action: "getDBURL"
@@ -1469,8 +1468,10 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
     }, $scope.$on("pagerComplete", function() {
         hilightCurrentPage();
     });
-<<<<<<< HEAD
-} ]), angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
+
+} ]);
+
+angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
     function construct() {
         $scope.collateralService = collateralService;
     }
@@ -1510,5 +1511,5 @@ function hideModal() {
 	$('#modal').addClass('hidden');
 }
 
-construct();
-} ]);
+// updated 2014.10.29
+
