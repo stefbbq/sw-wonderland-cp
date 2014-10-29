@@ -180,6 +180,8 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
         pageSize: 10
     }, $rootScope.collateralList = {
         pageSize: 10
+    }, $rootScope.collateralList = {
+        pageSize: 3
     }, $rootScope.collateralList_full = {
         pageSize: 10
     }, $rootScope.getFormVars = function(model) {
@@ -626,9 +628,8 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             file: file
         }).progress(function(e) {
             onProgress && onProgress(e);
-        }).success(function(e) {
-            console.log('uploadComplete', e);
-            onComplete();
+        }).success(function() {
+            if (onComplete) onComplete();
         });
     }
     function loadDetails(id, callback) {
@@ -744,6 +745,7 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             $("#server_response").html(data), onComplete();
         });
     }
+<<<<<<< HEAD
     function getDropboxAuthURL(callback) {
       var args = {
             action: "getDBURL"
@@ -776,7 +778,6 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
           console.log("error", err);
       });
     }
-
 
     var pageSize = $rootScope.clientList.pageSize, list = [], details = {}, types = [];
     return {
@@ -1149,7 +1150,6 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
             addMode = !1, $scope.title = "Edit Admin User", action = "updateAdminUser", $scope.adminUserService = adminUserService, 
             loadAdminUserDetails();
         }
-        
         $scope.isEditMode = !addMode;
     }
     
@@ -1195,10 +1195,12 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     function initializeTestData() {
         testDataList.push(new AdminUser("admin", "admin@wpl.com"));
     }
-    
     function AdminUser(username, email, guid) {
         var me = {};
-        return me.username = username, me.email = email, me.guid = guid, me;
+        me.username = username;
+        me.email = email;
+        me.guid = guid;
+        return me
     }
     var addMode, action;
     $scope.form = {}, $scope.user = {}, $scope.save = function(user) {
@@ -1467,6 +1469,7 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
     }, $scope.$on("pagerComplete", function() {
         hilightCurrentPage();
     });
+<<<<<<< HEAD
 } ]), angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
     function construct() {
         $scope.collateralService = collateralService;
@@ -1489,28 +1492,6 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
       });
     };
 
-      /*
-    $scope.collateral = {
-        name: "Test File"
-    }, $scope.file = {
-        file: null
-    }, $scope.onFileSelect = function($files) {
-        console.log("file", $files), $scope.file.file = $files[0];
-    }, $scope.save = function() {
-        console.log($scope.file.file), collateralService.saveToDropbox($scope.collateral, $scope.file.file, onProgress, function() {
-            var msg = "collateral added to dropbox";
-            alert(msg);
-        });
-    }, $scope.cancel = function() {
-        window.history.back();
-    };
-    var testDataIndex = 0;
-    $scope.autofill = function() {
-        testDataList[testDataIndex++];
-        angular.copy(testDataIndex, $scope.company), testDataIndex >= testDataList.length && (testDataIndex = 0);
-    };
-    var testDataList = [];
-    */
     construct();
 } ])
 .controller('LogoutCtrl', ['$scope', '$cookieStore', function($scope, $cookieStore) {
@@ -1521,10 +1502,6 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
 }])
 ;
 
-var hex_chr = "0123456789abcdef".split("");
-
-"5d41402abc4b2a76b9719d911017c592" != md5("hello");
-
 function showModal() {
 	$('#modal').removeClass('hidden');
 }
@@ -1532,3 +1509,6 @@ function showModal() {
 function hideModal() {
 	$('#modal').addClass('hidden');
 }
+
+construct();
+} ]);

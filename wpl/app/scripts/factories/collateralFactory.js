@@ -1,5 +1,5 @@
 'use strict';
-
+var $ = $;
 angular.module('wplAdmin')
 .factory('collateralService', ['$http', '$rootScope', '$upload', function($http, $rootScope, $upload) {
   var pageSize = $rootScope.clientList.pageSize;
@@ -119,10 +119,12 @@ angular.module('wplAdmin')
   
   function uploadFile(type, collateralID, file, onProgress, onComplete) {
     console.log("collateralID", collateralID);
+	/* jshint ignore:start */
     if (file == null) {
       onComplete();
       return;
     }
+	/* jshint ignore:end */
     console.log('uploadingFile');
     
     var url = $rootScope.wsUploadURL + '?action=upload' + (type == "thumb" ? 'Thumb' : 'File') ;
