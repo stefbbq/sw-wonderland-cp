@@ -1488,20 +1488,20 @@ class AdminManager {
   /*
    * Fake Dropdown Content
    */
-  public function getDropdownContent() {
+  public function getDropdownContent($table, $order) {
     $result=  new Result();
     $select = array('id', 'name');
     $orderBy = array('name' => 'ASC');
-    $dataset = $this->db->select('fakeDropdownContent', $select, $orderBy);
+    $dataset = $this->db->select($table, $select, $orderBy);
     
     if ($dataset) {
       $result->success = true;
       $result->code = 200;
       $result->data = $dataset;
-      $result->message = 'fake dropdown content';
+      $result->message = 'dropdown content';
     } else {
       $result->code = 304;
-      $result->message = 'error obtaining fake dropdown content';
+      $result->message = 'error obtaining dropdown content';
     }
 
 
@@ -1518,22 +1518,26 @@ class AdminManager {
     $result->code = 200;
     
     $result->data['type'] = $this->getDDList('collateralTypes');
-    $result->data['finish'] = $this->getDDList('dd_paperFinish');
-    $result->data['weight'] = $this->getDDList('dd_paperWeight');
+    $result->data['finish'] = $this->getDDList('dd_paperFinish', 'id');
+    $result->data['weightText'] = $this->getDDList('dd_paperWeightText', 'id');
+    $result->data['weightCover'] = $this->getDDList('dd_paperWeightCover', 'id');
     $result->data['recycle'] = $this->getDDList('dd_recycledOpts');
-    $result->data['colours'] = $this->getDDList('dd_inkColours');
+    $result->data['sides'] = $this->getDDList('dd_sides');
+    $result->data['colours'] = $this->getDDList('dd_inkColours', 'id');
     $result->data['sfx'] = $this->getDDList('dd_specialEffects');
     $result->data['binding'] = $this->getDDList('dd_binding');
+    $result->data['coatingAQ'] = $this->getDDList('dd_coatingAQ', 'id');
+    $result->data['coatingVarnish'] = $this->getDDList('dd_coatingVarnish', 'id');
     
     return $result;    
     
   }
   
-  private function getDDList($table) {
+  private function getDDList($table, $order = 'name') {
     $list = array();
-  
+
     $select = array('id', 'name');
-    $orderBy = array('name' => 'ASC');
+    $orderBy = array($order => 'ASC');
     $dataset = $this->db->select($table, $select, $orderBy);
     
     $list = $dataset;
