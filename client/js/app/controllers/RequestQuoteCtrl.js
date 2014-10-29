@@ -27,6 +27,7 @@ angular.module('ClientPortalApp')
       hideModal();
       angular.copy({}, $scope.quote);
       window.history.back();
+      location.reload();
     }
     
     $scope.formValidClass = function(invalid) {
@@ -42,19 +43,23 @@ angular.module('ClientPortalApp')
     };
     
     $scope.autoFill = function() {
-      $scope.quote.type = ws.dd.type[9].id;
-      $scope.quote.size = '8x10';
+      $scope.quote.type = ws.dropdown.type[9].id;
+      $scope.quote.size = '24 x 30';
+      $scope.quote.flatSize = '24 x 30 flat';
+      $scope.quote.foldedSize = '24 x 30 folded';
       $scope.quote.quantity = '1000';
       $scope.quote.pageCount = '1';
-      $scope.quote.finish = ws.dd.finish[0].id;
-      $scope.quote.weight = ws.dd.weight[1].id;
-      $scope.quote.recycled = ws.dd.recycle[0].id;
-      $scope.quote.colours = ws.dd.colours[1].id;
-      $scope.quote.sides = '1';
-      $scope.quote.specialFX = ws.dd.sfx[0].id;
-      $scope.quote.binding = ws.dd.binding[0].id;
-      $scope.quote.description = 'Autofilled content.';
-      
+      $scope.quote.coatingAQ = ws.dropdown.coatingAQ[0].id;
+      $scope.quote.coatingVarnish = ws.dropdown.coatingVarnish[0].id;
+      $scope.quote.finish = ws.dropdown.finish[0].id;
+      $scope.quote.weightText = ws.dropdown.weightText[1].id;
+      $scope.quote.weightCover = ws.dropdown.weightCover[1].id;
+      $scope.quote.recycled = ws.dropdown.recycle[0].id;
+      $scope.quote.colours = ws.dropdown.colours[1].id;
+      $scope.quote.sides = ws.dropdown.sides[1].id;
+      $scope.quote.specialFX = ws.dropdown.sfx[0].id;
+      $scope.quote.binding = ws.dropdown.binding[0].id;
+      $scope.quote.description = 'A poster for my room!';
       
     }
     

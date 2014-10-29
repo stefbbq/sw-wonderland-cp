@@ -176,7 +176,7 @@ angular.module('ClientPortalApp')
   /**
    * RFQ Dropdown Content
    */
-  me.dd = {};
+  me.dropdown = {};
   me.getDropdownContent = function(callback) {
     var args = {action:'getRFQDropdownContent'};
     $http.jsonp($rootScope.wsURL, {
@@ -184,7 +184,7 @@ angular.module('ClientPortalApp')
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).success(function(result) {
       console.log(result.data);
-      angular.copy(result.data, me.dd);
+      angular.copy(result.data, me.dropdown);
       if (callback) callback(result);
     }).error(function(err) {
       console.log('error', err);

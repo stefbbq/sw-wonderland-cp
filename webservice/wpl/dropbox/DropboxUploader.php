@@ -106,6 +106,7 @@ class DropboxUploader {
     $userID       = $this->getPostValue('userID');
     $clientName   = $this->getPostValue('clientName');
     $clientEmail  = $this->getPostValue('clientEmail');
+    $clientPhone  = $this->getPostValue('clientPhone');
     
     
     $confirmEmail;
@@ -114,7 +115,7 @@ class DropboxUploader {
     if ($userID != null) {
       // get the user data from the database
       $table    = 'clientUsers';
-      $select   = array('clients.name, clients.wplEmail, clientUsers.confirmation_email, clientUsers.email, clientUsers.first_name, clientUsers.last_name');
+      $select   = array('clients.name, clients.wplEmail, clientUsers.confirmation_email, clientUsers.email, clientUsers.phone, clientUsers.first_name, clientUsers.last_name');
       $orderBy  = null;
       $where    = array('clientUsers.guid' => $userID);
       $start    = null;
@@ -127,6 +128,7 @@ class DropboxUploader {
       $clientEmail  = $dbResult[0]['email'];
       $confirmEmail = $dbResult[0]['confirmation_email'];
       $repEmail     = $dbResult[0]['wplEmail'];
+      $clientPhone  = $dbResult[0]['phone'];
       
     
     } else if ($clientName == null || $clientEmail == null) {
@@ -160,6 +162,7 @@ class DropboxUploader {
     $data = array();
     $data['clientName'] = $clientName;
     $data['clientEmail'] = $clientEmail;
+    $data['clientPhone'] = $clientPhone;
     
     foreach ($specs as $spec) {
       $value = $this->getPostValue($spec->field);
@@ -191,6 +194,7 @@ class DropboxUploader {
     // Get friendly names for quote
     $textData = array();
     
+    if (!is_null($clientPhone)) $textData['phone'] = $clientPhone;
     if (!is_null($confirmEmail)) $textData['confirm email'] = $confirmEmail;
     
     foreach ($specs as $spec) {
@@ -231,7 +235,7 @@ class DropboxUploader {
     
     $body.= "<tr style=\"$css_tr1\"><th style=\"width:33%; $css_th\">Client Name: </th><td>{$clientName}</td></tr>";
     $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Submitter: </th><td><a href=\"mailto:{$clientEmail}\">{$clientEmail}</a></td></tr>";
-    
+   
     $i = 0;
     foreach($textData as $key => $value) {
       $style = ($i++ % 2 == 0) ? $css_tr1 : $css_tr2;
