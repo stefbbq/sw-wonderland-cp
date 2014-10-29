@@ -1,25 +1,33 @@
-<div class="edit_collateral">
-	<h1>{{title}}</h1>
-	<form id="form" name="form" novalidate>
+<div class="edit_collateral details-section">
+	<div class="section-header">{{title}}</div>
+	<form id="form" class="add-edit-form" name="form" novalidate>
 		<div class="field-group col-2">
-			<label for="client">Client</label> 
+			<div class="input-label" for="client">Client</div class="input-label"> 
 			<select id="client" ng-model="collateral.client_id" required ng-options="client.guid as client.name for client in clientService.list">
 				<option value="">-- choose client -- 
 			</select>
 		</div>
-		<div class="field-group col-2"> <label for="name">Collateral Name</label> <input id="name" type="text" ng-model="collateral.name" required ng-minlength="2" ng-maxlength="50"> </div>
+		<div class="field-group col-2"> <div class="input-label" for="name">Collateral Name</div class="input-label"> <input id="name" type="text" ng-model="collateral.name" required ng-minlength="2" ng-maxlength="50"> </div>
 		<div class="field-group col-2">
-			<label for="type">Type</label> 
+			<div class="input-label" for="type">Type</div class="input-label"> 
 			<select id="type" ng-model="collateral.type" required ng-options="type.id as type.name for type in collateralService.types">
 				<option value="">-- select type -- 
 			</select>
 		</div>
-		<div class="field-group col-2"> <label for="description">Description</label> <textarea id="description" ng-model="collateral.description" required></textarea> </div>
-		<div class="field-group col-2"> <label for="file">Attach thumbnail</label> <input id="file" type="file" ng-model="collateral.thumbnail" ng-file-select="onThumbSelect($files)" accept="image/*"> <img ng-src="{{thumb.image}}" height="100"> </div>
-		<div class="field-group col-2"> <label for="file">Attach file</label> <input id="file" type="file" ng-model="collateral.file" ng-file-select="onFileSelect($files)"> </div>
-		<div class="buttons">
-			<button ng-click="cancel()">Cancel</button> <button ng-click="save()" ng-disabled="form.$invalid">Save</button> <!-- <button ng-click="autofill()">Auto Fill</button> --> 
-		</div>
+		<div class="field-group col-2 text-field"> <div class="input-label" for="description">Description</div class="input-label"> <textarea id="description" ng-model="collateral.description" required></textarea> </div>
+		<div class="field-group col-2"> <div class="input-label" for="file">Attach thumbnail</div class="input-label"> <input id="file" type="file" ng-model="collateral.thumbnail" ng-file-select="onThumbSelect($files)" accept="image/*"> <img ng-src="{{thumb.image}}" class="preview-img" height="100"> </div>
+		<div class="field-group col-2"> <div class="input-label" for="file">Attach file</div class="input-label"> <input id="file" type="file" ng-model="collateral.file" ng-file-select="onFileSelect($files)"> </div>
+
+		<div class="util">
+			<div class="right">
+				<div class="buttons">
+					<button ng-click="cancel()">Cancel</button> <button ng-click="save()" ng-disabled="form.$invalid">Save</button> <!-- <button ng-click="autofill()">Auto Fill</button> --> 
+				</div><!-- end .buttons -->
+			</div><!--end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
+
 	</form>
 	<!--
 		<pre>{{collateral}}</pre>

@@ -1,6 +1,6 @@
 <div class="list_admins">
   <section id="admin_list">
-    <h1>Admin List</h1>
+
     <div class="util">
       <button class="add-btn" ng-click="onAddUser();">Create New Admin</button> <!--
         <form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()">
@@ -8,13 +8,18 @@
           <input type="submit" value="Search">
         </form>
         --> 
-    </div>
-    <ul class="nav tab-menu">
-      <li ng-class="getActiveClass(true);"><a href="javascript:void(0);" ng-click="listActive(true);">Active</a></li>
-      <li ng-class="getActiveClass(false);"><a href="javascript:void(0);" ng-click="listActive(false);">Inactive</a></li>
-    </ul>
+      <div class="right">
+        <div class="label">Show</div>
+        <ul class="nav tab-menu">
+          <li ng-class="getActiveClass(true);" class="button">Active<a href="javascript:void(0);" ng-click="listActive(true);" class="filled-link"></a></li>
+          <li ng-class="getActiveClass(false);" class="button">Inactive<a href="javascript:void(0);" ng-click="listActive(false);" class="filled-link"></a></li>
+        </ul><!-- end .nav.tab-menu -->
+      </div><!-- end .right -->
+      <div class="clear"></div>
+    </div><!-- end .util -->
+
     <table class="list selectable">
-      <tr>
+      <tr class="header">
         <th>Name 
         <th>Email  
       <tr class="record" ng-repeat="user in adminUserService.list" ng-click="showUser(user.guid)">

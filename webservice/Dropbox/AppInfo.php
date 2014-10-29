@@ -111,6 +111,7 @@ final class AppInfo
      */
     static function loadFromJsonFileWithRaw($path)
     {
+    
         if (!file_exists($path)) {
             throw new AppInfoLoadException("File doesn't exist: \"$path\"");
         }

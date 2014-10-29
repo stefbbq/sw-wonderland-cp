@@ -1,0 +1,76 @@
+.client-portal h1 {
+  font-size: 1.5em;
+  font-weight: bold; }
+.client-portal h2 {
+  font-size: 1.25em;
+  font-weight: bold; }
+.client-portal .company_detail {
+  padding-left: 15px;
+  border-left: 1px dotted black;
+  margin-bottom: 50px; }
+.client-portal .util .search.ng-scope input[type="submit"] {
+  display: inline-block; }
+.client-portal .util input#search {
+  display: inline-block; }
+.client-portal .util form {
+  float: right; }
+.client-portal table {
+  clear: both;
+  border: 2px solid gray;
+  width: 100%;
+  margin-top: 60px; }
+  .client-portal table th, .client-portal table td {
+    padding: 3px;
+    border: 1px solid gray; }
+  .client-portal table th {
+    background-color: #cccccc;
+    font-weight: bold; }
+    .client-portal table th a {
+      color: black;
+      text-decoration: none; }
+.client-portal .client_orderCollateral h1 {
+  margin-bottom: 10px; }
+.client-portal .client_orderCollateral h2 {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+.client-portal .client_orderCollateral .collateral-details {
+  margin-top: 5px; }
+  .client-portal .client_orderCollateral .collateral-details .info {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px; }
+.client-portal .client_orderCollateral .field-group {
+  margin-top: 10px; }
+  .client-portal .client_orderCollateral .field-group label {
+    display: inline-block;
+    width: 125px;
+    vertical-align: top; }
+  .client-portal .client_orderCollateral .field-group input, .client-portal .client_orderCollateral .field-group textarea {
+    display: inline-block; }
+  .client-portal .client_orderCollateral .field-group textarea {
+    width: 400px; }
+.client-portal .client_orderCollateral .button-row {
+  width: 100%;
+  text-align: right; }
+.client-portal .client_orderCollateral button:disabled {
+  color: #cccccc;
+  /*background-color: hsl(0,0,0);*/ }
+
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0; }
+
+* html .clearfix {
+  zoom: 1; }
+
+/* IE6 */
+*:first-child + html .clearfix {
+  zoom: 1; }
+
+/* IE7 */
+
+/*# sourceMappingURL=client_portal_override.css.map */

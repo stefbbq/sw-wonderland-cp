@@ -1,32 +1,59 @@
 <div class="collateral_detail">
-	<section id="collateral_detail">
-		<h1>Collateral Detail</h1>
-		<h2><a href="javascript:void(0);" ng-click="showClient(clientService.details.guid);">{{clientService.details.name}}</a></h2>
-		<p>{{clientService.details.address}}<br> {{clientService.details.city}}, {{clientService.details.province}}<br> {{clientService.details.postal_code}}<br> {{clientService.details.phone | tel}}<br> {{clientService.details.phone2 | tel}} </p>
-		<button ng-click="showClient(clientService.details.guid);">Back to Client</button> 
-	</section>
-	<section id="user">
-		<h3>Collateral Details</h3>
-		<table class="">
-			<tr>
+	<section id="collateral_detail" class="details-section">
+		<div class="section-header">Collateral Detail</div>
+		<div class="title">
+			<a href="javascript:void(0);" ng-click="showClient(clientService.details.guid);">
+				<span>{{clientService.details.name}}</span>
+			</a>
+			<div class="right">
+				<!-- <button id="edit_client_btn" ng-click="editClient();">Edit</button> -->
+				<button ng-click="showClient(clientService.details.guid);">Back to Client</button> 
+			</div><!-- end .right -->
+
+		</div><!-- end .title -->
+
+		<div class="details">
+			<div class="item">{{clientService.details.address}}</div>
+			<div class="item">{{clientService.details.city}}, {{clientService.details.province}}</div>
+			<div class="item">{{clientService.details.postal_code}}</div>
+			<div class="item">{{clientService.details.phone | tel}}</div>
+			<div class="item">{{clientService.details.phone2 | tel}}</div>
+		</div>
+		
+	</section><!-- end .details-section -->
+
+	<section id="user" class="details-section">
+		<div class="util">
+			<div class="section-header left"><span>Collateral Details</span></div>
+
+			<div class="right">
+				<button id="edit_user_btn" ng-click="edit();">Edit</button>
+				<button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button>
+			</div><!-- end .right -->
+			<div class="clear"></div>
+
+		</div><!-- end .util -->
+		
+		<table class="list selectable">
+			<tr class="vertical header">
 				<th>Name 
 				<td>{{collateralService.details.name}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Last Upload 
 				<td>{{collateralService.details.last_upload}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Type 
 				<td>{{collateralService.details.type}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Description 
 				<td>{{collateralService.details.description}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Thumbnail 
 				<td><img ng-src="{{collateralService.details.thumb_path}}" height="100">  
-			<tr>
+			<tr class="vertical header">
 				<th>Asset 
 				<td><a href="{{collateralService.details.asset_path}}" target="_blank">{{collateralService.details.asset_path}}</a>  
 		</table>
-		<div class="util"> <button id="edit_user_btn" ng-click="edit();">Edit</button> <button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> </div>
+		<!-- <div class="util">  </div> -->
 	</section>
 </div>

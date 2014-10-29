@@ -1,29 +1,61 @@
 <div class="client_detail">
-	<section id="client_detail">
-		<h1>Client User Detail</h1>
-		<h2><a href="javascript:void(0);" ng-click="showClient(clientUserService.client.guid);">{{clientUserService.client.name}}</a></h2>
-		<p>{{clientUserService.client.address}}<br> {{clientUserService.client.city}}, {{clientUserService.client.province}}<br> {{clientUserService.client.postal_code}}<br> {{clientUserService.client.phone | tel}}<br> {{clientUserService.client.phone2 | tel}} </p>
-		<button ng-click="showClient(clientUserService.client.guid);">Back to Client</button> 
-	</section>
-	<section id="user">
-		<h3>User Details</h3>
-		<table class="">
-			<tr>
+	<section id="client_detail" class="details-section">
+		<div class="section-header">Client User Detail</div>
+		<div class="util">
+			<div class="title left">
+				<a href="javascript:void(0);" ng-click="showClient(clientUserService.client.guid);">
+					<span>{{clientUserService.client.name}}</span>
+				</a>
+			</div><!-- end .title -->
+
+			<div class="right">
+				<button ng-click="showClient(clientUserService.client.guid);">Back to Client</button>
+			</div><!-- end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
+
+		<div class="details">
+			<div class="item">{{clientUserService.client.address}}</div>
+			<div class="item">{{clientUserService.client.city}}, {{clientUserService.client.province}}</div>
+			<div class="item">{{clientUserService.client.postal_code}}</div>
+			<div class="item">{{clientUserService.client.phone | tel}}</div>
+			<div class="item">{{clientUserService.client.phone2 | tel}}</div>
+		</div><!-- end .details -->
+
+	</section><!-- end .details-section -->
+
+	<section id="user" class="details-section">
+		
+		<div class="util">
+			<div class="section-header left">
+				<span>User Details</span>
+			</div><!-- end .section-header -->
+			<div class="right">
+				<button id="edit_user_btn" ng-click="edit();">Edit Details</button>
+				<button id="reset_password_btn" ng-click="resetPassword();">Reset Password</button>
+				<button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> 
+			</div><!-- end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+		
+		<table class="list selectable">
+			<tr class="vertical header">
 				<th>Name 
 				<td>{{clientUserService.user.first_name}} {{clientUserService.user.last_name}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Email 
 				<td>{{clientUserService.user.email}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Confirm Email 
 				<td>{{clientUserService.user.confirmation_email}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Phone 
 				<td>{{clientUserService.user.phone | tel}}  
-			<tr>
+			<tr class="vertical header">
 				<th>Phone2 
 				<td>{{clientUserService.user.phone2 | tel}}  
 		</table>
-		<div class="util"> <button id="edit_user_btn" ng-click="edit();">Edit Details</button> <button id="reset_password_btn" ng-click="resetPassword();">Reset Password</button> <button id="edit_client_btn" ng-click="changeActiveStatus();">{{activeStatusLabel}}</button> </div>
+
 	</section>
 </div>

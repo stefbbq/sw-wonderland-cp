@@ -117,10 +117,14 @@ switch ($action) {
      * Admin Users
      */
     case 'addAdminUser':
+	  $testValue = getValue('test');
+	  $testMode = ($testValue == '1' || $testValue == 'true');
+	
       $result = $manager->saveAdminUser(
               getValue('username'), 
-              getValue('email'), 
-              getValue('password')
+              getValue('email'),
+			  null,
+			  $testMode
               );
       break;
      case 'updateAdminUser':
@@ -155,8 +159,9 @@ switch ($action) {
       $result = $manager->setAdminUserActive(getValue('guid'), '1');
       break;
     case 'adminLogin':
-      $result = $manager->login(getValue('username'), getValue('password'));
+      $result = $manager->adminLogin(getValue('username'), getValue('password'));
       break;
+      
     /*
      * Collateral
      */
@@ -217,16 +222,61 @@ switch ($action) {
       $dropbox = new DropboxUploader();
       $result = $dropbox->getAuthURL();
       break;
+    case 'authorizeDropbox':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->authorizeDropbox(getValue('c'));
+      break;
     case 'typeList':
       $result = $manager->getProductTypes();
       break;
     case 'ddContent':
       $result = $manager->getDropdownContent();
       break;
+    case 'getRFQDropdownContent':
+      $result = $manager->getRFQDropdownContent();
+      break;
     case 'requestQuote':
       $dropbox = new DropboxUploader();
       $result = $dropbox->submitQuoteRequest();
       break;
+    case 'emailTest':
+      $result = $manager->emailTest(getValue('id'));
+      break;	  
+    case 'resetAdminPassword':
+      $result = $manager->resetAdminPassword(getValue('email'));
+      break;
+    case 'changeAdminPassword':
+      $result = $manager->changeAdminPassword(getValue('guid'), getValue('p0'), getValue('p1'));
+      break;	  
+    case 'resetClientPassword':
+      $result = $manager->resetClientPassword(getValue('email'));
+      break;	  
+    case 'changeClientPassword':
+      $result = $manager->changeClientPassword(getValue('guid'), getValue('p0'), getValue('p1'));
+      break;	 
+    case 'clientLogin':
+      $result = $manager->clientLogin(getValue('email'), getValue('password'));
+      break;
+    case 'clientCollateralList':
+      $result = $manager->getCollateralList(getValue('clientID'), null, null, 1);
+      break;
+    case 'clientCollateralSearch':
+      $result = $manager->searchCollateral(getValue('clientID'), getValue('q'));
+      break;
+      
+    case 'submitReorder':
+      $result = $manager->submitReorder(getValue('client'), getValue('user'), getValue('collateral'), getValue('quantity'), getValue('comment'));
+      break;
+    case 'confirmOrder':
+      $result = $manager->confirmOrder(getValue('orderID'));
+      break;
+    case 'getOrderHistory':
+      $result = $manager->getOrderHistory(getValue('clientID'));
+      break;
+    case 'searchOrderHistory':
+      $result = $manager->searchOrderHistory(getValue('clientID'), getValue('q'));
+      break;
+      
     default : 
         $result->success = false;
         $result->message = 'no action';

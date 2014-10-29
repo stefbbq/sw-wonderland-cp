@@ -1,22 +1,30 @@
 <div class="list_clients">
 	<section id="client_list">
-		<h1>Client List</h1>
+
 		<div class="util">
-			<button class="add-btn" ng-click="onAddClient();">Create New Client</button> 
-			<form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()"> <input type="text" name="search" id="search" placeholder="" ng-model="searchString"> <input type="submit" value="Search"> </form>
-		</div>
-		<ul class="nav tab-menu">
-			<li ng-class="getActiveClass(true);"><a href="javascript:void(0);" ng-click="listActive(true);">Active</a></li>
-			<li ng-class="getActiveClass(false);"><a href="javascript:void(0);" ng-click="listActive(false);">Inactive</a></li>
-		</ul>
+			<button class="add-btn" ng-click="onAddClient();">Create New Client</button>
+
+			<div class="right">
+
+				<ul class="nav tab-menu">
+					<div class="label">Show</div>
+					<li ng-class="getActiveClass(true);" class="button">Active<a href="javascript:void(0);" ng-click="listActive(true);" class="filled-link"></a></li>
+					<li ng-class="getActiveClass(false);" class="button">Inactive<a href="javascript:void(0);" ng-click="listActive(false);" class="filled-link"></a></li>
+				</ul><!-- end .nav.tab-menu -->
+				<div class="label">Search</div>
+				<form ng-controller="SearchCtrl" class="search" ng-submit="doSearch()"> <input type="text" name="search" id="search" placeholder="" ng-model="searchString"> <input type="submit" value="Search"> </form>				
+			</div><!-- end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
 		<table class="list selectable">
-			<tr>
+			<tr class="header">
 				<th>Name 
 				<th>Address 
 				<th>City 
 				<th>Province 
 				<th>Phone 
-				<th>Phone2  
+				<th>Alt Phone  
 			<tr class="record" ng-repeat="company in clientService.list" ng-click="showClient(company.guid)">
 				<td>{{company.name}} 
 				<td>{{company.address}} 
@@ -25,7 +33,8 @@
 				<td ng-bind="company.phone | tel"> 
 				<td ng-bind="company.phone2 | tel">  
 		</table>
-		<div ng-controller="ClientListPager" class="pages"> <a href="javascript:void(0);" ng-click="prevPage();">Prev</a> <span class="page-numbers"> <a href="javascript:void(0);" ng-repeat="page in pages" ng-click="loadPage($index)" pager-complete>{{page.num}}</a> </span> <a href="javascript:void(0);" ng-click="nextPage();">Next</a> </div>
-	</section>
+		<div ng-controller="ClientListPager" class="pages pagination"> <a href="javascript:void(0);" ng-click="prevPage();">Prev</a> <span class="page-numbers"> <a href="javascript:void(0);" ng-repeat="page in pages" ng-click="loadPage($index)" pager-complete>{{page.num}}</a> </span> <a href="javascript:void(0);" ng-click="nextPage();">Next</a> </div>
+
+	</section><!-- end #client_list -->
 </div>
 

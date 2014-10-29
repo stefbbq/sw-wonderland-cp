@@ -1,0 +1,89 @@
+// Base Styles
+
+* {
+  box-sizing: border-box;
+}
+
+.left {float: left;}
+.right {float: right;}
+.clear {clear: both;}
+
+.filled-link {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.section-wrapper, .bucket-wrapper {
+	max-width: $maxSize;
+	width: $minWidth;
+	margin: 0 auto;
+}
+
+.section-wrapper {
+	position: relative;
+	padding: 60px 0;
+	.content {font-family: "Myriad Pro", "Vegur", "PT Sans";}
+}
+
+.section-title {
+	font-family: "Open Sans";
+	font-size: 51px;
+	text-transform: uppercase;
+	margin-bottom: 60px;
+	position: relative;
+
+}
+
+input[type="submit"], button[ng-click], .button {
+  position: relative;
+  background: rgb(237,231,224);
+  color: black;
+  font-family: "Myriad Pro", "Vegur", "PT Sans";
+  font-size: 11px;
+  text-transform: uppercase;
+  box-shadow: none;
+  border: none;
+  outline: none;
+  padding: 18px 15px 13px;
+  margin: 0;
+  cursor: pointer;
+
+  &:hover {
+    background: darken(rgb(237,231,224), 3);
+  }
+
+  &.active {
+    color: white;
+    background: rgb(76,76,76);
+  }
+
+}
+
+input[type="text"], input[type="email"], input[type="phone"], textarea, select {
+  padding: 10px 0 11px 10px;
+  display: block;
+  font-size: 14px;
+  font-family: "Open Sans";
+  color: #747474;
+  border: 1px solid rgb(217,217,217);
+  @include appearance(none);
+  @include border-radius(0);
+  &:focus {outline: 1px solid rgb(200,200,200);}
+}
+
+.label {
+  font-size: 14px;
+  text-transform: uppercase;
+  font-family: "Myriad Pro", "Vegur", "PT Sans";
+  padding: 0 10px;
+}
+
+
+@media #{$tablet-mobile} {
+  body {
+    -webkit-text-size-adjust: none;
+  }
+}

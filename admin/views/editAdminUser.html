@@ -1,9 +1,18 @@
-<div class="edit_admin_user">
-	<h1>{{title}}</h1>
-	<form id="edit_form" novalidate name="form">
-		<div class="field-group col-2"> <label for="username">User Name</label> <input id="username" type="text" ng-model="user.username" required ng-minlength="2" ng-maxlength="45"> </div>
-		<div class="field-group col-2"> <label for="email">Email</label> <input id="email" type="email" ng-model="user.email" required> </div>
-		<div class="buttons"> <button ng-click="cancel()">Cancel</button> <button ng-click="save(user)" ng-disabled="form.$invalid">Save</button> <button ng-click="autofill()">Auto Fill</button> </div>
+<div class="edit_admin_user details-section">
+	<div class="section-header">{{title}}</div>
+	<form id="edit_form" class="add-edit-form" novalidate name="form">
+		<div class="field-group col-2"> <div class="input-label" for="username">User Name</div class="input-label"> <input id="username" type="text" ng-model="user.username" required ng-minlength="2" ng-maxlength="45"> </div>
+		<div class="field-group col-2"> <div class="input-label" for="email">Email</div class="input-label"> <input id="email" type="email" ng-model="user.email" required> </div>
+
+		<div class="util">
+			<div class="right">
+				<div class="buttons"> <button ng-click="cancel()">Cancel</button> <button ng-click="save(user)" ng-disabled="form.$invalid">Save</button> <button ng-click="toggleActive();" ng-show="isEditMode;">{{activateLabel();}}</button> </div><!-- end .buttons -->
+			</div><!--end .right -->
+			<div class="clear"></div>
+		</div><!-- end .util -->
+
+
+
 	</form>
 	<!--
 		<pre>form = {{company | json}}</pre>

@@ -1,0 +1,49 @@
+// Fonts
+@font-face {
+  font-family: 'NeutraFace2';
+  src: url('../fonts/Neutraface_no2_text_book_lining.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/Neutraface_no2_text_book_lining.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/Neutraface_no2_text_book_lining.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/Neutraface_no2_text_book_lining.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/Neutraface_no2_text_book_lining.svg#83ae88f2580e11b4bd26865646cfd160') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: '../fonts/Vegur';
+  src: url('../fonts/Vegur-Regular.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/Vegur-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/Vegur-Regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/Vegur-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/Vegur-Regular.svg#cc3bcc84968dd7b3a781ee7bfaa4665a') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: '../fonts/Vegur Light';
+  src: url('../fonts/Vegur-Light.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/Vegur-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/Vegur-Light.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/Vegur-Light.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/Vegur-Light.svg#cb10dbcaeac9c8f6bae2612f3441e15f') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  200;
+}
+
+@font-face {
+  font-family: '../fonts/Vegur';
+  src: url('../fonts/Vegur-Bold.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/Vegur-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/Vegur-Bold.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/Vegur-Bold.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/Vegur-Bold.svg#ee85b0843d26471a856cb5acb5d4d0ab') format('svg'); /* Legacy iOS */
+       
+  font-style:   normal;
+  font-weight:  700;
+}
+
