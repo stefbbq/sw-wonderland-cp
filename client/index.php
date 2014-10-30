@@ -28,7 +28,7 @@
 						</li>
 						<li ng-class="getClass('/collateral')" class="menu-item ">
 							<a ng-href="#/collateral">
-								Collateral
+								My Products
 								<span class="filled-link"></span>
 							</a>
 						</li>

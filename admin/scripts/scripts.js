@@ -144,9 +144,9 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }).when("/listCollateral", {
         templateUrl: basePath + "views/listCollateral" + viewExt,
         controller: "CollateralListCtrl"
-    }).when("/dropbox", {
-        templateUrl: basePath + "views/dropboxTest" + viewExt,
-        controller: "DropBoxTestCtrl"
+    }).when("/dropboxSetup", {
+        templateUrl: basePath + "views/dropboxSetup" + viewExt,
+        controller: "DropBoxSetupCtrl"
     }).when('/logout', {
       templateUrl: basePath + "views/logout" + viewExt,
       controller: 'LogoutCtrl'
@@ -155,7 +155,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     });
 } ]).run([ "$rootScope", "$location", "$cookieStore", function($rootScope, $location, $cookieStore) {
     if ($rootScope.adminData = $cookieStore.get("adminData"), void 0 === $rootScope.adminData || !$rootScope.adminData.isAdmin) return void (window.location.href = "./login.php");
-    var forceStaging = false;
+    var forceStaging = true;
     switch ($location.host()) {
       case "wonderland-cp.stagebot.net":
         $rootScope.wsURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK", 
@@ -165,8 +165,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
 
       case "bach":
         $rootScope.wsURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php?callback=JSON_CALLBACK", 
-        $rootScope.wsUploadURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php", 
-        $rootScope.wsDropboxURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php", 
+        $rootScope.wsUploadURL = "http://bach/wonderland-cp/webservice/WPLAdmin.php", $rootScope.wsDropboxURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php", 
         forceStaging && ($rootScope.wsURL = "http://wonderland-cp.stagebot.net/webservice/WPLAdmin.php?callback=JSON_CALLBACK");
         break;
 
@@ -181,6 +180,8 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
         pageSize: 10
     }, $rootScope.collateralList = {
         pageSize: 10
+    }, $rootScope.collateralList = {
+        pageSize: 3
     }, $rootScope.collateralList_full = {
         pageSize: 10
     }, $rootScope.getFormVars = function(model) {
@@ -462,7 +463,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }
     function deactivateUser(id, callback) {
         var args = {
-            action: "deactivateClientUser",
+            action: "deactivateAdminUser",
             guid: id
         };
         $http.jsonp($rootScope.wsURL, {
@@ -476,7 +477,7 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
     }
     function reactivateUser(id, callback) {
         var args = {
-            action: "reactivateClientUser",
+            action: "reactivateAdminUser",
             guid: id
         };
         $http.jsonp($rootScope.wsURL, {
@@ -497,8 +498,8 @@ angular.module("wplAdmin", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", 
         changePassword: changePassword,
         client: clientDetails,
         save: saveUser,
-        deactivate: deactivateUser,
-        reactivate: reactivateUser
+        deactivateUser: deactivateUser,
+        reactivateUser: reactivateUser
     };
 } ]);
 
@@ -627,14 +628,9 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             file: file
         }).progress(function(e) {
             onProgress && onProgress(e);
-        }).success(function(e) {
-            console.log('uploadComplete', e);
-            onComplete();
+        }).success(function() {
+            if (onComplete) onComplete();
         });
-            // .success(function() {
-// >>>>>>> 0df88392d508f761c01bc378581082f67f0be935
-//             onComplete();
-//         });
     }
     function loadDetails(id, callback) {
         var args = {
@@ -749,6 +745,39 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
             $("#server_response").html(data), onComplete();
         });
     }
+    function getDropboxAuthURL(callback) {
+      var args = {
+            action: "getDBURL"
+        };
+      $http.jsonp($rootScope.wsURL, {
+          params: args,
+          header: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          }
+      }).success(function(result) {
+          callback && callback(result);
+      }).error(function(err) {
+          console.log("error", err);
+      });
+    }
+
+    function authorizeDropbox(authCode, callback) {
+      var args = {
+            action: "authorizeDropbox",
+            c:authCode
+        };
+      $http.jsonp($rootScope.wsURL, {
+          params: args,
+          header: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          }
+      }).success(function(result) {
+          callback && callback(result);
+      }).error(function(err) {
+          console.log("error", err);
+      });
+    }
+
     var pageSize = $rootScope.clientList.pageSize, list = [], details = {}, types = [];
     return {
         loadList: loadList,
@@ -764,7 +793,9 @@ angular.module("wplAdmin").factory("collateralService", [ "$http", "$rootScope",
         deactivate: deactivate,
         reactivate: reactivate,
         details: details,
-        saveToDropbox: saveToDropbox
+        saveToDropbox: saveToDropbox,
+        getDropboxAuthURL: getDropboxAuthURL,
+        authorizeDropbox: authorizeDropbox
     };
 } ]), angular.module("wplAdmin").directive("capitalizeFirst", function() {
     return {
@@ -1109,7 +1140,7 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     }, construct();
 } ]), angular.module("wplAdmin").controller("EditAdminUserCtrl", [ "$scope", "$http", "$location", "$rootScope", "adminUserService", function($scope, $http, $location, $rootScope, adminUserService) {
     function construct() {
-        switch (initializeTestData(), $location.path()) {
+        switch ($location.path()) {
           case "/addAdminUser":
             addMode = !0, $scope.title = "Add New Admin User", action = "addAdminUser";
             break;
@@ -1118,7 +1149,42 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
             addMode = !1, $scope.title = "Edit Admin User", action = "updateAdminUser", $scope.adminUserService = adminUserService, 
             loadAdminUserDetails();
         }
+        $scope.isEditMode = !addMode;
     }
+    
+    $scope.activateLabel = function() {
+      return $scope.user.active == '1' ? 'Deactivate' : 'Reactivate';
+    };
+    
+    var activateMessage;
+    $scope.toggleActive = function() {
+    
+      function onActiveStatusChanged() {
+        alert(activateMessage);
+        $location.path("listAdminUsers");
+      }
+
+      var performAction = false;
+      if ($scope.user.active == '1') {
+        performAction = confirm('Are you sure you want to deactivate \n"' + $scope.user.username + ' (' + $scope.user.email + ')"?\nThe user will be displayed in the "inactive" list.');
+      } else {
+        performAction = true;
+      }
+      
+      if (performAction) {
+        if ($scope.user.active == '1') {
+          activateMessage = "User Deactivated";
+          adminUserService.deactivateUser($scope.user.guid, onActiveStatusChanged);
+        } else {
+          activateMessage = "User Reactivated";
+          adminUserService.reactivateUser($scope.user.guid, onActiveStatusChanged);
+        }
+        
+      
+      
+      }
+    };
+    
     function loadAdminUserDetails() {
         var id = $location.search().id;
         $scope.adminUserService.loadDetails(id, function(details) {
@@ -1128,9 +1194,12 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     function initializeTestData() {
         testDataList.push(new AdminUser("admin", "admin@wpl.com"));
     }
-    function AdminUser(username, email) {
+    function AdminUser(username, email, guid) {
         var me = {};
-        return me.username = username, me.email = email, me;
+        me.username = username;
+        me.email = email;
+        me.guid = guid;
+        return me
     }
     var addMode, action;
     $scope.form = {}, $scope.user = {}, $scope.save = function(user) {
@@ -1399,33 +1468,31 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
     }, $scope.$on("pagerComplete", function() {
         hilightCurrentPage();
     });
-} ]), angular.module("wplAdmin").controller("DropBoxTestCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
+
+} ]);
+
+angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "$location", "$rootScope", "$upload", "$timeout", "collateralService", function($scope, $http, $location, $rootScope, $upload, $timeout, collateralService) {
     function construct() {
         $scope.collateralService = collateralService;
     }
-    function onProgress(e) {
-        console.log("onProgress", e);
-    }
-    $scope.collateral = {
-        name: "Test File"
-    }, $scope.file = {
-        file: null
-    }, $scope.onFileSelect = function($files) {
-        console.log("file", $files), $scope.file.file = $files[0];
-    }, $scope.save = function() {
-        console.log($scope.file.file), collateralService.saveToDropbox($scope.collateral, $scope.file.file, onProgress, function() {
-            var msg = "collateral added to dropbox";
-            alert(msg);
-        });
-    }, $scope.cancel = function() {
-        window.history.back();
+    
+    $scope.getAuthCode = function() {
+      collateralService.getDropboxAuthURL(function(result) {
+        $('#auth_step_1').hide();
+        $('#auth_step_2').show();
+        window.open(result.data, 'db_auth');
+        
+      });
     };
-    var testDataIndex = 0;
-    $scope.autofill = function() {
-        testDataList[testDataIndex++];
-        angular.copy(testDataIndex, $scope.company), testDataIndex >= testDataList.length && (testDataIndex = 0);
+
+    $scope.authorizeDropbox = function() {
+      collateralService.authorizeDropbox($scope.auth_code, function(result) {
+      $scope.auth_token = result.data;
+        $('#auth_step_2').hide();
+        $('#auth_step_3').show();
+      });
     };
-    var testDataList = [];
+
     construct();
 } ])
 .controller('LogoutCtrl', ['$scope', '$cookieStore', function($scope, $cookieStore) {
@@ -1436,10 +1503,6 @@ angular.module("wplAdmin").controller("CollateralListCtrl", [ "$scope", "$locati
 }])
 ;
 
-var hex_chr = "0123456789abcdef".split("");
-
-"5d41402abc4b2a76b9719d911017c592" != md5("hello");
-
 function showModal() {
 	$('#modal').removeClass('hidden');
 }
@@ -1447,3 +1510,6 @@ function showModal() {
 function hideModal() {
 	$('#modal').addClass('hidden');
 }
+
+// updated 2014.10.29
+

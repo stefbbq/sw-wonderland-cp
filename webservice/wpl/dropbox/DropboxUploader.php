@@ -1,5 +1,6 @@
 <?php
 namespace wpl\dropbox;
+require_once "Dropbox/autoload.php";
 
 use sdg\data\Result;
 use wpl\database\Database;
@@ -26,7 +27,9 @@ class DropboxUploader {
     
   //  $authCode = 'Rtf-mLdIcxsAAAAAAAAEgLyo4Ea1XGUbD2_vK06eYE8';
 //    $authToken = $webAuth->finish($authCode);
-    $accessToken = 'Rtf-mLdIcxsAAAAAAAAEgad9u-POsKpy3A8eUAxzzNzXLb3U5JpSOyTLIWDmw3V8';
+
+    // TODO: Update this value with the token sent from the client.
+    $accessToken = 'Rtf-mLdIcxsAAAAAAAAE7cKMa3CK5K3LV04HFw5s-fLJc8d62scOyCzD21mFUD7E';
 
     $this->dbxClient = new dbx\Client($accessToken, "PHP-Example/1.0");
     /*
@@ -48,6 +51,21 @@ class DropboxUploader {
     
     return $result;
     //$this->dump($authorizeUrl);
+  }
+  
+  public function authorizeDropbox($authCode) {
+    $result = new Result();
+    $appInfo = dbx\AppInfo::loadFromJsonFile("pp-info.json");
+    $webAuth = new dbx\WebAuthNoRedirect($appInfo, "PHP-Example/1.0");
+    //$authorizeUrl = $webAuth->start();
+    
+    list($accessToken, $dropboxUserId) = $webAuth->finish($authCode);
+    $result->success = true;
+    $result->code = 200;
+    $result->message = "Dropbox Auth Token";
+    $result->data = $accessToken;
+    
+    return $result;
   }
   
   public function saveToDropbox() {
@@ -87,7 +105,8 @@ class DropboxUploader {
     
     $userID       = $this->getPostValue('userID');
     $clientName   = $this->getPostValue('clientName');
-    $clientEmail  = $this->getPostValue('clientName');
+    $clientEmail  = $this->getPostValue('clientEmail');
+    $clientPhone  = $this->getPostValue('clientPhone');
     
     
     $confirmEmail;
@@ -96,7 +115,7 @@ class DropboxUploader {
     if ($userID != null) {
       // get the user data from the database
       $table    = 'clientUsers';
-      $select   = array('clients.name, clients.wplEmail, clientUsers.confirmation_email, clientUsers.email, clientUsers.first_name, clientUsers.last_name');
+      $select   = array('clients.name, clients.wplEmail, clientUsers.confirmation_email, clientUsers.email, clientUsers.phone, clientUsers.first_name, clientUsers.last_name');
       $orderBy  = null;
       $where    = array('clientUsers.guid' => $userID);
       $start    = null;
@@ -109,6 +128,7 @@ class DropboxUploader {
       $clientEmail  = $dbResult[0]['email'];
       $confirmEmail = $dbResult[0]['confirmation_email'];
       $repEmail     = $dbResult[0]['wplEmail'];
+      $clientPhone  = $dbResult[0]['phone'];
       
     
     } else if ($clientName == null || $clientEmail == null) {
@@ -118,47 +138,36 @@ class DropboxUploader {
       return $result;
     }
     
-    
-    
-    
-    $fields = array(
-      'type',
-      'size',
-      'quantity',
-      'pageCount',
-      'finish',
-      'weight',
-      'recycled',
-      'colours',
-      'sides',
-      'specialFX',
-      'binding',
-      'description'
-      );
-      
-    $tables = array(
-      'collateralTypes',
-      null,
-      null,
-      null,
-      'dd_paperFinish',
-      'dd_paperWeight',
-      'dd_recycledOpts',
-      'dd_inkColours',
-      null,
-      'dd_specialEffects',
-      'dd_binding',
-      null
-    );
-    
+    $specs = array();
+    $specs[] = new SpecData('type', 'collateralTypes');
+    $specs[] = new SpecData('size', null);
+    $specs[] = new SpecData('flatSize', null);
+    $specs[] = new SpecData('foldedSize', null);
+    $specs[] = new SpecData('quantity', null);
+    $specs[] = new SpecData('pageCount', null);
+    $specs[] = new SpecData('coatingAQ', 'dd_coatingAQ');
+    $specs[] = new SpecData('coatingVarnish', 'dd_coatingVarnish');
+    $specs[] = new SpecData('finish', 'dd_paperFinish');
+    $specs[] = new SpecData('weightText', 'dd_paperWeightText');
+    $specs[] = new SpecData('weightCover', 'dd_paperWeightCover');
+    $specs[] = new SpecData('recycled', 'dd_recycledOpts');
+    $specs[] = new SpecData('colours', 'dd_inkColours');
+    $specs[] = new SpecData('sides', 'dd_sides');
+    $specs[] = new SpecData('specialFX', 'dd_specialEffects');
+    $specs[] = new SpecData('binding', 'dd_binding');
+    $specs[] = new SpecData('description', null);
+
+
+ 
     $data = array();
     $data['clientName'] = $clientName;
     $data['clientEmail'] = $clientEmail;
+    $data['clientPhone'] = $clientPhone;
     
-    foreach ($fields as $fieldName) {
-      $value = $this->getPostValue($fieldName);
+    foreach ($specs as $spec) {
+      $value = $this->getPostValue($spec->field);
       if ($value != null) {
-        $data[$fieldName] = $value;
+        $data[$spec->field] = $value;
       }
     }
     
@@ -168,7 +177,7 @@ class DropboxUploader {
       $data['file'] = $fileName;
     }
     
-    $dbResult = $this->db->add('quoteRequests', $data); // TODO: disable add for test
+    $dbResult = $this->db->add('quoteRequests', $data);
     if ($dbResult) {
       //$lastID = $this->db->getLastInsertID('id');
 
@@ -182,30 +191,15 @@ class DropboxUploader {
       return $result;
     }
     
-    // do dropbox save
-    if (count($_FILES) > 0) {
-      $file = $_FILES['file'];
-      $f = fopen($file['tmp_name'], "rb");
-      $email = $clientEmail;
-      
-      $this->dbxClient->createFolder("/$email");
-      $dbxResult = $this->dbxClient->uploadFile("/$email/{$file['name']}", dbx\WriteMode::add(), $f);
-
-      
-      fclose($f);
-      
-      //$this->dump($dbxResult);
-    }
-    
-    
     // Get friendly names for quote
     $textData = array();
     
+    if (!is_null($clientPhone)) $textData['phone'] = $clientPhone;
     if (!is_null($confirmEmail)) $textData['confirm email'] = $confirmEmail;
     
-    for ($i=0; $i<count($fields); $i++) {
-      $field = $fields[$i];
-      $table = $tables[$i];
+    foreach ($specs as $spec) {
+      $field = $spec->field;
+      $table = $spec->table;
       if (is_null($table)) {
         $textData[$field] = $data[$field];
       } else {
@@ -241,7 +235,7 @@ class DropboxUploader {
     
     $body.= "<tr style=\"$css_tr1\"><th style=\"width:33%; $css_th\">Client Name: </th><td>{$clientName}</td></tr>";
     $body.= "<tr style=\"$css_tr2\"><th style=\"$css_th\">Submitter: </th><td><a href=\"mailto:{$clientEmail}\">{$clientEmail}</a></td></tr>";
-    
+   
     $i = 0;
     foreach($textData as $key => $value) {
       $style = ($i++ % 2 == 0) ? $css_tr1 : $css_tr2;
@@ -252,17 +246,33 @@ class DropboxUploader {
     $adminManager = new AdminManager();
     $adminManager->sendEmail($to, $subject, $body);
     
+
+    // do dropbox save
+    if (count($_FILES) > 0) {
+      $file = $_FILES['file'];
+      $f = fopen($file['tmp_name'], "rb");
+      $email = $clientEmail;
+      
+      $this->dbxClient->createFolder("/$email");
+      $dbxResult = $this->dbxClient->uploadFile("/$email/{$file['name']}", dbx\WriteMode::add(), $f);
+
+      
+      fclose($f);
+      
+      //$this->dump($dbxResult);
+    }
+        
     
     return $result;
   }
   
   private function getPostValue($name) {
-  if (isset($_POST[$name])) {
-    return htmlspecialchars($_POST[$name]);
-  } else {
-    return null;
+    if (isset($_POST[$name])) {
+      return htmlspecialchars($_POST[$name]);
+    } else {
+      return null;
+    }
   }
-}
   
   private function dump($obj) {
     echo('<pre>');
@@ -270,4 +280,16 @@ class DropboxUploader {
     //echo('</pre>');
   }
      
+}
+
+
+class SpecData {
+  public $field;
+  public $table;
+
+  public function __construct($field, $table) {
+    $this->field = $field;
+    $this->table = $table;
+  }
+
 }

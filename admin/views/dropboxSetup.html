@@ -1,0 +1,24 @@
+<div>
+  <section id="dropbox_setup">
+    
+    <div id="auth_step_1">
+      <p>Click the button below to change the dropbox account to which quote request collateral will be uploaded.</p>
+      <button ng-click="getAuthCode();">Authorize</button>
+    </div>
+    
+    <div id="auth_step_2" style="display:none">
+      <label for="auth_code">Authorization Code</label>
+      <input id="auth_code" type="text" ng-model="auth_code">
+      <button ng-click="authorizeDropbox();">Authorize</button>
+    </div>
+    
+    <div id="auth_step_3" style="display:none">
+      <p>Copy and paste the code below in an email this token to Steamwalker</p>
+      <p><strong>{{auth_token}}</strong></p>
+      <p>It may take up to 24 hours for your dropbox account to be updated.</p>
+    </div>
+    
+  
+
+  </section>
+</div><!-- end .list_admin -->

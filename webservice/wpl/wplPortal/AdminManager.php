@@ -49,6 +49,8 @@ class AdminManager {
       if ($newClient) {
         $client->active = '1';
         $dbResult = $this->db->add('clients', $client);
+		
+		
         if ($dbResult) {
           $result->success = true;
           $result->message = "Client added.";
@@ -73,6 +75,7 @@ class AdminManager {
           $result->message = "Error updating client.";
         }
       }
+	  
 
       return $result;
   }
@@ -108,7 +111,7 @@ class AdminManager {
   /*
    * Search Clients
    */
-public function searchClients($searchString, $startRecord, $pageSize, $active) {
+  public function searchClients($searchString, $startRecord, $pageSize, $active) {
       $result = new Result();
 
       $searchQuery = " name LIKE :search OR address LIKE :search OR city LIKE :search AND active='$active'";
@@ -147,7 +150,8 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   public function getClientDetail($guid, $includeID = false) {
     $result = new Result();
 
-    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'phone2', 'email', 'wplEmail', 'active');
+    $select = array('guid', 'name', 'address', 'city', 'province', 'postal_code', 'phone', 'ext', 'phone2', 'email', 'wplEmail', 'active');
+    if ($includeID) $select[] = 'id';
 
     $where = array(
         'guid' => $guid
@@ -1017,7 +1021,7 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     $result->data = array();
 
     // get user detail
-    $select = array('guid', 'username', 'email');
+    $select = array('guid', 'username', 'email', 'active');
     $where = array(
         'guid' => $id
     );
@@ -1484,20 +1488,20 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
   /*
    * Fake Dropdown Content
    */
-  public function getDropdownContent() {
+  public function getDropdownContent($table, $order) {
     $result=  new Result();
     $select = array('id', 'name');
     $orderBy = array('name' => 'ASC');
-    $dataset = $this->db->select('fakeDropdownContent', $select, $orderBy);
+    $dataset = $this->db->select($table, $select, $orderBy);
     
     if ($dataset) {
       $result->success = true;
       $result->code = 200;
       $result->data = $dataset;
-      $result->message = 'fake dropdown content';
+      $result->message = 'dropdown content';
     } else {
       $result->code = 304;
-      $result->message = 'error obtaining fake dropdown content';
+      $result->message = 'error obtaining dropdown content';
     }
 
 
@@ -1514,22 +1518,26 @@ public function searchClients($searchString, $startRecord, $pageSize, $active) {
     $result->code = 200;
     
     $result->data['type'] = $this->getDDList('collateralTypes');
-    $result->data['finish'] = $this->getDDList('dd_paperFinish');
-    $result->data['weight'] = $this->getDDList('dd_paperWeight');
+    $result->data['finish'] = $this->getDDList('dd_paperFinish', 'id');
+    $result->data['weightText'] = $this->getDDList('dd_paperWeightText', 'id');
+    $result->data['weightCover'] = $this->getDDList('dd_paperWeightCover', 'id');
     $result->data['recycle'] = $this->getDDList('dd_recycledOpts');
-    $result->data['colours'] = $this->getDDList('dd_inkColours');
+    $result->data['sides'] = $this->getDDList('dd_sides');
+    $result->data['colours'] = $this->getDDList('dd_inkColours', 'id');
     $result->data['sfx'] = $this->getDDList('dd_specialEffects');
     $result->data['binding'] = $this->getDDList('dd_binding');
+    $result->data['coatingAQ'] = $this->getDDList('dd_coatingAQ', 'id');
+    $result->data['coatingVarnish'] = $this->getDDList('dd_coatingVarnish', 'id');
     
     return $result;    
     
   }
   
-  private function getDDList($table) {
+  private function getDDList($table, $order = 'name') {
     $list = array();
-  
+
     $select = array('id', 'name');
-    $orderBy = array('name' => 'ASC');
+    $orderBy = array($order => 'ASC');
     $dataset = $this->db->select($table, $select, $orderBy);
     
     $list = $dataset;

@@ -6,7 +6,7 @@
 
 		<div class="util">
 			<div class="right">
-				<div class="buttons"> <button ng-click="cancel()">Cancel</button> <button ng-click="save(user)" ng-disabled="form.$invalid">Save</button> <button ng-click="autofill()">Auto Fill</button> </div><!-- end .buttons -->
+				<div class="buttons"> <button ng-click="cancel()">Cancel</button> <button ng-click="save(user)" ng-disabled="form.$invalid">Save</button> <button ng-click="toggleActive();" ng-show="isEditMode;">{{activateLabel();}}</button> </div><!-- end .buttons -->
 			</div><!--end .right -->
 			<div class="clear"></div>
 		</div><!-- end .util -->

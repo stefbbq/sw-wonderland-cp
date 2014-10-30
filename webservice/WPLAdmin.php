@@ -222,11 +222,24 @@ switch ($action) {
       $dropbox = new DropboxUploader();
       $result = $dropbox->getAuthURL();
       break;
+    case 'authorizeDropbox':
+      $dropbox = new DropboxUploader();
+      $result = $dropbox->authorizeDropbox(getValue('c'));
+      break;
     case 'typeList':
       $result = $manager->getProductTypes();
       break;
     case 'ddContent':
-      $result = $manager->getDropdownContent();
+      $table = getValue('t');
+      $order = getValue('o');
+      if ($table != null) {
+        $table = 'dd_' . $table;
+      } else {
+        $table = 'fakeDropdownContent';
+      }
+      if ($order == null) $order = 'name';
+
+      $result = $manager->getDropdownContent($table, $order);
       break;
     case 'getRFQDropdownContent':
       $result = $manager->getRFQDropdownContent();
