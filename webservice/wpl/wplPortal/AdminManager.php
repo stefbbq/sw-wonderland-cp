@@ -1517,18 +1517,15 @@ class AdminManager {
     $result->success = true;
     $result->code = 200;
     
-    $result->data['type'] = $this->getDDList('collateralTypes');
-    $result->data['finish'] = $this->getDDList('dd_paperFinish', 'id');
-    $result->data['weightText'] = $this->getDDList('dd_paperWeightText', 'id');
-    $result->data['weightCover'] = $this->getDDList('dd_paperWeightCover', 'id');
-    $result->data['recycle'] = $this->getDDList('dd_recycledOpts');
     $result->data['sides'] = $this->getDDList('dd_sides');
-    $result->data['colours'] = $this->getDDList('dd_inkColours', 'id');
-    $result->data['sfx'] = $this->getDDList('dd_specialEffects');
-    $result->data['binding'] = $this->getDDList('dd_binding');
+    $result->data['ink'] = $this->getDDList('dd_inkColours', 'id');
     $result->data['coatingAQ'] = $this->getDDList('dd_coatingAQ', 'id');
     $result->data['coatingVarnish'] = $this->getDDList('dd_coatingVarnish', 'id');
-    
+    $result->data['weightText'] = $this->getDDList('dd_paperWeightText', 'id');
+    $result->data['weightCover'] = $this->getDDList('dd_paperWeightCover', 'id');
+    $result->data['paperFinish'] = $this->getDDList('dd_paperFinish', 'id');
+    $result->data['finishing'] = $this->getDDList('dd_finishing');
+
     return $result;    
     
   }
@@ -1536,11 +1533,12 @@ class AdminManager {
   private function getDDList($table, $order = 'name') {
     $list = array();
 
-    $select = array('id', 'name');
+    $select = array('id', 'code', 'name');
     $orderBy = array($order => 'ASC');
     $dataset = $this->db->select($table, $select, $orderBy);
     
     $list = $dataset;
+    array_unshift($list, array('id' => -1, 'code' => '', 'name' => ''));
     
     return $list;
   }

@@ -139,23 +139,20 @@ class DropboxUploader {
     }
     
     $specs = array();
-    $specs[] = new SpecData('type', 'collateralTypes');
-    $specs[] = new SpecData('size', null);
-    $specs[] = new SpecData('flatSize', null);
-    $specs[] = new SpecData('foldedSize', null);
-    $specs[] = new SpecData('quantity', null);
-    $specs[] = new SpecData('pageCount', null);
-    $specs[] = new SpecData('coatingAQ', 'dd_coatingAQ');
-    $specs[] = new SpecData('coatingVarnish', 'dd_coatingVarnish');
-    $specs[] = new SpecData('finish', 'dd_paperFinish');
-    $specs[] = new SpecData('weightText', 'dd_paperWeightText');
-    $specs[] = new SpecData('weightCover', 'dd_paperWeightCover');
-    $specs[] = new SpecData('recycled', 'dd_recycledOpts');
-    $specs[] = new SpecData('colours', 'dd_inkColours');
-    $specs[] = new SpecData('sides', 'dd_sides');
-    $specs[] = new SpecData('specialFX', 'dd_specialEffects');
-    $specs[] = new SpecData('binding', 'dd_binding');
-    $specs[] = new SpecData('description', null);
+    $specs[] = new SpecData('quantity', null, 'Quantity');
+    $specs[] = new SpecData('description', null, 'Description');
+    $specs[] = new SpecData('flatSize', null, 'Flat Size');
+    $specs[] = new SpecData('foldedSize', null, 'Folded Size');
+    $specs[] = new SpecData('sides', 'dd_sides', 'Sides');
+    $specs[] = new SpecData('ink', 'dd_inkColours', 'Ink');
+    $specs[] = new SpecData('coatingAQ', 'dd_coatingAQ', 'Coating AQ');
+    $specs[] = new SpecData('coatingVarnish', 'dd_coatingVarnish', 'Coating Varnish');
+    $specs[] = new SpecData('weightText', 'dd_paperWeightText', 'Weight - Text');
+    $specs[] = new SpecData('weightCover', 'dd_paperWeightCover', 'Weight - Cover');
+    $specs[] = new SpecData('paperFinish', 'dd_paperFinish', 'Paper Finish');
+    $specs[] = new SpecData('finishing', 'dd_finishing', 'Finishing');
+    $specs[] = new SpecData('finishingReq', null, 'Finishing Requirements');
+    $specs[] = new SpecData('specialInstructions', null, 'Special Instructions');
 
 
  
@@ -194,26 +191,27 @@ class DropboxUploader {
     // Get friendly names for quote
     $textData = array();
     
-    if (!is_null($clientPhone)) $textData['phone'] = $clientPhone;
-    if (!is_null($confirmEmail)) $textData['confirm email'] = $confirmEmail;
+    if (!is_null($clientPhone)) $textData['Phone'] = $clientPhone;
+    if (!is_null($confirmEmail)) $textData['Confirm Email'] = $confirmEmail;
     
     foreach ($specs as $spec) {
       $field = $spec->field;
       $table = $spec->table;
+      $label = $spec->label;
       if (is_null($table)) {
-        $textData[$field] = $data[$field];
+        $textData[$label] = $data[$field];
       } else {
         $select = array('name');
-        $where = array('id' => $data[$field]);
+        $where = array('code' => $data[$field]);
         $dbResult = $this->db->select($table, $select, null, $where);
         
-        $textData[$field] = $dbResult[0]['name'];
+        $textData[$label] = $dbResult[0]['name'];
       }
       
     }
     
     if (!is_null($fileName)) {
-      $textData['file'] = $fileName;
+      $textData['File'] = $fileName;
     }
     
     
@@ -286,10 +284,12 @@ class DropboxUploader {
 class SpecData {
   public $field;
   public $table;
+  public $label;
 
-  public function __construct($field, $table) {
+  public function __construct($field, $table, $label) {
     $this->field = $field;
     $this->table = $table;
+    $this->label = $label;
   }
 
 }
