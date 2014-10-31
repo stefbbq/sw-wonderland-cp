@@ -1501,6 +1501,39 @@ angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "
   location.href = './login.php';
 
 }])
+.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('loadingInterceptor');
+}])
+.value('loadingService', {
+  loadingCount:0,
+  isLoading: function() { return this.loadingCount > 0; },
+  requested: function() { 
+    if (this.loadingCount == 0) {
+      console.log('loading started');
+      showModal();
+    }
+    this.loadingCount += 1;
+  },
+  responded: function() { 
+    this.loadingCount -= 1; 
+    if (this.loadingCount == 0) {
+      console.log('loading completed');
+      hideModal();
+    }
+  }
+})
+.factory('loadingInterceptor', function(loadingService) {
+  return {
+    request: function(config) {
+      loadingService.requested();
+      return config;
+    },
+    response: function(response) {
+      loadingService.responded();
+      return response;
+    },
+  }
+})
 ;
 
 function showModal() {
