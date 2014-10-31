@@ -1,7 +1,10 @@
 angular.module('ClientPortalApp')
-.controller('RequestQuoteCtrl', ['$scope', '$rootScope', 'ClientService', function($scope, $rootScope, ClientService) {
+.controller('RequestQuoteCtrl', ['$scope', '$rootScope', 'ClientService', 'loadingService', function($scope, $rootScope, ClientService, loadingService) {
 
     var ws = $scope.ws = ClientService;
+
+    $scope.loadingService = loadingService;
+    
     $scope.quote = {
       sides:'',
       ink:'',

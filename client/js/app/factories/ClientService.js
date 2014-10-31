@@ -34,17 +34,19 @@ angular.module('ClientPortalApp')
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).success(function(result) {
       // console.log(result);
-      for (var i=0; i<result.data.length; i++) {
-        var item = result.data[i];
-        item.quantity = Number(item.quantity);
-        item.name = item.name.replace('\\', '');
-        // console.log(result);
-        // item.order_date = (new Date(item.order_date)).getTime();
-        // console.log(item.order_date);
+      if (result.success) {
+        for (var i=0; i<result.data.length; i++) {
+          var item = result.data[i];
+          item.quantity = Number(item.quantity);
+          item.name = item.name.replace('\\', '');
+          // console.log(result);
+          // item.order_date = (new Date(item.order_date)).getTime();
+          // console.log(item.order_date);
+        }
+      
+      
+        angular.copy(result.data, me.orderHistory);
       }
-    
-    
-      angular.copy(result.data, me.orderHistory);
       if (callback) callback(result.data);
     }).error(function(err) {
       console.log('error', err);
