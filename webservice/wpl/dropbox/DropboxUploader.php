@@ -110,7 +110,7 @@ class DropboxUploader {
     
     
     $confirmEmail;
-    $repEmail = 'sdgarson@gmail.com'; // TODO: hard-code to default user
+    $repEmail = 'adel@steamwalker.net'; // TODO: hard-code to default user
     
     if ($userID != null) {
       // get the user data from the database
