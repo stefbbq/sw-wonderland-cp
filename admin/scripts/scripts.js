@@ -1272,11 +1272,8 @@ angular.module("wplAdmin").controller("ClientDetailCtrl", [ "$scope", "$location
     }, $scope.filesSelected = function() {
         return null !== $scope.thumb.file;
     }, $scope.save = function() {
-		showModal();
         collateralService.save($scope.collateral, action, onProgress, function() {
             var msg;
-			hideModal();
-
             addMode ? (msg = "collateral added", alert(msg)) : (msg = "collateral updated", 
             alert(msg));
 			window.history.back();

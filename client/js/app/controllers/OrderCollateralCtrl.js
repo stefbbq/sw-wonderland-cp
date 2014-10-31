@@ -9,9 +9,7 @@ angular.module('ClientPortalApp')
   ClientService.loadCollateralDetails(collateralID);
   
   $scope.submitOrder = function() {
-    showModal();
     $scope.ws.submitOrder($rootScope.clientID, $rootScope.userID, collateralID, $scope.order.quantity, $scope.order.comment, function(result) {
-      hideModal();
       alert("Your order has been submitted.");
       window.history.back();
     });

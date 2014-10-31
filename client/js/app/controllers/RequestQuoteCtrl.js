@@ -4,7 +4,7 @@ angular.module('ClientPortalApp')
     var ws = $scope.ws = ClientService;
 
     $scope.loadingService = loadingService;
-    
+
     $scope.quote = {
       sides:'',
       ink:'',
@@ -21,7 +21,6 @@ angular.module('ClientPortalApp')
     }
     
     $scope.submit = function() {
-      showModal();
       $scope.quote.userID = $rootScope.userID;
 
       var quote = {};
@@ -42,7 +41,6 @@ angular.module('ClientPortalApp')
     
     function onQuoteSubmitted() {
       alert("Thank you for your submission.");
-      hideModal();
       angular.copy({}, $scope.quote);
       window.history.back();
       location.reload();
