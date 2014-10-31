@@ -1504,11 +1504,13 @@ angular.module("wplAdmin").controller("DropBoxSetupCtrl", [ "$scope", "$http", "
 ;
 
 function showModal() {
-	$('#modal').removeClass('hidden');
+	// $('#modal').removeClass('hidden');
+    $(".loader").show();
 }
 
 function hideModal() {
-	$('#modal').addClass('hidden');
+	// $('#modal').addClass('hidden');
+    $(".loader").hide();
 }
 
 // updated 2014.10.29

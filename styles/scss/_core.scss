@@ -10,6 +10,20 @@ $tablet-mobile: "only screen and (max-device-width: 767px), (max-width: 767px)";
 	@return "only screen and (max-device-height: " + $res + "px), (max-height: " + $res + "px)";
 }
 
+
+@-webkit-keyframes play {
+  from {background-position: 0;}
+  to {background-position: -424px;}
+}
+@-moz-keyframes play {
+  from {background-position: 0;}
+  to {background-position: -424px;}
+}
+@keyframes play {
+  from {background-position: 0;}
+  to {background-position: -424px;}
+}
+
 .magnify {
 	background: url('../images/magnify.png') center no-repeat, rgba(black, 0.5);
 	background-size: 25px 25px, 100% 100%;
@@ -69,6 +83,33 @@ $tablet-mobile: "only screen and (max-device-width: 767px), (max-width: 767px)";
 	background: url('../images/drop-down.png') center / contain no-repeat;
 	height: 23px;
 	width: 23px;
+}
+
+.loader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	background: rgba(white, 0.6);
+	z-index: 200;
+	display: none;
+	
+	.spinner {
+		height: 53px;
+		width: 53px;
+		margin: 0 auto;
+		position: relative;
+		top: 50%;
+		@include transform(translateY(-50%));
+		background: url('../images/loader.png') center no-repeat;
+		-webkit-animation: play .5s steps(8) infinite; /* Safari 4+ */
+		-moz-animation:    play .5s steps(8) infinite; /* Fx 5+ */
+		-o-animation:      play .5s steps(8) infinite; /* Opera 12+ */
+		animation:         play .5s steps(8) infinite; /* IE 10+, Fx 29+ */
+		position: relative;
+		// display: none;
+	}
 }
 
 //Grids

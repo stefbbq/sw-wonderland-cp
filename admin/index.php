@@ -77,7 +77,8 @@
 			<script src="scripts/vendor.js"></script>
 			<script src="scripts/scripts.js"></script>
 
-			<div id="modal" class="hidden"></div>
+			<!-- <div id="modal" class="hidden"></div> -->
+			<div class="loader"><div class="spinner"></div></div>
 
 		</div><!-- end .page-wrapper -->
 
@@ -89,6 +90,7 @@
 	      		$("#admin-menu .menu-item").removeClass('current');
 	      		$(this).addClass('current');
 	      	}
+	      	showModal();
 	      });
 
     		$("#admin-menu .menu-item").removeClass('current');

@@ -3,7 +3,7 @@
     <form name="requestQuote" novalidate>
       <ul>
         <li>
-          <label for="quantity">Quantity</label><input id="quantity" ng-model="quote.quantity" type="text" restrict="0-9">
+          <label for="quantity">Quantity Required</label><input id="quantity" ng-model="quote.quantity" type="text" restrict="0-9">
         </li>
         <li class="textArea">
           <label for="description">Description</label><p>(If booklet Please indicate page count including or plus cover)</p><textarea id="description" ng-model="quote.description"></textarea>
